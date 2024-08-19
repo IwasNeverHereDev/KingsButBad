@@ -1,0 +1,2 @@
+Command: C:\Users\aquao\Desktop\Java17\bin\java.exe -Dpaperclip.patchonly=true -classpath C:\Users\aquao\Desktop\Dev\KingsButBad\.gradle\caches\paperweight\setupCache\extractDevBundle.dir\data\paperclip-mojang+yarn.jar io.papermc.paperclip.Main
+Applying patches
