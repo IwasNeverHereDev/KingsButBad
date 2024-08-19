@@ -1,70 +1,121 @@
 package agmas.kingsbutbad.tasks;
 
+import agmas.kingsbutbad.Kingdom.Kingdom;
+import agmas.kingsbutbad.Kingdom.KingdomsLoader;
 import agmas.kingsbutbad.KingsButBad;
+import agmas.kingsbutbad.keys.Keys;
 import agmas.kingsbutbad.utils.CreateText;
 import agmas.kingsbutbad.utils.Role;
 import agmas.kingsbutbad.utils.RoleManager;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-
-// role related stuff here
-
+@SuppressWarnings("deprecation")
 public class RoleTask extends BukkitRunnable {
-    @Override
-    public void run(){
 
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            KingsButBad.princeGender.putIfAbsent(p, "Prince");
-            if (KingsButBad.roles.get(p).isPowerful) {
-                if (KingsButBad.isInside(p, new Location(Bukkit.getWorld("world"), -82, -44, -15), new Location(Bukkit.getWorld("world"), -70, -56, -27))) {
-                    p.teleport(new Location(Bukkit.getWorld("world"), -101.5, -57, -18.5));
-                    for (Entity pe : p.getPassengers()) {
-                        pe.leaveVehicle();
-                    }
-                    p.sendMessage(CreateText.addColors("<red><b>>> </b>You can't be in here!"));
-                }
-            }
-            KingsButBad.roles.putIfAbsent(p, Role.PEASANT);
+   @Override
+   public void run() {
+      for (Player player : Bukkit.getOnlinePlayers()) {
+         if (player == null) continue; // Skip if player is null
 
-            if (KingsButBad.api.getPlayerAdapter(Player.class).getUser(p).getCachedData().getMetaData().getPrefix() != null) {
-                if (KingsButBad.king2 == p) {
-                    p.setPlayerListName(CreateText.addColors("<dark_gray>[" + KingsButBad.api.getPlayerAdapter(Player.class).getUser(p).getCachedData().getMetaData().getPrefix() + "<dark_gray>] " + "<dark_gray>[" + "<gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingGender2.toUpperCase() + "<dark_gray></b><dark_gray>] <white>") + KingsButBad.roles.get(p).chatColor + p.getName());
-                } else {
-                    if (KingsButBad.roles.get(p).equals(Role.PRINCE)) {
-                        p.setPlayerListName(CreateText.addColors("<dark_gray>[" + KingsButBad.api.getPlayerAdapter(Player.class).getUser(p).getCachedData().getMetaData().getPrefix() + "<dark_gray>] " + "[<gradient:#FFFF52:#FFBA52>" + KingsButBad.princeGender.get(p).toUpperCase() + "<dark_gray>] ") + KingsButBad.roles.get(p).chatColor + p.getName());
-                    }  else {
-                        p.setPlayerListName(CreateText.addColors("<dark_gray>[" + KingsButBad.api.getPlayerAdapter(Player.class).getUser(p).getCachedData().getMetaData().getPrefix() + "<dark_gray>]  " +"<dark_gray>[" + "<gradient:#FFFF52:#FFBA52>" + KingsButBad.roles.get(p).uncompressedColors + "<dark_gray><dark_gray>] <white>") + KingsButBad.roles.get(p).chatColor + p.getName());
-                    }
-                }
+         // Assign default role if not already assigned
+         KingsButBad.roles.putIfAbsent(player, Role.PEASANT);
 
-            } else {
-                if (KingsButBad.king2 == p) {
-                    p.setPlayerListName(CreateText.addColors("<dark_gray>[" + "<gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingGender2.toUpperCase() + "<dark_gray></b><dark_gray>] <white>") + KingsButBad.roles.get(p).chatColor + p.getName());
-                } else {
-                    if (KingsButBad.roles.get(p).equals(Role.PRINCE)) {
-                        p.setPlayerListName(CreateText.addColors("<dark_gray>[<gradient:#FFFF52:#FFBA52>" + KingsButBad.princeGender.get(p).toUpperCase() + "<dark_gray>] <white>") + KingsButBad.roles.get(p).chatColor + p.getName());
-                    } else {
-                        p.setPlayerListName(CreateText.addColors("<dark_gray>[" + "<gradient:#FFFF52:#FFBA52>" + KingsButBad.roles.get(p).uncompressedColors + "<dark_gray><dark_gray>] <white>") + KingsButBad.roles.get(p).chatColor + p.getName());
-                    }
-                }
+         // Assign default prince gender if not already assigned
+         KingsButBad.princeGender.putIfAbsent(player, "Prince");
 
-            }
-            p.setDisplayName(p.getPlayerListName());
-            if (KingsButBad.king2 != null) {
-                if (!KingsButBad.king2.isOnline()) {
-                    KingsButBad.king2 = null;
-                }
+         // Check if the player is in a restricted area and has a powerful role
+         Location restrictedAreaStart = KingdomsLoader.activeKingdom.getBm1();
+         Location restrictedAreaEnd = KingdomsLoader.activeKingdom.getBm2();
+         if (KingsButBad.roles.get(player).isPowerful &&
+                 KingsButBad.isInside(player, restrictedAreaStart, restrictedAreaEnd)) {
+
+            // Teleport player to a safe location
+            Location safeLocation = KingdomsLoader.activeKingdom.getBmSafe();
+            if (safeLocation.getWorld() != null) {
+               player.teleport(safeLocation);
             }
 
-
-
-            if (KingsButBad.roles.get(p).equals(Role.KING) && !RoleManager.isKingAtAll(p)) {
-                KingsButBad.roles.put(p, Role.PEASANT);
-                RoleManager.givePlayerRole(p);
+            // Remove all passengers (if any)
+            for (Entity passenger : player.getPassengers()) {
+               if (passenger != null) {
+                  passenger.leaveVehicle();
+               }
             }
-        }
-    }
+
+            // Notify the player
+            player.sendMessage(CreateText.addColors("<red><b>>> </b>You can't be in here!"));
+         }
+
+         // Update the player's display name and list name based on their role and prefix
+         updatePlayerNames(player);
+
+         // Check if the second king is online, if not, reset the king
+         if (KingsButBad.king2 != null && !KingsButBad.king2.isOnline()) {
+            KingsButBad.king2 = null;
+         }
+
+         // If the player is no longer king, revert their role to Peasant
+         if (KingsButBad.roles.get(player).equals(Role.KING) && !RoleManager.isKingAtAll(player)) {
+            KingsButBad.roles.put(player, Role.PEASANT);
+            RoleManager.givePlayerRole(player);
+         }
+      }
+   }
+
+   /**
+    * Updates the player's display name and player list name based on their role and prefix.
+    *
+    * @param player The player whose name is being updated.
+    */
+   private void updatePlayerNames(Player player) {
+      if (player == null) return; // Skip if player is null
+
+      String prefix = null;
+      if (KingsButBad.api.getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix() != null) {
+         prefix = CreateText.convertAmpersandToMiniMessage(
+                 KingsButBad.api.getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix());
+      }
+
+      String playerListName;
+      String vanishMsg = "";
+      if(Keys.vanish.get(player, false)){
+         vanishMsg =  vanishMsg = "<red>(VANISH) ";
+      }
+      if (KingsButBad.king2 == player) {
+         playerListName = CreateText.addColors(
+                 vanishMsg+"<dark_gray>["
+                         + (prefix != null ? prefix : "")
+                         + "<dark_gray>] <dark_gray>[<gradient:#FFFF52:#FFBA52><b>"
+                         + KingsButBad.kingGender2.toUpperCase()
+                         + "<dark_gray></b><dark_gray>] <white>")
+                 + KingsButBad.roles.get(player).chatColor
+                 + player.getName();
+      } else if (KingsButBad.roles.get(player).equals(Role.PRINCE)) {
+         playerListName = CreateText.addColors(
+                 vanishMsg+"<dark_gray>["
+                         + (prefix != null ? prefix : "")
+                         + "<dark_gray>] [<gradient:#FFFF52:#FFBA52>"
+                         + KingsButBad.princeGender.get(player).toUpperCase()
+                         + "<dark_gray>] ")
+                 + KingsButBad.roles.get(player).chatColor
+                 + player.getName();
+      } else {
+         playerListName = CreateText.addColors(
+                 vanishMsg+"<dark_gray>["
+                         + (prefix != null ? prefix : "")
+                         + "<dark_gray>] <dark_gray>[<gradient:#FFFF52:#FFBA52>"
+                         + KingsButBad.roles.get(player).uncompressedColors
+                         + "<dark_gray><dark_gray>] <white>")
+                 + KingsButBad.roles.get(player).chatColor
+                 + player.getName();
+      }
+
+      // Set player list name and display name
+      player.setPlayerListName(playerListName);
+      player.setDisplayName(playerListName);
+   }
 }

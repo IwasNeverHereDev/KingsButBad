@@ -1,54 +1,64 @@
 package agmas.kingsbutbad.listeners;
 
+import agmas.kingsbutbad.Discord.BotManager;
 import agmas.kingsbutbad.KingsButBad;
+import agmas.kingsbutbad.keys.Keys;
+import agmas.kingsbutbad.utils.CreateText;
+import agmas.kingsbutbad.utils.DiscordUtils;
 import agmas.kingsbutbad.utils.Role;
 import agmas.kingsbutbad.utils.RoleManager;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.persistence.PersistentDataType;
 
-import static net.kyori.adventure.text.minimessage.MiniMessage.*;
-
 public class PlayerJoinListener implements Listener {
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        event.getPlayer().damage(80);
-        event.setQuitMessage(LegacyComponentSerializer.legacySection().serialize(miniMessage().deserialize("<#D49B63>" + event.getPlayer().getName() + " ran away somewhere else..")));
-    }
 
-    @EventHandler
-    public void cancelDrop(PlayerDropItemEvent event) {
-        if (KingsButBad.roles.get(event.getPlayer()).isPowerful) {
-            event.getItemDrop().remove();
-        }
-    }
+   @EventHandler
+   public void onPlayerJoin(PlayerJoinEvent event) {
+      updateTab();
+      if(Keys.vanish.get(event.getPlayer(), false)) {
+         event.setJoinMessage(null);
+         for(Player p : Bukkit.getOnlinePlayers()){
+            if(!p.hasPermission("kbb.staff")) continue;
+            p.sendMessage(CreateText.addColors("<red>(Staff) "+ event.getPlayer().getName()+" has joined in vanish!"));
+            BotManager.getStafflogChannel().sendMessage("(Staff) "+event.getPlayer().getName()+" has joined in vanish!").queue();
+         }
+         return;
+      }
+      event.setJoinMessage(
+         LegacyComponentSerializer.legacySection()
+            .serialize(MiniMessage.miniMessage().deserialize("<#D49B63>" + event.getPlayer().getName() + " was shipped into the kingdom."))
+      );
+      if (!Keys.inPrison.get(event.getPlayer(), false)) {
+         KingsButBad.roles.put(event.getPlayer(), Role.PEASANT);
+         RoleManager.givePlayerRole(event.getPlayer());
+         BotManager.getInGameChatChannel().sendMessage("**" + DiscordUtils.deformat(event.getPlayer().getName()) + "**" + " was shipped into the kingdom.").queue();
+      } else {
+         event.setJoinMessage(
+            LegacyComponentSerializer.legacySection()
+               .serialize(MiniMessage.miniMessage().deserialize("<gold>" + event.getPlayer().getName() + " was sent back to prison."))
+         );
+         BotManager.getInGameChatChannel().sendMessage("**" + DiscordUtils.deformat(event.getPlayer().getName()) + "**" + " was sent back to prison.").queue();
+         KingsButBad.prisonTimer.put(event.getPlayer(), 2400);
+         KingsButBad.roles.put(event.getPlayer(), Role.PRISONER);
+         RoleManager.givePlayerRole(event.getPlayer());
+      }
+   }
 
-    @EventHandler
-    public void cancelDrop(PlayerMoveEvent event) {
-        if (KingsButBad.roles.get(event.getPlayer()).equals(Role.PRISONER)) {
-            if (event.hasChangedBlock()) {
-                event.getPlayer().getWorld().playSound(event.getPlayer(), Sound.ENTITY_IRON_GOLEM_STEP, 1, 0.75f);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        event.setJoinMessage(LegacyComponentSerializer.legacySection().serialize(miniMessage().deserialize("<#D49B63>" + event.getPlayer().getName() + " was shipped into the kingdom.")));
-        if (event.getPlayer().getPersistentDataContainer().getOrDefault(KingsButBad.wasInPrison, PersistentDataType.INTEGER, 0) == 0) {
-            KingsButBad.roles.put(event.getPlayer(), Role.PEASANT);
-            RoleManager.givePlayerRole(event.getPlayer());
-        } else {
-            event.setJoinMessage(LegacyComponentSerializer.legacySection().serialize(miniMessage().deserialize("<gold>" + event.getPlayer().getName() + " was sent back to prison.")));
-            KingsButBad.prisonTimer.put(event.getPlayer(), 6000);
-            KingsButBad.roles.put(event.getPlayer(), Role.PRISONER);
-            RoleManager.givePlayerRole(event.getPlayer());
-        }
-    }
+   public static void updateTab() {
+      int playercount = 0;
+      for(Player p : Bukkit.getOnlinePlayers())
+         if(!Keys.vanish.get(p, false)) playercount++;
+      String header = CreateText.addColors("\n\n<gold>KingsButBad\n\n<green>Online Players<gray>: <green>" + playercount + "\n");
+      String footer = CreateText.addColors("\n\n<white>IP<gray>: <gold>KingsButBad.Minehut.GG\n\n<dark_gray>Continued by _Aquaotter_");
+      for(Player player : Bukkit.getOnlinePlayers()){
+         player.setPlayerListHeader(header);
+         player.setPlayerListFooter(footer);
+      }
+   }
 }

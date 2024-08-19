@@ -7,13 +7,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class LocationTask extends BukkitRunnable {
-    @Override
-    public void run() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            KingsButBad.datedLocations.put(player, player
-                    .getLocation()
-                    .clone()
-                    .setDirection(new Vector(0, 0, 0)));
-        }
-    }
+   public void run() {
+      for (Player player : Bukkit.getOnlinePlayers())
+         KingsButBad.datedLocations.put(player, player.getLocation().clone().setDirection(new Vector(0, 0, 0)));
+   }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="HttpHistory">
+    <option name="httpHistories">
+      <map>
+        <entry key="0">
+          <value>
+            <ReqHistory>
+              <option name="body" value="" />
+              <option name="contentType" value="application/x-www-form-urlencoded" />
+              <option name="fileNames">
+                <array />
+              </option>
+              <option name="headers">
+                <map />
+              </option>
+              <option name="host" value="http://127.0.0.1" />
+              <option name="id" value="0" />
+              <option name="method" value="GET" />
+              <option name="params">
+                <map />
+              </option>
+              <option name="res" value="404 page not found&#10;" />
+              <option name="time" value="2024-08-15 13:55:17" />
+              <option name="uri" value="servers" />
+            </ReqHistory>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
