@@ -1,0 +1,87 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id "io.papermc.paperweight.userdev" version "1.5.10"
+}
+
+group = 'agmas'
+version = '1.0-SNAPSHOT'
+description = 'The Plugin for KingsButBad'
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'md_5-public'
+        url = 'https://repo.md-5.net/content/groups/public/'
+    }
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        name = "dmulloy2-repo"
+        url = "https://repo.dmulloy2.net/repository/public/"
+    }
+    maven {
+        name = "jitpack"
+        url = "https://jitpack.io/"
+    }
+}
+
+dependencies {
+    paperweight.paperDevBundle("1.20.3-R0.1-SNAPSHOT")
+    implementation "cc.ekblad:4koma:1.2.0"
+    implementation 'net.kyori:adventure-text-minimessage:4.12.0'
+    compileOnly("LibsDisguises:LibsDisguises:10.0.31") {
+        exclude group: "org.spigotmc"
+    }
+    compileOnly 'net.luckperms:api:5.4'
+    implementation "net.dv8tion:JDA:5.0.0-beta.18"
+    compileOnly files("src/main/java/agmas/kingsbutbad/utils/CBP/CBP.jar")
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset "UTF-8"
+
+    filesMatching("plugin.yml") {
+        expand props
+    }
+}
+
+shadowJar {
+    dependencies {}
+
+    def reloc = { String pkg -> relocate(pkg, "agmas.kingsbutbad.libs." + pkg) }
+    reloc("cc.ekblad")
+}
