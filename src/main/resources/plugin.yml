@@ -1,9 +1,9 @@
 name: KingsButBad
 version: '1.0-SNAPSHOT'
-main: agmas.kingsbutbad.KingsButBad
+main: kingsbutbad.kingsbutbad.KingsButBad
 api-version: 1.19
 prefix: KBB
-authors: [ agmas ]
+authors: [ "_Aquaotter_","Agmass"]
 load: POSTWORLD
 depend:
   - LuckPerms
@@ -33,28 +33,28 @@ commands:
   setMoney:
     description: "set's a player's money count"
     usage: /setmoney <player> <money>
-    permission: kbb.setMoney
+    permission: kbb.debug.setMoney
   pay:
     description: "Pay a player money."
     usage: /pay <player> <money>
   swapKingdom:
-    permission: kbb.debug.swap
+    permission: kbb.builder.swap
   serverStats:
     description: "Gives debug info about the Server."
   showBorders:
   maps:
-    permission: kbb.dev.maps
+    permission: kbb.builder.maps
   cells:
     permission: kbb.dev.cells
   builderMode:
     permission: kbb.builder.mode
   setRole:
-    permission: kbb.dev.setrole
+    permission: kbb.debug.setrole
   link:
   unlink:
   whois:
   reloadFilter:
-    permission: kbb.dev.reloadfilter
+    permission: kbb.debug.reloadfilter
   kbbSettings:
     aliases:
       - kbsettings
@@ -78,4 +78,4 @@ commands:
       - show
       - bye
       - leave
-    permission: kbb.staff
+    permission: kbb.staff.vanish

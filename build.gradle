@@ -4,7 +4,7 @@ plugins {
     id "io.papermc.paperweight.userdev" version "1.5.10"
 }
 
-group = 'agmas'
+group = 'kingsbutbad'
 version = '1.0-SNAPSHOT'
 description = 'The Plugin for KingsButBad'
 sourceCompatibility = '16'
@@ -47,7 +47,7 @@ dependencies {
     }
     compileOnly 'net.luckperms:api:5.4'
     implementation "net.dv8tion:JDA:5.0.0-beta.18"
-    compileOnly files("src/main/java/agmas/kingsbutbad/utils/CBP/CBP.jar")
+    compileOnly files("src/main/java/kingsbutbad/kingsbutbad/utils/CBP/CBP.jar")
 }
 
 tasks.withType(JavaCompile) {
