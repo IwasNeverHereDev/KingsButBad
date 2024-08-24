@@ -44,14 +44,13 @@ public final class KingsButBad extends JavaPlugin {
    public static Villager archerJohn;
    public static Villager prisonGuard;
    public static Villager littleJoes;
-   public static Villager mafiaRectuier;
+   public static Villager mafiaRecruiter;
    public static Villager bmPrisonTrader;
    public static HashMap<Player, String> princeGender = new HashMap<>();
    public static Villager servant;
    public static Villager miner;
    public static String kingGender = "King";
    public static String kingGender2 = "King";
-   public static int taxesCount = 25;
    public static int cooldown = 100;
    public static Player lastKing;
    public static Player lastKing2;

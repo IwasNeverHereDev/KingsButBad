@@ -81,37 +81,34 @@ public class RoleTask extends BukkitRunnable {
 
       String playerListName;
       String vanishMsg = "";
-      if(Keys.vanish.get(player, false)){
-         vanishMsg =  vanishMsg = "<red>(VANISH) ";
+      if (Keys.vanish.get(player, false)) {
+         vanishMsg = "<red>(VANISH) ";
       }
+
+      String prefixPart = "";
+      if (prefix != null && !prefix.isEmpty()) {
+         prefixPart = "<dark_gray>[" + prefix + "<dark_gray>] ";
+      }
+
+      String rolePart;
       if (KingsButBad.king2 == player) {
-         playerListName = CreateText.addColors(
-                 vanishMsg+"<dark_gray>["
-                         + (prefix != null ? prefix : "")
-                         + "<dark_gray>] <dark_gray>[<gradient:#FFFF52:#FFBA52><b>"
-                         + KingsButBad.kingGender2.toUpperCase()
-                         + "<dark_gray></b><dark_gray>] <white>")
-                 + KingsButBad.roles.get(player).chatColor
-                 + player.getName();
+         rolePart = "<dark_gray>[<gradient:#FFFF52:#FFBA52><b>"
+                 + KingsButBad.kingGender2.toUpperCase()
+                 + "<dark_gray></b><dark_gray>] ";
       } else if (KingsButBad.roles.get(player).equals(Role.PRINCE)) {
-         playerListName = CreateText.addColors(
-                 vanishMsg+"<dark_gray>["
-                         + (prefix != null ? prefix : "")
-                         + "<dark_gray>] [<gradient:#FFFF52:#FFBA52>"
-                         + KingsButBad.princeGender.get(player).toUpperCase()
-                         + "<dark_gray>] ")
-                 + KingsButBad.roles.get(player).chatColor
-                 + player.getName();
+         rolePart = "[<gradient:#FFFF52:#FFBA52>"
+                 + KingsButBad.princeGender.get(player).toUpperCase()
+                 + "<dark_gray>] ";
       } else {
-         playerListName = CreateText.addColors(
-                 vanishMsg+"<dark_gray>["
-                         + (prefix != null ? prefix : "")
-                         + "<dark_gray>] <dark_gray>[<gradient:#FFFF52:#FFBA52>"
-                         + KingsButBad.roles.get(player).uncompressedColors
-                         + "<dark_gray><dark_gray>] <white>")
-                 + KingsButBad.roles.get(player).chatColor
-                 + player.getName();
+         rolePart = "<dark_gray>[<gradient:#FFFF52:#FFBA52>"
+                 + KingsButBad.roles.get(player).uncompressedColors
+                 + "<dark_gray><dark_gray>] ";
       }
+
+      playerListName = CreateText.addColors(
+              vanishMsg + prefixPart + rolePart
+      ) + KingsButBad.roles.get(player).chatColor
+              + player.getName();
 
       // Set player list name and display name
       player.setPlayerListName(playerListName);

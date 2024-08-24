@@ -20,6 +20,7 @@ public class PlayerJoinListener implements Listener {
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event) {
       updateTab();
+      sendDiscordMessage(event.getPlayer());
       if(Keys.vanish.get(event.getPlayer(), false)) {
          event.setJoinMessage(null);
          for(Player p : Bukkit.getOnlinePlayers()){
@@ -59,5 +60,10 @@ public class PlayerJoinListener implements Listener {
          player.setPlayerListHeader(header);
          player.setPlayerListFooter(footer);
       }
+   }
+   private void sendDiscordMessage(Player p){
+      if(Keys.link.has(p)) return;
+      p.sendMessage(CreateText.addColors("<gray>You haven't linked your <light_blue>Discord <white>account<gray>!"));
+      Bukkit.dispatchCommand(p, "/discord");
    }
 }

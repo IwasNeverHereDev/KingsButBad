@@ -4,6 +4,7 @@ import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.NoNoWords;
 import kingsbutbad.kingsbutbad.commands.Builders.BuilderChatCommand;
+import kingsbutbad.kingsbutbad.commands.Misc.DiscordCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.StaffChatCommand;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
@@ -97,7 +98,7 @@ public class PlayerChatListener implements Listener {
                if(KingsButBad.king2 == player && role == Role.KING)
                   rolePrefix = KingsButBad.kingGender2;
             }
-            BotManager.getInGameChatChannel().sendMessage("**" + prefix + "** **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(message) + "`").queue();
+            BotManager.getInGameChatChannel().sendMessage("**" + prefix + "** **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(DiscordUtils.deformat(message)) + "`").queue();
             this.handleLocalChat(event, message);
          }
       }

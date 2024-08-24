@@ -262,9 +262,17 @@ public class MiscTask extends BukkitRunnable {
          Bukkit.getWorld("world").setTime(Bukkit.getWorld("world").getTime() + 1L);
       }
 
-      bossbar.setProgress(
-         (double)(((float)Bukkit.getWorld("world").getTime() - (float)this.timer1.intValue()) / ((float)this.timer2.intValue() - (float)this.timer1.intValue()))
-      );
+      int currentTime = (int) Bukkit.getWorld("world").getTime();
+      int startTime = this.timer1.intValue();
+      int endTime = this.timer2.intValue();
+
+      if (endTime > startTime) {
+         double progress = (double)(currentTime - startTime) / (endTime - startTime);
+         progress = Math.max(0.0, Math.min(1.0, progress));
+         bossbar.setProgress(progress);
+      } else {
+         bossbar.setProgress(0.0);
+      }
 
       for (Player player : Bukkit.getOnlinePlayers()) {
          if(!Keys.money.has(player))

@@ -49,7 +49,7 @@ public class kbbSettingsCommand implements CommandExecutor {
     private List<String> getChatSelectedLore(Player p){
         List<String> lore = new ArrayList<>();
         lore.add("");
-        if(Keys.selectedChat.get(p, false))
+        if(!Keys.selectedChat.get(p, false))
             lore.add("<gray>Click to Select <white>Builder Chat <gray>Shortcut!");
         else
             lore.add("<gray>Click to Select <white>Staff Chat <gray>Shortcut!");

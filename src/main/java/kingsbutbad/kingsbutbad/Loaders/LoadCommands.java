@@ -7,6 +7,7 @@ import kingsbutbad.kingsbutbad.commands.Builders.BuilderModeCommand;
 import kingsbutbad.kingsbutbad.commands.Builders.MapsCommand;
 import kingsbutbad.kingsbutbad.commands.Builders.SwapKingdomCommand;
 import kingsbutbad.kingsbutbad.commands.Dev.*;
+import kingsbutbad.kingsbutbad.commands.Misc.DiscordCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.LinkCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.UnLinkCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.StaffChatCommand;

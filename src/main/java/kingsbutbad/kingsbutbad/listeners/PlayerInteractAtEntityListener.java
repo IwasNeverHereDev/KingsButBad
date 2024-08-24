@@ -134,7 +134,7 @@ public class PlayerInteractAtEntityListener implements Listener {
                      inv.setItem(16, key);
                      event.getPlayer().openInventory(inv);
                   }
-                  if(event.getRightClicked().equals(KingsButBad.mafiaRectuier)){
+                  if(event.getRightClicked().equals(KingsButBad.mafiaRecruiter)){
                      if(KingsButBad.roles.get(event.getPlayer()).isPowerful) return;
                      Inventory inv = Bukkit.createInventory(null, 9*3, CreateText.addColors("<gold>Outlaw Recruiter"));
                      ItemStack dye = new ItemStack(Material.ORANGE_DYE);

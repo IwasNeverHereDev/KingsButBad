@@ -104,7 +104,7 @@ public class KingdomsLoader {
       KingsButBad.littleJoes = createVillager(kingdom.getLittleJoesLocation(), "<blue>Little Joes");
       KingsButBad.miner = createVillager(kingdom.getMinerLocation(), "<gold>Miner Joseph");
       KingsButBad.servant = createVillager(kingdom.getServantLocation(), "<gray>Servant Application");
-      KingsButBad.mafiaRectuier = createVillager(kingdom.getMafiaRecruiter(), "<gold>Outlaw Recruiter");
+      KingsButBad.mafiaRecruiter = createVillager(kingdom.getMafiaRecruiter(), "<gold>Outlaw Recruiter");
       KingsButBad.bmPrisonTrader = createVillager(kingdom.getBmPrisonTrader(), "<gold>Prison Trader");
    }
 }
