@@ -31,6 +31,7 @@ public class LoadEvents {
       registerEvent(new PlayerPickArrowListener());
       registerEvent(new PlayerPickItemListener());
       registerEvent(new CBPListener());
+      registerEvent(new PlayerAdvancementCriterionGrantListener());
    }
    private static void registerEvent(Listener listener){
       Bukkit.getPluginManager().registerEvents(listener, KingsButBad.pl);

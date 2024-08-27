@@ -24,14 +24,17 @@ public class kbbSettingsCommand implements CommandExecutor {
         if(!(commandSender instanceof Player p)) return true;
         Inventory inv = Bukkit.createInventory(null, 9*3, CreateText.addColors("<gold>KingsButBad Settings"));
         boolean isAutoShoutEnabled = Keys.isAutoShoutEnabled.get(p, true);
+        boolean isRolePlayerTimeDisplayed = Keys.displayRoleStats.get(p, false);
         List<String> loreShout = new ArrayList<>();
-        loreShout.add(isEnabled(isAutoShoutEnabled));
-        ItemStack comingSoon = clearData(Item.createItem(Material.BARRIER, "<red>Coming soon", new ArrayList<>(), null));
+        loreShout.add(isEnabled(isAutoShoutEnabled, "Auto Shout"));
+        List<String> loreRolePlaytime = new ArrayList<>();
+        loreRolePlaytime.add(isEnabled(isRolePlayerTimeDisplayed, "Auto Shout"));
+        ItemStack displayPlaytimeItem = clearData(Item.createItem(Material.CLOCK, "<yellow>Display Role Playtime", loreRolePlaytime, null));
         ItemStack shoutItem = clearData(Item.createItem(Material.BLACK_CANDLE, "<yellow>Auto Shout", loreShout, null));
         ItemStack chatItem = clearData(Item.createItem(Material.PAPER, "<yellow>Chat Selected", getChatSelectedLore(p), null));
         inv.setItem(10,shoutItem);
         inv .setItem(13, chatItem);
-        inv.setItem(16, comingSoon);
+        inv.setItem(16, displayPlaytimeItem);
         p.openInventory(inv);
         return false;
     }
@@ -42,14 +45,14 @@ public class kbbSettingsCommand implements CommandExecutor {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
-    private String isEnabled(boolean isEnabled){
-        if(!isEnabled) return "\n<gray>Click to <green>Enable <gray>Auto Shout!\n";
-        return "\n<gray>Click to <red>Disable <gray>Auto Shout!\n";
+    private String isEnabled(boolean isEnabled, String setting){
+        if(!isEnabled) return "\n<gray>Click to <green>Enable <gray>"+setting+"!\n";
+        return "\n<gray>Click to <red>Disable <gray>"+setting+"!\n";
     }
     private List<String> getChatSelectedLore(Player p){
         List<String> lore = new ArrayList<>();
         lore.add("");
-        if(!Keys.selectedChat.get(p, false))
+        if(Keys.selectedChat.get(p, false))
             lore.add("<gray>Click to Select <white>Builder Chat <gray>Shortcut!");
         else
             lore.add("<gray>Click to Select <white>Staff Chat <gray>Shortcut!");

@@ -344,6 +344,10 @@ public class MiscTask extends BukkitRunnable {
          }
 
          if(KingsButBad.isInside(player, KingdomsLoader.activeKingdom.getBmPrison1(), KingdomsLoader.activeKingdom.getBmPrison2())){
+            for(Entity p : player.getPassengers()) {
+               player.getPassengers().remove(p);
+               p.teleport(KingdomsLoader.activeKingdom.getBlackMarketExitPrisoner());
+            }
             player.teleport(KingdomsLoader.activeKingdom.getBlackMarketExitPrisoner());
          }
 

@@ -57,6 +57,7 @@ public final class KingsButBad extends JavaPlugin {
    public static HashMap<Player, Integer> currentZone = new HashMap<>();
    public static HashMap<Player, Integer> thirst = new HashMap<>();
    public static HashMap<Player, Boolean> soundWaves = new HashMap<>();
+   public static boolean isInterocmEnabled = false;
    public static CustomBansPlus cbp;
 
    public void onEnable() {
@@ -72,6 +73,7 @@ public final class KingsButBad extends JavaPlugin {
       LoadKingdoms.init();
       LoadTasks.init();
       NoNoWords.reload();
+      RemoveAdvancements.init();
    }
 
    public void onDisable() {

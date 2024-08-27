@@ -19,6 +19,7 @@ public class RoleTask extends BukkitRunnable {
    public void run() {
       for (Player player : Bukkit.getOnlinePlayers()) {
          if (player == null) continue; // Skip if player is null
+         addTicksToRolesTimer(player);
 
          // Assign default role if not already assigned
          KingsButBad.roles.putIfAbsent(player, Role.PEASANT);
@@ -62,6 +63,21 @@ public class RoleTask extends BukkitRunnable {
             KingsButBad.roles.put(player, Role.PEASANT);
             RoleManager.givePlayerRole(player);
          }
+      }
+   }
+   private void addTicksToRolesTimer(Player p){
+      switch (KingsButBad.roles.getOrDefault(p, Role.PEASANT)){
+         case PRISONER -> Keys.PRISONERTicks.addDouble(p, 1.0);
+         case CRIMINAl -> Keys.CRIMINALTicks.addDouble(p, 1.0);
+         case KING -> Keys.KINGTicks.addDouble(p, 1.0);
+         case PRINCE -> Keys.PRINCETicks.addDouble(p, 1.0);
+         case PEASANT -> Keys.PEASANTTicks.addDouble(p, 1.0);
+         case PRISON_GUARD -> Keys.PRISON_GUARDTicks.addDouble(p, 1.0);
+         case BODYGUARD -> Keys.BODYGUARDTicks.addDouble(p, 1.0);
+         case SERVANT -> Keys.SERVANTTicks.addDouble(p, 1.0);
+         case KNIGHT -> Keys.KNIGHTTicks.addDouble(p, 1.0);
+         case OUTLAW -> Keys.OUTLAWTicks.addDouble(p, 1.0);
+         default -> p.sendActionBar("Your not going up Contact _Aquaotter_ About this!");
       }
    }
 

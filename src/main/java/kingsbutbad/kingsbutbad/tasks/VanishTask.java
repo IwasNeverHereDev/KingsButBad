@@ -11,9 +11,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class VanishTask extends BukkitRunnable {
     @Override
     public void run() {
-        PlayerJoinListener.updateTab();
-        for(Player p : Bukkit.getOnlinePlayers())
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            PlayerJoinListener.updateTab(p);
             vanishPlayer(p);
+        }
     }
     private void vanishPlayer(Player p){
         if(!Keys.vanish.get(p, false)) return;

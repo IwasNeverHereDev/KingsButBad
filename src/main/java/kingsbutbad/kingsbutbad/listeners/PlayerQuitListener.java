@@ -7,6 +7,7 @@ import kingsbutbad.kingsbutbad.utils.DiscordUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +26,8 @@ public class PlayerQuitListener implements Listener {
             }
             return;
         }
+        for(Entity entity : event.getPlayer().getPassengers())
+            event.getPlayer().getPassengers().remove(entity);
         event.setQuitMessage(
                 LegacyComponentSerializer.legacySection()
                         .serialize(MiniMessage.miniMessage().deserialize("<#D49B63>" + event.getPlayer().getName() + " ran away somewhere else..."))

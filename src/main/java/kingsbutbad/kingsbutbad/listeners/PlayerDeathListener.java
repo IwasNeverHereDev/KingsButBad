@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.listeners;
 
+import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
@@ -19,6 +20,9 @@ public class PlayerDeathListener implements Listener {
    @EventHandler
    public void onPlayerDeathEvent(PlayerDeathEvent event) {
       BotManager.getInGameChatChannel().sendMessage(DiscordUtils.deformat(ChatColor.stripColor(event.getDeathMessage()))).queue();
+      event.setDeathMessage(ChatColor.stripColor(event.getDeathMessage()));
+      if(event.getPlayer().equals(KingsButBad.king))
+         AdvancementManager.giveAdvancement(event.getPlayer().getKiller(), "royalassassin");
       if (event.getPlayer().equals(KingsButBad.king)) {
          if (event.getPlayer().getKiller() != null && !RoleManager.isKingAtAll(event.getPlayer())) {
             KingsButBad.king = null;

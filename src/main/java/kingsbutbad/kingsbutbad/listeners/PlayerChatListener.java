@@ -29,6 +29,10 @@ public class PlayerChatListener implements Listener {
    @EventHandler
    public void onPlayerChatEvent(PlayerChatEvent event) {
       Player player = event.getPlayer();
+      if(KingsButBad.cbp.getDatabase().isPlayerMuted(player.getUniqueId())) {
+         event.setCancelled(true);
+         return;
+      }
       String message = event.getMessage();
       Role playerRole = KingsButBad.roles.getOrDefault(player, Role.PEASANT);
       String prefix = "";
@@ -84,7 +88,7 @@ public class PlayerChatListener implements Listener {
             return;
          }
 
-         if (this.isKingInIntercomZone(player)) {
+         if (this.isKingInIntercomZone(player) && KingsButBad.isInterocmEnabled) {
             this.broadcastIntercomMessage(player, message);
             event.setCancelled(true);
          } else {
@@ -125,7 +129,7 @@ public class PlayerChatListener implements Listener {
             case PRINCE:
                message = message.replace(
                   p.getName(),
-                  CreateText.addColors("<gradient:#FFFF52:#FFBA52>" + KingsButBad.princeGender.get(p).toUpperCase() + p.getName())
+                  CreateText.addColors("<gradient:#FFFF52:#FFBA52>" + KingsButBad.princeGender.get(p).toUpperCase() + " " + p.getName())
                      + KingsButBad.roles.get(p).chatColor
                );
                break;

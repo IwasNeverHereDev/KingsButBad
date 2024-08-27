@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -52,6 +53,14 @@ public class PlayerInteractListener implements Listener {
       }
 
       if (event.getClickedBlock() != null) {
+         if(event.getClickedBlock().getType().equals(Material.BLACK_CANDLE)){
+            if(KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT) == Role.KING || KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT) == Role.PRINCE){
+               KingsButBad.isInterocmEnabled = !KingsButBad.isInterocmEnabled;
+               event.getPlayer().sendMessage(CreateText.addColors("<green>The Intercom being enabled is "+KingsButBad.isInterocmEnabled+" now!"));
+               event.setCancelled(true);
+               return;
+            }
+         }
          ArrayList<Material> untouchables = new ArrayList<Material>() {
          };
          untouchables.add(Material.SWEET_BERRY_BUSH);

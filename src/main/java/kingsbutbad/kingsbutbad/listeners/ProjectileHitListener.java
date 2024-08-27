@@ -16,11 +16,6 @@ public class ProjectileHitListener implements Listener {
    public void onProjectileHit(ProjectileHitEvent event) {
       if (event.getHitEntity() != null) {
          if (event.getEntity().getShooter() instanceof Player shooter && event.getHitEntity() instanceof Player target) {
-            if(Keys.vanish.get(shooter, false)) {
-               shooter.sendMessage(CreateText.addColors("<gray>You can't shoot a bow in Vanish!"));
-               event.setCancelled(true);
-               return;
-            }
             Role shooterRole = KingsButBad.roles.get(shooter);
             Role targetRole = KingsButBad.roles.get(target);
             if (shooterRole.equals(Role.PEASANT) && targetRole.isPowerful) {

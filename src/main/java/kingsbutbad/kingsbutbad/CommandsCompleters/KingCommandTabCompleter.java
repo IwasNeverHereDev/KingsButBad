@@ -14,7 +14,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 public class KingCommandTabCompleter implements TabCompleter {
-   private static final List<String> COMMANDS = Arrays.asList("help", "gender", "knight", "fire", "prisonguard", "bodyguard", "sidekick", "prince", "taxes");
+   private static final List<String> COMMANDS = Arrays.asList("help", "gender", "knight", "fire", "prisonguard", "bodyguard", "sidekick", "prince");
 
    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
       if (!(sender instanceof Player player)) {

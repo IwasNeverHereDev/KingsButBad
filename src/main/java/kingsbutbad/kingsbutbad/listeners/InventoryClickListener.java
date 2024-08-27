@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.listeners;
 
+import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.Kingdom.Kingdom;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
@@ -68,16 +69,21 @@ public class InventoryClickListener implements Listener {
             return;
          }
          if(event.getCurrentItem().getType().equals(Material.PAPER)){
-            Keys.selectedChat.set(event.getWhoClicked(), !Keys.selectedChat.get(event.getWhoClicked(), false));
             String chat;
             if(!Keys.selectedChat.get(event.getWhoClicked(), false))
                chat = "<white>Builder Chat<gray>";
             else
                chat = "<white>Staff Chat<gray>";
             event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Your Selected Chat has been set to "+chat+" Shortcut!"));
-            return;
+            Keys.selectedChat.set(event.getWhoClicked(), !Keys.selectedChat.get(event.getWhoClicked(), false));
          }
-         Bukkit.dispatchCommand(event.getWhoClicked(), "/kbbsettings");
+         if(event.getCurrentItem().getType().equals(Material.CLOCK)){
+            Keys.displayRoleStats.set(event.getWhoClicked(), !Keys.displayRoleStats.get(event.getWhoClicked(), false));
+            event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Your Displayed Role Stats settings (Tab) has been set to "+Keys.displayRoleStats.get(event.getWhoClicked(), false)+"!"));
+         }
+         PlayerJoinListener.updateTab((Player) event.getWhoClicked());
+         Bukkit.dispatchCommand(event.getWhoClicked(), "kbbsettings");
+         return;
       }
       if (event.getView().getTitle().equals(CreateText.addColors("<gold>Prisoner Trader"))) {
          event.setCancelled(true);
@@ -118,6 +124,7 @@ public class InventoryClickListener implements Listener {
                KingsButBad.prisonTimer.put(p, KingsButBad.prisonTimer.getOrDefault(p, 0) - 25*20);
                if(KingsButBad.prisonTimer.getOrDefault(p, 0) < 0) KingsButBad.prisonTimer.remove(p);
                p.sendMessage(CreateText.addColors("<gray>You have purchased a Less Time!"));
+               AdvancementManager.giveAdvancement(p, "undertable");
                return;
 
             } else {
@@ -158,7 +165,7 @@ public class InventoryClickListener implements Listener {
                card.setItemMeta(cardm);
                p.getInventory().addItem(card);
                p.sendMessage(CreateText.addColors("<gray>You have purchased a Make-Shift Key!"));
-
+               AdvancementManager.giveAdvancement(p, "undertable");
             } else {
                p.sendMessage(CreateText.addColors("<gray>You need <white>35 Coal<gray> to buy a Make-Shift Key!"));
             }
@@ -172,6 +179,7 @@ public class InventoryClickListener implements Listener {
          if (KingsButBad.roles.get(p) == Role.PEASANT) {
             Bukkit.broadcastMessage(CreateText.addColors("<gold>" + p.getName() + " has became a Outlaw!"));
             p.sendMessage(CreateText.addColors("<gray>Click Red Dye again to refresh kit!"));
+            AdvancementManager.giveAdvancement(p, "outlaw");
          }
          KingsButBad.roles.put(p, Role.OUTLAW);
          Bukkit.getScheduler().scheduleSyncDelayedTask(KingsButBad.pl, () -> {
@@ -303,6 +311,7 @@ public class InventoryClickListener implements Listener {
             if (Keys.money.get(p, 0.0) >= 150.0) {
                Keys.money.subtractDouble(p, 150.0);
                p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.GOLDEN_APPLE)});
+               AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
 
@@ -395,6 +404,7 @@ public class InventoryClickListener implements Listener {
             if (Keys.money.get(p, 0.0) >= 150.0) {
                Keys.money.subtractDouble(p, 150.0);
                p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.STONE_AXE)});
+               AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
 
@@ -500,6 +510,7 @@ public class InventoryClickListener implements Listener {
                cardm.setDisplayName(ChatColor.BLUE + "Keycard");
                card.setItemMeta(cardm);
                p.getInventory().addItem(new ItemStack[]{card});
+               AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
 
@@ -586,7 +597,7 @@ public class InventoryClickListener implements Listener {
                                           Player p = (Player)event.getWhoClicked();
                                           p.setCooldown(Material.WOODEN_HOE, 20);
                                           p.playSound(p, Sound.ENTITY_ITEM_PICKUP, 1.0F, 1.0F);
-                                          Keys.money.addDouble(p, 50.0);
+                                          Keys.money.addDouble(p, 5.0);
                                        },
                                        5
                                     );

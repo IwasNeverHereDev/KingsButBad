@@ -29,7 +29,7 @@ public class FailsafeTask extends BukkitRunnable {
          piranha.setSilent(true);
          piranha.setGravity(false);
          piranha.setCustomName("Piranha");
-         p.damage(1.0, piranha);
+         p.damage(5, piranha);
          piranha.remove();
       }
    }

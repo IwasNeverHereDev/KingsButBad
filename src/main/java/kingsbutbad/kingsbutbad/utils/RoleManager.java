@@ -160,6 +160,7 @@ public class RoleManager {
          p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.ARROW, 64)});
          p.teleport(KingdomsLoader.activeKingdom.getKingSpawn());
          Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Monarchs").addPlayer(p);
+         Bukkit.getScheduler().runTaskLater(KingsButBad.getPlugin(KingsButBad.class), () -> p.teleport(KingdomsLoader.activeKingdom.getKingSpawn()), 10L);
       } else if (p != KingsButBad.king && p != KingsButBad.king2) {
          if (KingsButBad.roles.get(p) == Role.KNIGHT) {
             ItemStack diamondchest = new ItemStack(Material.IRON_CHESTPLATE);

@@ -10,6 +10,7 @@ import kingsbutbad.kingsbutbad.commands.Dev.*;
 import kingsbutbad.kingsbutbad.commands.Misc.DiscordCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.LinkCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.UnLinkCommand;
+import kingsbutbad.kingsbutbad.commands.Staff.ClearChatCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.StaffChatCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.VanishCommand;
 import org.bukkit.command.CommandExecutor;
@@ -39,6 +40,10 @@ public class LoadCommands {
       setExecutor("staffChat", new StaffChatCommand());
       setExecutor("builderChat", new BuilderChatCommand());
       setExecutor("vanish", new VanishCommand());
+      setExecutor("clearchat", new ClearChatCommand());
+      setExecutor("rules", new RulesCommand());
+      setExecutor("reboot", new RebootCommand());
+      setExecutor("playtime", new PlaytimeCommand());
    }
 
    private static void setExecutor(String cmd, CommandExecutor executor) {

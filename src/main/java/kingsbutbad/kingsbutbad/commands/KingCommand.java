@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.commands;
 
+import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.tasks.MiscTask;
@@ -66,8 +67,12 @@ public class KingCommand implements CommandExecutor {
                RoleManager.showKingMessages(p, Role.KING.objective);
                RoleManager.givePlayerRole(p);
                KingsButBad.kingGender = "King";
+               AdvancementManager.giveAdvancement(p, "king");
 
                for (Player pe : Bukkit.getOnlinePlayers()) {
+                  if(pe == KingsButBad.king) continue;
+                  KingsButBad.roles.put(pe, Role.PEASANT);
+                  RoleManager.givePlayerRole(pe);
                   pe.sendTitle(
                      CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>KING " + p.getName().toUpperCase()), ChatColor.GREEN + "is your new overlord!"
                   );
@@ -248,7 +253,7 @@ public class KingCommand implements CommandExecutor {
                                                 + RoleManager.getKingGender(p)
                                                 + " "
                                                 + p.getName().toUpperCase()
-                                                + "</b><blue> you, have invited "+sender+" to become a <yellow>The Prince!"
+                                                + "</b><blue> you, have invited "+ ((Player) sender).getPlayer().getName() +" to become a <yellow>The Prince!"
                                 )
                         );
                      } else {

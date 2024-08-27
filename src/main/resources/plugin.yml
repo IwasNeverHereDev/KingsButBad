@@ -79,3 +79,9 @@ commands:
       - bye
       - leave
     permission: kbb.staff.vanish
+  clearchat:
+    permission: kbb.staff.clearchat
+  rules:
+  reboot:
+    permission: kbb.dev.reboot
+  playtime:

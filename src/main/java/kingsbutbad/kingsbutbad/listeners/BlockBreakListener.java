@@ -25,6 +25,11 @@ public class BlockBreakListener implements Listener {
          event.setCancelled(true);
          KingsButBad.prisonQuota.put(event.getPlayer(), KingsButBad.prisonQuota.get(event.getPlayer()) - 1);
          event.getBlock().setType(Material.DEEPSLATE);
+         if(KingsButBad.roles.get(event.getPlayer()).equals(Role.PRISONER)){
+            KingsButBad.prisonTimer.put(event.getPlayer(), KingsButBad.prisonTimer.getOrDefault(event.getPlayer(), 0) - 10);
+            event.getPlayer().sendTitle("", CreateText.addColors("<gray>PrisonTime... -10s."), 0, 1,0);
+            event.getPlayer().getInventory().addItem(new ItemStack(Material.COAL));
+         }
          Bukkit.getScheduler()
             .runTaskLater(
                KingsButBad.getPlugin(KingsButBad.class),
@@ -35,11 +40,6 @@ public class BlockBreakListener implements Listener {
                      KingsButBad.king.sendMessage(ChatColor.GREEN + "+5$ Prisoner mined a block");
                      KingsButBad.king2.sendMessage(ChatColor.GREEN + "+5$ Prisoner mined a block");
                      Keys.money.addDouble(KingsButBad.king2, 5.0);
-                  }
-                  if(KingsButBad.roles.get(event.getPlayer()).equals(Role.PRISONER)){
-                     KingsButBad.prisonTimer.put(event.getPlayer(), KingsButBad.prisonTimer.getOrDefault(event.getPlayer(), 0) - 10);
-                     event.getPlayer().sendTitle("", CreateText.addColors("<gray>PrisonTime... -10s."), 0, 1,0);
-                     event.getPlayer().getInventory().addItem(new ItemStack(Material.COAL));
                   }
                },
                80L
