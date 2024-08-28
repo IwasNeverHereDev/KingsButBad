@@ -1,6 +1,7 @@
 package kingsbutbad.kingsbutbad;
 
 import kingsbutbad.kingsbutbad.Discord.BotManager;
+import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReactMessageEvent;
 import kingsbutbad.kingsbutbad.Loaders.*;
 import kingsbutbad.kingsbutbad.utils.Role;
 import me.coralise.spigot.CustomBansPlus;
@@ -8,18 +9,23 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public final class KingsButBad extends JavaPlugin {
    public static KingsButBad pl;
    public static Player king = null;
+   public static int raidCooldown = -1;
+   public static boolean isRaidActive = false;
+   public static List<Entity> raidEnemies = new ArrayList<>();
+   public static BossBar raidBossbar = null;
+   public static int raidStartedEnmeiesCount = 0;
    public static Player king2 = null;
    public static HashMap<Player, Role> roles = new HashMap<>();
    public static Boolean joesUnlocked = false;

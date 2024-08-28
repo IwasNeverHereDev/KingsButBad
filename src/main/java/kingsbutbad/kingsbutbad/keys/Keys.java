@@ -1,7 +1,6 @@
 package kingsbutbad.kingsbutbad.keys;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
-import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +14,7 @@ public interface Keys {
     Key<Boolean> isAutoShoutEnabled = new Key<>("isAutoShoutEnabled", new NamespacedKey(KingsButBad.pl, "isAutoShoutEnabled"), KeyTypes.BOOLEAN);
     Key<Boolean> selectedChat = new Key<>("selectedChat", new NamespacedKey(KingsButBad.pl, "selectedChat"), KeyTypes.BOOLEAN);
     Key<Boolean> displayRoleStats = new Key<>("displayRoleStats", new NamespacedKey(KingsButBad.pl, "displayRoleStats"), KeyTypes.BOOLEAN);
+    Key<Boolean> showMineMessages = new Key<>("showMineMessages", new NamespacedKey(KingsButBad.pl, "showMineMessages"), KeyTypes.BOOLEAN);
     // Builders
     Key<Boolean> isBuilderMode = new Key<>("builder", new NamespacedKey(KingsButBad.pl, "builder"), KeyTypes.BOOLEAN);
     // Staff

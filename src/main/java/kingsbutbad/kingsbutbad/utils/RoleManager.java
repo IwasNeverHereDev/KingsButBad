@@ -410,6 +410,7 @@ public class RoleManager {
          p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.ARROW, 64)});
          p.teleport(KingdomsLoader.activeKingdom.getKingSpawn());
          Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Monarchs").addPlayer(p);
+         Bukkit.getScheduler().runTaskLater(KingsButBad.getPlugin(KingsButBad.class), () -> p.teleport(KingdomsLoader.activeKingdom.getKingSpawn()), 10L);
       }
    }
    public static boolean isSettable(ItemStack itemStack){

@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.Discord;
 
+import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReactMessageEvent;
 import kingsbutbad.kingsbutbad.Discord.DiscordEvents.SLashCommandInteractionEvent;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReceiveMessageEvent;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -23,6 +25,9 @@ public class BotManager {
    private static TextChannel stafflogChannel;
    private static TextChannel builderChannel;
    private static ForumChannel reportChannel;
+   private static Role updateRole;
+   private static Role startRole;
+   private static Role stopRole;
    private static Guild guild;
 
    public static void init() {
@@ -38,6 +43,7 @@ public class BotManager {
                     .enableCache(CacheFlag.VOICE_STATE)
                     .setActivity(Activity.playing("Playing KingsButBad.minehut.gg!"))
                     .addEventListeners(new SLashCommandInteractionEvent())
+                    .addEventListeners(new ReactMessageEvent())
                     .build();
             bot.awaitReady();
 
@@ -49,6 +55,9 @@ public class BotManager {
             builderChannel = getChannelById("BuilderLogChannelID");
             guild = getGuildById("GuildID");
             reportChannel = getFormChannelById("ReportForumChannelID");
+            updateRole = getRoleById("UpdateRoleID");
+            startRole = getRoleById("StartRoleID");
+            stopRole = getRoleById("StopRoleID");
 
          } catch (Exception e) {
             logError("An error occurred while initializing the Discord bot.", e);
@@ -77,6 +86,14 @@ public class BotManager {
          logSevere("Channel not found! [" + configKey + ": CONFIG.YML]");
       }
       return channel;
+   }
+   private static Role getRoleById(String configKey) {
+      String roleId = getConfigString(configKey, "0");
+      Role role = bot.getRoleById(roleId);
+      if (role == null) {
+         logSevere("Role not found! [" + configKey + ": CONFIG.YML]");
+      }
+      return role;
    }
    private static ForumChannel getFormChannelById(String configKey) {
       String channelId = getConfigString(configKey, "0");
@@ -122,6 +139,18 @@ public class BotManager {
 
    public static Guild getGuild() {
       return guild;
+   }
+
+   public static Role getStartRole() {
+      return startRole;
+   }
+
+   public static Role getUpdateRole() {
+      return updateRole;
+   }
+
+   public static Role getStopRole() {
+      return stopRole;
    }
 
    private static String getConfigString(String path, String defaultValue) {

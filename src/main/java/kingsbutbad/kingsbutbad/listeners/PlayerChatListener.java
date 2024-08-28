@@ -37,13 +37,13 @@ public class PlayerChatListener implements Listener {
       Role playerRole = KingsButBad.roles.getOrDefault(player, Role.PEASANT);
       String prefix = "";
       if (KingsButBad.api.getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix() != null) {
-         prefix = "["
+         prefix = "**"+"["
             + ChatColor.stripColor(
                ChatColor.translateAlternateColorCodes(
                   '&', Objects.requireNonNull(KingsButBad.api.getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix())
                )
             )
-            + "] ";
+            + "]** ";
       }
       message = playerRole.chatColor + message;
       if (KingsButBad.king != null) {
@@ -102,7 +102,7 @@ public class PlayerChatListener implements Listener {
                if(KingsButBad.king2 == player && role == Role.KING)
                   rolePrefix = KingsButBad.kingGender2;
             }
-            BotManager.getInGameChatChannel().sendMessage("**" + prefix + "** **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(DiscordUtils.deformat(message)) + "`").queue();
+            BotManager.getInGameChatChannel().sendMessage(prefix + " **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(DiscordUtils.deformat(message)) + "`").queue();
             this.handleLocalChat(event, message);
          }
       }
@@ -141,6 +141,7 @@ public class PlayerChatListener implements Listener {
                break;
             case OUTLAW:
                message = message.replace(p.getName(), CreateText.addColors("<gold>Outlaw " + p.getName()) + KingsButBad.roles.get(p).chatColor);
+               break;
             case CRIMINAl:
                message = message.replace(p.getName(), CreateText.addColors("<red>Criminal " + p.getName()) + KingsButBad.roles.get(p).chatColor);
                break;
@@ -195,20 +196,22 @@ public class PlayerChatListener implements Listener {
          p.playSound(p, Sound.ENTITY_BEE_LOOP_AGGRESSIVE, 1.0F, 0.75F);
          p.sendTitle(ChatColor.BLUE + "INTERCOM " + ChatColor.WHITE + ">>", ChatColor.GOLD + message);
          p.sendMessage(ChatColor.BLUE + "INTERCOM " + ChatColor.WHITE + ">> " + ChatColor.GOLD + message);
-         EmbedBuilder embed = new EmbedBuilder();
-         embed.setColor(Color.BLUE); // Set the color of the embed
-         embed.setTitle("**INTERCOM**"); // Title of the embed
-         embed.setDescription("`" + DiscordUtils.deformat(ChatColor.stripColor(message)) + "`"); // Main message content
-         embed.setFooter("sent by "+DiscordUtils.deformat(executor.getName()), null); // Optional footer
-
-         BotManager.getInGameChatChannel().sendMessageEmbeds(embed.build()).queue();;
-
       }
+      EmbedBuilder embed = new EmbedBuilder();
+      embed.setColor(Color.BLUE); // Set the color of the embed
+      embed.setTitle("**INTERCOM**"); // Title of the embed
+      embed.setDescription("`" + DiscordUtils.deformat(ChatColor.stripColor(message)) + "`"); // Main message content
+      embed.setFooter("sent by "+DiscordUtils.deformat(executor.getName()), null); // Optional footer
+      BotManager.getInGameChatChannel().sendMessageEmbeds(embed.build()).queue();;
    }
 
    private void handleLocalChat(PlayerChatEvent event, String message) {
       Player player = event.getPlayer();
       int hearCount = 0;
+      if(Keys.isAutoShoutEnabled.get(player, true)) {
+         Bukkit.getOnlinePlayers().forEach(px -> this.sendShoutMessage(player, px, message));
+         return;
+      }
 
       for (Player p : Bukkit.getOnlinePlayers()) {
          if (!p.equals(player)) {

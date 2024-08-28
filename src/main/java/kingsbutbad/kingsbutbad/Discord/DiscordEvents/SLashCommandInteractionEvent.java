@@ -64,8 +64,8 @@ public class SLashCommandInteractionEvent extends ListenerAdapter {
                     playerCount++;
                     players += playerlistname+"\n";
                 }
-                vanishedPlayers += "\n(VISIBLE TO STAFF ONLY)\n";
             }
+            vanishedPlayers += "\n(VISIBLE TO STAFF ONLY)\n";
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.addField("**Online Players**: `"+playerCount+"`", players, false);
             if(event.getMember().hasPermission(Permission.MESSAGE_MANAGE))

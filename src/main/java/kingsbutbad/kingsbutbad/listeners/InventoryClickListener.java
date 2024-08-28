@@ -13,6 +13,7 @@ import kingsbutbad.kingsbutbad.utils.Role;
 import kingsbutbad.kingsbutbad.utils.RoleManager;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -67,6 +68,10 @@ public class InventoryClickListener implements Listener {
             Keys.isAutoShoutEnabled.set(event.getWhoClicked(), !Keys.isAutoShoutEnabled.get(event.getWhoClicked(), true));
             event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Auto Shout has been set to "+Keys.isAutoShoutEnabled.get(event.getWhoClicked(), false))+"!");
             return;
+         }
+         if(event.getCurrentItem().getType().equals(Material.COAL)){
+            Keys.showMineMessages.set(event.getWhoClicked(), !Keys.showMineMessages.get(event.getWhoClicked(), true));
+            event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Show Mine Messages has been set to "+Keys.showMineMessages.get(event.getWhoClicked(), false))+"!");
          }
          if(event.getCurrentItem().getType().equals(Material.PAPER)){
             String chat;
@@ -260,7 +265,7 @@ public class InventoryClickListener implements Listener {
             if (Keys.money.get(p, 0.0) >= 150.0) {
                Keys.money.subtractDouble(p, 150.0);
                LivingEntity le = (LivingEntity)Bukkit.getWorld("world")
-                  .spawnEntity(new Location(Bukkit.getWorld("world"), -117.22, -57.0, -10.131), EntityType.ZOMBIE);
+                  .spawnEntity(KingdomsLoader.activeKingdom.getSpawn(),EntityType.ZOMBIE);
                le.getEquipment().setHelmet(new ItemStack(Material.DIAMOND_HELMET));
                le.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
                le.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
@@ -448,14 +453,16 @@ public class InventoryClickListener implements Listener {
                ItemMeta im = event.getCurrentItem().getItemMeta();
                if (im.getDisplayName().equals(ChatColor.GOLD + "+1 Power Level")
                   && Keys.money.get(p, 0.0) >= 400.0) {
-                  Keys.money.subtractDouble(p, 400.0);
 
                   for (ItemStack i : p.getInventory()) {
                      if (i != null && i.getType().equals(Material.BOW)) {
+                        if(i.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) >= 4) continue;
                         if (i.getEnchantments().containsKey(Enchantment.ARROW_DAMAGE)) {
                            i.addEnchantment(Enchantment.ARROW_DAMAGE, i.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) + 1);
+                           Keys.money.subtractDouble(p, 400.0);
                         } else {
                            i.addEnchantment(Enchantment.ARROW_DAMAGE, 1);
+                           Keys.money.subtractDouble(p, 400.0);
                         }
                      }
                   }
@@ -463,22 +470,24 @@ public class InventoryClickListener implements Listener {
 
                if (im.getDisplayName().equals(ChatColor.GOLD + "Fortune 1 On all Hoes")
                   && Keys.money.get(p, 0.0) >= 400.0) {
-                  Keys.money.subtractDouble(p, 400.0);
 
                   for (ItemStack ix : p.getInventory()) {
                      if (ix != null && ix.getType().equals(Material.WOODEN_HOE)) {
+                        if(ix.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) >= 1) continue;
                         ix.addEnchantment(Enchantment.LOOT_BONUS_BLOCKS, 1);
+                        Keys.money.subtractDouble(p, 400.0);
                      }
                   }
                }
 
                if (im.getDisplayName().equals(ChatColor.GOLD + "Lure 2 On all Fishing Rods")
                   && Keys.money.get(p, 0.0) >= 400.0) {
-                  Keys.money.subtractDouble(p,400.0);
 
                   for (ItemStack ixx : p.getInventory()) {
                      if (ixx != null && ixx.getType().equals(Material.FISHING_ROD)) {
+                        if(ixx.getEnchantmentLevel(Enchantment.LURE) >= 1) continue;
                         ixx.addEnchantment(Enchantment.LURE, 2);
+                        Keys.money.subtractDouble(p,400.0);
                      }
                   }
                }
@@ -489,6 +498,7 @@ public class InventoryClickListener implements Listener {
 
                   for (ItemStack ixxx : p.getInventory()) {
                      if (ixxx != null && ixxx.getType().equals(Material.STONE_PICKAXE)) {
+                        if(ixxx.getEnchantmentLevel(Enchantment.DIG_SPEED) >= 2) continue;
                         ixxx.addEnchantment(Enchantment.DIG_SPEED, 2);
                      }
                   }
@@ -581,9 +591,13 @@ public class InventoryClickListener implements Listener {
          if (event.getCurrentItem().getType().equals(Material.WHEAT)) {
             Integer iii = 0;
             if (!event.getWhoClicked().hasCooldown(Material.WOODEN_HOE)) {
+               int wheat = 0;
                for (ItemStack ixxxx : event.getWhoClicked().getInventory()) {
                   if (ixxxx != null && ixxxx.getType().equals(Material.WHEAT)) {
                      Integer originalamount = ixxxx.getAmount();
+                     wheat += originalamount;
+                     if(wheat >= 1000)
+                        AdvancementManager.giveAdvancement((Player) event.getWhoClicked(), "farmerjoe");
                      Bukkit.getScheduler()
                         .runTaskLater(
                            KingsButBad.getPlugin(KingsButBad.class),
@@ -609,6 +623,7 @@ public class InventoryClickListener implements Listener {
                   }
                }
             }
+
          }
 
          if (event.getCurrentItem().getType().equals(Material.COAL_ORE)) {

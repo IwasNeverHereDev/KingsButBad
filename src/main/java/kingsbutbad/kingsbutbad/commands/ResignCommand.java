@@ -18,13 +18,15 @@ public class ResignCommand implements CommandExecutor {
             return true;
          }
 
-         if (KingsButBad.roles.get(p).equals(Role.KING)) {
+         if (KingsButBad.roles.get(p).equals(Role.KING) && KingsButBad.king == p) {
             sender.sendMessage(ChatColor.GOLD + "Drop your crown instead!");
             return true;
          }
 
          KingsButBad.roles.put(p, Role.PEASANT);
          RoleManager.givePlayerRole(p);
+         if(KingsButBad.king2 == p)
+            KingsButBad.king2 = null;
       }
 
       return true;

@@ -16,5 +16,6 @@ public class LoadTasks {
         new AFKTask().runTaskTimer(p, 3000L, 6000L);
         new LocationTask().runTaskTimer(p, 0L, 6000L);
         new VeteranTask().runTaskTimer(p, 0L, 20);
+        new RaidTask().runTaskTimer(p, 0L, 1);
     }
 }

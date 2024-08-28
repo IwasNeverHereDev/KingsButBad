@@ -22,4 +22,12 @@ public class FormatUtils {
             }
         }
     }
+    public static String parseTicksToTime(int ticks) {
+        int totalSeconds = ticks / 20;
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        // Formatting the time string as MM:SS
+        return String.format("%02d:%02d", minutes, seconds);
+    }
 }

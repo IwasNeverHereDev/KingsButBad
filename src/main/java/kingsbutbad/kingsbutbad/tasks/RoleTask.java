@@ -127,7 +127,15 @@ public class RoleTask extends BukkitRunnable {
               + player.getName();
 
       // Set player list name and display name
-      player.setPlayerListName(playerListName);
+      player.setPlayerListName(playerListName+" "+getPing(player));
       player.setDisplayName(playerListName);
+   }
+   public static String getPing(Player p){
+      int ping = p.getPing();
+      String pingText = "<green>"+ping;
+      if(ping >= 1000) return CreateText.addColors("<red>"+ping);
+      if(ping >= 500) return CreateText.addColors("<gold>"+ping);
+      if(ping >= 250) return CreateText.addColors("<yellow>"+ping);
+      return CreateText.addColors("<gray>("+pingText+"ms<gray>)");
    }
 }

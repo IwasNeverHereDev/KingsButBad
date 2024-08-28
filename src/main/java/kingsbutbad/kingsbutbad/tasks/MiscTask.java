@@ -27,6 +27,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
@@ -320,8 +321,10 @@ public class MiscTask extends BukkitRunnable {
       for (Player player : Bukkit.getOnlinePlayers()) {
          KingsButBad.thirst.putIfAbsent(player, 300);
          if (KingsButBad.thirst.get(player) <= 0) {
-            KingsButBad.thirst.put(player, 0);
-            player.damage(3.0);
+            if(!Keys.vanish.get(player, false) || player.getGameMode().equals(GameMode.ADVENTURE)) {
+               KingsButBad.thirst.put(player, 0);
+               Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "damage " + player.getName() + " 3 minecraft:dry_out");
+            }
          }
 
          if (!KingsButBad.roles.containsKey(player)

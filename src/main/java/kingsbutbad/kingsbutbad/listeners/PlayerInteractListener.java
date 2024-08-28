@@ -1,20 +1,19 @@
 package kingsbutbad.kingsbutbad.listeners;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
+import kingsbutbad.kingsbutbad.Kingdom.KingdomsReader;
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
+import kingsbutbad.kingsbutbad.utils.FormatUtils;
 import kingsbutbad.kingsbutbad.utils.Role;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.type.Door;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -53,7 +52,54 @@ public class PlayerInteractListener implements Listener {
       }
 
       if (event.getClickedBlock() != null) {
-         if(event.getClickedBlock().getType().equals(Material.BLACK_CANDLE)){
+         if (event.getClickedBlock().getType() == Material.END_PORTAL_FRAME) {
+            event.setCancelled(true);
+            if(!KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT).isPowerful){
+               event.getPlayer().sendMessage(CreateText.addColors("<red>Only Kingdom roles can use this! <gray>(<white>Knight,King,Prince,etc..<gray>)"));
+               return;
+            }
+            Player player = event.getPlayer();
+
+            if (KingsButBad.raidCooldown > 0) {
+               player.sendMessage(CreateText.addColors("<red>You can't start another Raid! <gray>(<white>" + FormatUtils.parseTicksToTime(KingsButBad.raidCooldown) + "<gray>)"));
+               return;
+            }
+
+            if (KingsButBad.isRaidActive) {
+               player.sendMessage(CreateText.addColors("<red>You can't start another Raid! <gray>(<white>Raid is Active<gray>)"));
+               return;
+            }
+
+            Bukkit.broadcastMessage(CreateText.addColors("<red>Raid is Starting! <gray>(<white>Started by " + player.getName() + "!<gray>)"));
+            KingsButBad.isRaidActive = true;
+
+            Random random = new Random();
+            int totalRaiders = 10 + random.nextInt(41);
+            KingsButBad.raidStartedEnmeiesCount = totalRaiders + 1;
+
+            Bukkit.broadcastMessage(CreateText.addColors("<gray>This raid has a total of <white>" + totalRaiders + " Raiders<gray>! (<white>Spawning...<gray>)"));
+
+            for (int i = 0; i < totalRaiders; i++) {
+               Bukkit.getScheduler().scheduleSyncDelayedTask(KingsButBad.pl, () -> {
+                  // Spawn the raider entity
+                  Entity raider = KingdomsLoader.activeKingdom.getRaidSpawn().getWorld().spawnEntity(KingdomsLoader.activeKingdom.getRaidSpawn(), EntityType.WITHER_SKELETON);
+                  raider.setGlowing(true);
+                  raider.setCustomName(CreateText.addColors("<gold>Raider " + (KingsButBad.raidEnemies.size() + 1)));
+                  KingsButBad.raidEnemies.add(raider);
+
+                  // Target the nearest player
+                  if (raider instanceof Monster) {  // Ensure the entity is a type that can target players (e.g., Monster)
+                     Monster monster = (Monster) raider;
+                     Player nearestPlayer = getNearestPlayer(monster);
+                     if (nearestPlayer != null) {
+                        monster.setTarget(nearestPlayer);
+                     }
+                  }
+               }, i * 5L);
+            }
+            return;
+         }
+         if(event.getClickedBlock().getType().equals(Material.BLACK_CANDLE) && event.getAction().isLeftClick()){
             if(KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT) == Role.KING || KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT) == Role.PRINCE){
                KingsButBad.isInterocmEnabled = !KingsButBad.isInterocmEnabled;
                event.getPlayer().sendMessage(CreateText.addColors("<green>The Intercom being enabled is "+KingsButBad.isInterocmEnabled+" now!"));
@@ -117,4 +163,20 @@ public class PlayerInteractListener implements Listener {
          }
       }
    }
+   private Player getNearestPlayer(Monster monster) {
+      Player nearestPlayer = null;
+      double nearestDistance = Double.MAX_VALUE;
+
+      for (Player player : Bukkit.getOnlinePlayers()) {
+         if(!player.getGameMode().equals(GameMode.ADVENTURE)) continue;
+         if(Keys.vanish.get(player, false)) continue;
+         double distance = player.getLocation().distance(monster.getLocation());
+         if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestPlayer = player;
+         }
+      }
+      return nearestPlayer;
+   }
+
 }

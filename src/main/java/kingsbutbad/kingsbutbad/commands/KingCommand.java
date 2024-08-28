@@ -71,8 +71,11 @@ public class KingCommand implements CommandExecutor {
 
                for (Player pe : Bukkit.getOnlinePlayers()) {
                   if(pe == KingsButBad.king) continue;
-                  KingsButBad.roles.put(pe, Role.PEASANT);
-                  RoleManager.givePlayerRole(pe);
+                  Role role = KingsButBad.roles.getOrDefault(pe, Role.PEASANT);
+                  if(role.isPowerful){
+                     KingsButBad.roles.put(pe, Role.PEASANT);
+                     RoleManager.givePlayerRole(pe);
+                  }
                   pe.sendTitle(
                      CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>KING " + p.getName().toUpperCase()), ChatColor.GREEN + "is your new overlord!"
                   );

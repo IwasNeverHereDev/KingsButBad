@@ -81,6 +81,7 @@ public class KingdomsReader {
             Location bmPrison1 = this.readLocation(kingdomObject.getAsJsonObject("bmPrison1"));
             Location bmPrison2 = this.readLocation(kingdomObject.getAsJsonObject("bmPrison2"));
             Location bmPrisonTrader = this.readLocation(kingdomObject.getAsJsonObject("bmPrisonTrader"));
+            Location raidSpawn = this.readLocation(kingdomObject.getAsJsonObject("raidSpawn"));
             List<Location> cells = new ArrayList<>();
             JsonArray cellsArray = kingdomObject.getAsJsonArray("cells");
             if (cellsArray != null) {
@@ -136,7 +137,8 @@ public class KingdomsReader {
                     prisonGuardSpawn,
                     bmPrison1,
                     bmPrison2,
-                    bmPrisonTrader
+                    bmPrisonTrader,
+                    raidSpawn
             );
             kingdomsList.add(kingdom);
             kingdoms.put(key, kingdom);

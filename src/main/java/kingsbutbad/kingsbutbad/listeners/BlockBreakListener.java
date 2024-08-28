@@ -37,8 +37,10 @@ public class BlockBreakListener implements Listener {
                   event.getBlock().setType(Material.DEEPSLATE_COAL_ORE);
                   if (KingsButBad.coalCompactor) {
                      Keys.money.addDouble(KingsButBad.king, 5.0);
-                     KingsButBad.king.sendMessage(ChatColor.GREEN + "+5$ Prisoner mined a block");
-                     KingsButBad.king2.sendMessage(ChatColor.GREEN + "+5$ Prisoner mined a block");
+                     if(Keys.showMineMessages.get(KingsButBad.king, false))
+                        KingsButBad.king.sendMessage(ChatColor.GREEN + "+5$ Prisoner mined a block");
+                     if(Keys.showMineMessages.get(KingsButBad.king2, false))
+                        KingsButBad.king2.sendMessage(ChatColor.GREEN + "+5$ Prisoner mined a block");
                      Keys.money.addDouble(KingsButBad.king2, 5.0);
                   }
                },

@@ -2,6 +2,7 @@ package kingsbutbad.kingsbutbad.listeners;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.utils.Role;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ public class EntityTargetListener implements Listener {
    public void onEntityTarget(EntityTargetEvent event) {
       if (!event.getReason().equals(TargetReason.TARGET_ATTACKED_ENTITY)
          && event.getTarget() instanceof Player player
+              && event.getEntity().getType().equals(EntityType.ZOMBIE)
          && !KingsButBad.roles.get(player).equals(Role.CRIMINAl)) {
          event.setCancelled(true);
       }

@@ -29,10 +29,6 @@ public class EntityDamageByEntityListener implements Listener {
 
          attacker.setCooldown(Material.RED_STAINED_GLASS, 120);
          target.setCooldown(Material.RED_STAINED_GLASS, 120);
-         if (attacker.getInventory().getItemInMainHand().getType().equals(Material.IRON_SHOVEL) && !KingsButBad.king.equals(target)) {
-            event.setCancelled(true);
-            attacker.addPassenger(target);
-         }
 
          Role attackerRole = KingsButBad.roles.get(attacker);
          Role targetRole = KingsButBad.roles.get(target);

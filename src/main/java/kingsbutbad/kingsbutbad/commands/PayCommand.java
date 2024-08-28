@@ -51,7 +51,7 @@ public class PayCommand implements CommandExecutor {
                      CreateText.addColors("<gray>Sent <green>$" + this.formatAmount(amount) + " <gray>to <white>" + target.getName() + "<gray>.")
                   );
                   target.sendMessage(
-                     CreateText.addColors("<gray>You have been given <green>$" + this.formatAmount(amount) + " <gray>by <white>" + target.getName() + "<gray>.")
+                     CreateText.addColors("<gray>You have been given <green>$" + this.formatAmount(amount) + " <gray>by <white>" + player.getName() + "<gray>.")
                   );
                   return true;
                }

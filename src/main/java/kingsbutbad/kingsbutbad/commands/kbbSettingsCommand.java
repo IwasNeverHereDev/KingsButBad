@@ -22,19 +22,25 @@ public class kbbSettingsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(!(commandSender instanceof Player p)) return true;
-        Inventory inv = Bukkit.createInventory(null, 9*3, CreateText.addColors("<gold>KingsButBad Settings"));
+        Inventory inv = Bukkit.createInventory(null, 9*6, CreateText.addColors("<gold>KingsButBad Settings"));
         boolean isAutoShoutEnabled = Keys.isAutoShoutEnabled.get(p, true);
         boolean isRolePlayerTimeDisplayed = Keys.displayRoleStats.get(p, false);
         List<String> loreShout = new ArrayList<>();
         loreShout.add(isEnabled(isAutoShoutEnabled, "Auto Shout"));
         List<String> loreRolePlaytime = new ArrayList<>();
+        List<String> loreshowMineMessages = new ArrayList<>();
         loreRolePlaytime.add(isEnabled(isRolePlayerTimeDisplayed, "Auto Shout"));
         ItemStack displayPlaytimeItem = clearData(Item.createItem(Material.CLOCK, "<yellow>Display Role Playtime", loreRolePlaytime, null));
+        ItemStack showMineMessagesItem = clearData(Item.createItem(Material.COAL, "<yellow>Show Mine Messages", loreshowMineMessages, null));
+        ItemStack comingSoonItem = clearData(Item.createItem(Material.BARRIER, "<red>Coming Soon!", new ArrayList<>(), null));
         ItemStack shoutItem = clearData(Item.createItem(Material.BLACK_CANDLE, "<yellow>Auto Shout", loreShout, null));
         ItemStack chatItem = clearData(Item.createItem(Material.PAPER, "<yellow>Chat Selected", getChatSelectedLore(p), null));
         inv.setItem(10,shoutItem);
         inv .setItem(13, chatItem);
         inv.setItem(16, displayPlaytimeItem);
+        inv.setItem(37, showMineMessagesItem);
+        inv.setItem(40, comingSoonItem);
+        inv.setItem(43, comingSoonItem);
         p.openInventory(inv);
         return false;
     }

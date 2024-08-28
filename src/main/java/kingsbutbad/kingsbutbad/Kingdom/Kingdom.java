@@ -51,6 +51,7 @@ public class Kingdom {
    private final Location bmPrison1;
    private final Location bmPrison2;
    private final Location bmPrisonTrader;
+   private final Location raidSpawn;
 
    public Kingdom(
            String material,
@@ -89,7 +90,7 @@ public class Kingdom {
            Location prison2,
            Location bm1,
            Location bm2,
-           Location prisonLightPowerBlock, Location blackMarketInsidePrisoner, Location blackMarketExitPrisoner, List<Location> cells, Location bmSafe, Location prisonGuardSpawn, Location bmPrison1, Location bmPrison2, Location bmPrisonTrader
+           Location prisonLightPowerBlock, Location blackMarketInsidePrisoner, Location blackMarketExitPrisoner, List<Location> cells, Location bmSafe, Location prisonGuardSpawn, Location bmPrison1, Location bmPrison2, Location bmPrisonTrader, Location raidSpawn
    ) {
       this.material = material;
       this.isPublic = isPublic;
@@ -137,6 +138,7 @@ public class Kingdom {
        this.bmPrison1 = bmPrison1;
        this.bmPrison2 = bmPrison2;
        this.bmPrisonTrader = bmPrisonTrader;
+       this.raidSpawn = raidSpawn;
    }
 
    public String getMaterial() {
@@ -321,5 +323,8 @@ public class Kingdom {
 
    public Location getBmPrisonTrader() {
       return bmPrisonTrader;
+   }
+   public Location getRaidSpawn() {
+      return raidSpawn;
    }
 }
