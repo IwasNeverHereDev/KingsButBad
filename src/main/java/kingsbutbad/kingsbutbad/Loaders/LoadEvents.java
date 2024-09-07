@@ -1,6 +1,7 @@
 package kingsbutbad.kingsbutbad.Loaders;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.commands.Misc.ChangelogCommand;
 import kingsbutbad.kingsbutbad.listeners.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -32,6 +33,7 @@ public class LoadEvents {
       registerEvent(new PlayerPickItemListener());
       registerEvent(new CBPListener());
       registerEvent(new EntityDeathListener());
+      registerEvent(new ChangelogCommand());
    }
    private static void registerEvent(Listener listener){
       Bukkit.getPluginManager().registerEvents(listener, KingsButBad.pl);

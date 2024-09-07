@@ -15,6 +15,10 @@ public interface Keys {
     Key<Boolean> selectedChat = new Key<>("selectedChat", new NamespacedKey(KingsButBad.pl, "selectedChat"), KeyTypes.BOOLEAN);
     Key<Boolean> displayRoleStats = new Key<>("displayRoleStats", new NamespacedKey(KingsButBad.pl, "displayRoleStats"), KeyTypes.BOOLEAN);
     Key<Boolean> showMineMessages = new Key<>("showMineMessages", new NamespacedKey(KingsButBad.pl, "showMineMessages"), KeyTypes.BOOLEAN);
+    Key<Boolean> PING_NOISES = new Key<>("PING_NOISES", new NamespacedKey(KingsButBad.pl, "PING_NOISES"), KeyTypes.BOOLEAN);
+    Key<Boolean> SHORTEN_SHOUTMSG = new Key<>("SHORTEN_SHOUTMSG", new NamespacedKey(KingsButBad.pl, "SHORTEN_SHOUTMSG"), KeyTypes.BOOLEAN);
+    Key<Boolean> SHORTEN_ROLES_MSG = new Key<>("SHORTEN_ROLES_MSG", new NamespacedKey(KingsButBad.pl, "SHORTEN_ROLES_MSG"), KeyTypes.BOOLEAN);
+    Key<Boolean> SHORTEN_RANKS_MSG = new Key<>("SHORTEN_RANKS_MSG", new NamespacedKey(KingsButBad.pl, "SHORTEN_RANKS_MSG"), KeyTypes.BOOLEAN);
     // Builders
     Key<Boolean> isBuilderMode = new Key<>("builder", new NamespacedKey(KingsButBad.pl, "builder"), KeyTypes.BOOLEAN);
     // Staff

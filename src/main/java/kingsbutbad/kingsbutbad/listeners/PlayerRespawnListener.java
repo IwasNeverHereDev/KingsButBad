@@ -24,13 +24,13 @@ public class PlayerRespawnListener implements Listener {
             if (KingsButBad.roles.get(p) != Role.PEASANT) {
                KingsButBad.roles.put(p, Role.PEASANT);
                RoleManager.givePlayerRole(p);
-               event.getPlayer().setNoDamageTicks(300);
+               event.getPlayer().setNoDamageTicks(20*3);
                event.getPlayer().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(300, 0));
             }
          }
       } else {
          RoleManager.givePlayerRole(event.getPlayer());
-         event.getPlayer().setNoDamageTicks(300);
+         event.getPlayer().setNoDamageTicks(20*3);
          event.getPlayer().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(300, 0));
       }
    }

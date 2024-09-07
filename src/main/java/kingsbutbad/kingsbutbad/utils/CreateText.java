@@ -2,10 +2,11 @@ package kingsbutbad.kingsbutbad.utils;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
 
 public class CreateText {
    public static String addColors(String a) {
-      return LegacyComponentSerializer.legacySection().serialize(MiniMessage.miniMessage().deserialize(a));
+      return LegacyComponentSerializer.legacySection().serialize(MiniMessage.miniMessage().deserialize(ChatColor.stripColor(a)));
    }
 
    public static String convertAmpersandToMiniMessage(String text) {

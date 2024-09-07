@@ -1,39 +1,41 @@
 package kingsbutbad.kingsbutbad;
 
 import kingsbutbad.kingsbutbad.Discord.BotManager;
-import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReactMessageEvent;
 import kingsbutbad.kingsbutbad.Loaders.*;
+import kingsbutbad.kingsbutbad.WebServer.WebServerManager;
 import kingsbutbad.kingsbutbad.utils.Role;
 import me.coralise.spigot.CustomBansPlus;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.eclipse.jetty.server.Server;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
-public final class KingsButBad extends JavaPlugin {
+public final class KingsButBad extends JavaPlugin { // TODO: Clean up This File (KingsButBad.java)
    public static KingsButBad pl;
    public static Player king = null;
    public static int raidCooldown = -1;
    public static boolean isRaidActive = false;
+   public static int taxesPerctage = 0;
    public static List<Entity> raidEnemies = new ArrayList<>();
    public static BossBar raidBossbar = null;
+   public static List<Player> inRaid = new ArrayList<>();
    public static int raidStartedEnmeiesCount = 0;
    public static Player king2 = null;
    public static HashMap<Player, Role> roles = new HashMap<>();
    public static Boolean joesUnlocked = false;
    public static Boolean coalCompactor = false;
+   public static HashMap<UUID, List<Role>> listOfKilledRoles = new HashMap<>();
    public static HashMap<Player, Integer> prisonTimer = new HashMap<>();
    public static HashMap<Player, Integer> prisonQuota = new HashMap<>();
    public static HashMap<Player, Role> invitations = new HashMap<>();
-   public static HashMap<Player, Location> datedLocations = new HashMap<>();
    public static LuckPerms api;
    public static Villager royalVillager;
    public static Villager sewerVillager;
@@ -62,9 +64,10 @@ public final class KingsButBad extends JavaPlugin {
    public static Player lastKing2;
    public static HashMap<Player, Integer> currentZone = new HashMap<>();
    public static HashMap<Player, Integer> thirst = new HashMap<>();
-   public static HashMap<Player, Boolean> soundWaves = new HashMap<>();
    public static boolean isInterocmEnabled = false;
    public static CustomBansPlus cbp;
+   public static Server server;
+   public static Instant startTime;
 
    public void onEnable() {
       pl = this;
@@ -80,16 +83,21 @@ public final class KingsButBad extends JavaPlugin {
       LoadTasks.init();
       NoNoWords.reload();
       RemoveAdvancements.init();
+      WebServerManager.startWebServer();
+      BotManager.getInGameChatChannel().sendMessage(BotManager.getStartRole().getAsMention() + " | Server is Starting...").queue();
+      startTime = Instant.now();
    }
 
    public void onDisable() {
-      for (LivingEntity le : Bukkit.getWorld("world").getLivingEntities()) {
-         if (le.getType().equals(EntityType.VILLAGER)) {
+      World world = Bukkit.getWorld("world");
+      if(world == null) world = Bukkit.getWorlds().get(0);
+      for (LivingEntity le : world.getLivingEntities())
+         if (le.getType().equals(EntityType.VILLAGER))
             le.remove();
-         }
-      }
 
       BotManager.getBot().shutdown();
+      WebServerManager.stopWebServer();
+       BotManager.getInGameChatChannel().sendMessage(BotManager.getStopRole().getAsMention() + " | Server is Stopping...").queue();
    }
 
    public static boolean isInside(Player player, Location loc1, Location loc2) {

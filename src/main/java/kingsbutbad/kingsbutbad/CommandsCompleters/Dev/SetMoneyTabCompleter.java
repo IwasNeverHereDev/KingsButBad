@@ -9,9 +9,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class SetMoneyTabCompleter implements TabCompleter {
-   public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+   public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
       List<String> completions = new ArrayList<>();
       if (args.length == 1) {
          for (Player player : sender.getServer().getOnlinePlayers()) {

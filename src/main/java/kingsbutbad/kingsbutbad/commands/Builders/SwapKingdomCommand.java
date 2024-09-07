@@ -31,7 +31,7 @@ public class SwapKingdomCommand implements CommandExecutor {
             commandSender.sendMessage(ChatColor.RED + "Kingdom not found: " + kingdomName);
             return false;
          } else {
-            new KingdomsLoader(targetKingdom);
+            new KingdomsLoader(targetKingdom, false);
             commandSender.sendMessage(ChatColor.GREEN + "Successfully swapped to kingdom: " + targetKingdom.getName());
             BotManager.getBuilderChannel().sendMessage(DiscordUtils.deformat(commandSender.getName()) + " has swapped the kingdom! ("+targetKingdom.getName()+")");
             return true;

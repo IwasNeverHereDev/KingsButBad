@@ -1,46 +1,42 @@
 package kingsbutbad.kingsbutbad.tasks;
 
-import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
+import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Role;
 import kingsbutbad.kingsbutbad.utils.RoleManager;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.WorldBorder;
+import org.bukkit.*;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
+
 import static kingsbutbad.kingsbutbad.utils.FormatUtils.formatMoney;
 
+@SuppressWarnings("deprecation")
 public class MiscTask extends BukkitRunnable {
    public static HashMap<Player, Float> stamina = new HashMap<>();
    HashMap<Player, Boolean> regenstamina = new HashMap<>();
    public static ArrayList<Location> cells = new ArrayList<>();
-   public static BossBar bossbar = Bukkit.createBossBar("??? TIME", BarColor.WHITE, BarStyle.SOLID, new BarFlag[0]);
-   public static BossBar bar = Bukkit.createBossBar("KingHealth", BarColor.WHITE, BarStyle.SOLID, new BarFlag[0]);
+   public static BossBar bossbar = Bukkit.createBossBar("??? TIME", BarColor.WHITE, BarStyle.SOLID);
+   public static BossBar bar = Bukkit.createBossBar("KingHealth", BarColor.WHITE, BarStyle.SOLID);
    Integer timer1 = 0;
    Integer timer2 = 1000;
 
@@ -61,7 +57,7 @@ public class MiscTask extends BukkitRunnable {
          bossbar.setTitle("ROLL CALL");
 
          for (Player p : Bukkit.getOnlinePlayers()) {
-            if (KingsButBad.roles.get(p).equals(Role.PRISONER)) {
+            if (KingsButBad.roles.getOrDefault(p, Role.PEASANT).equals(Role.PRISONER)) {
                WorldBorder rollborder = Bukkit.createWorldBorder();
                rollborder.setCenter(new Location(Bukkit.getWorld("world"), -140.0, -57.0, 15.0));
                rollborder.setSize(3.0);
@@ -235,7 +231,7 @@ public class MiscTask extends BukkitRunnable {
             }
          }
 
-         Integer prisonersnotincell = 0;
+         int prisonersnotincell = 0;
 
          for (Player player : Bukkit.getOnlinePlayers()) {
             if (KingsButBad.roles.get(player).equals(Role.PRISONER)
@@ -321,9 +317,13 @@ public class MiscTask extends BukkitRunnable {
       for (Player player : Bukkit.getOnlinePlayers()) {
          KingsButBad.thirst.putIfAbsent(player, 300);
          if (KingsButBad.thirst.get(player) <= 0) {
-            if(!Keys.vanish.get(player, false) || player.getGameMode().equals(GameMode.ADVENTURE)) {
-               KingsButBad.thirst.put(player, 0);
-               Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "damage " + player.getName() + " 3 minecraft:dry_out");
+            if(!Keys.vanish.get(player, false) && player.getGameMode().equals(GameMode.ADVENTURE)) {
+               if(!player.isInvulnerable()) {
+                  KingsButBad.thirst.put(player, 0);
+                  if(player.isInsideVehicle())
+                     player.getVehicle().removePassenger(player);
+                  Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "damage " + player.getName() + " 5 minecraft:dry_out");
+               }
             }
          }
 
@@ -332,9 +332,8 @@ public class MiscTask extends BukkitRunnable {
             KingsButBad.thirst.put(player, 300);
          }
 
-         if (KingsButBad.thirst.get(player) > 300) {
+         if (KingsButBad.thirst.get(player) > 300)
             KingsButBad.thirst.put(player, 300);
-         }
 
          player.setRemainingAir(KingsButBad.thirst.get(player));
          if (new Random().nextInt(0, 16) == 0) {
@@ -361,7 +360,7 @@ public class MiscTask extends BukkitRunnable {
          if (KingsButBad.roles.get(player).equals(Role.BODYGUARD)) {
             WorldBorder kingborder = Bukkit.createWorldBorder();
             kingborder.setCenter(KingsButBad.bodyLink.get(player).getLocation());
-            kingborder.setSize(8.0);
+            kingborder.setSize(10.0);
             kingborder.setDamageAmount(0.4);
             kingborder.setDamageBuffer(0.0);
             if (!kingborder.isInside(player.getLocation())) {
@@ -411,11 +410,10 @@ public class MiscTask extends BukkitRunnable {
          }
 
          if (this.regenstamina.get(player)) {
-            player.setFoodLevel(6);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 1, 10));
             player.setWalkSpeed(0.09F);
-            player.setFreezeTicks(30);
          } else {
-            player.setFreezeTicks(0);
+            player.removePotionEffect(PotionEffectType.HUNGER);
             player.setFoodLevel(19);
             if (!KingsButBad.roles.get(player).equals(Role.PRISONER)) {
                if (KingsButBad.king != null) {
@@ -457,7 +455,7 @@ public class MiscTask extends BukkitRunnable {
          }
 
          if (KingsButBad.roles.get(player).equals(Role.KNIGHT)) {
-            Boolean hasHorseSpawned = false;
+            boolean hasHorseSpawned = false;
 
             for (Entity e : Bukkit.getWorld("world").getEntities()) {
                if (e.getCustomName() != null && e.getCustomName().equals(player.getName() + "'s horse")) {
@@ -479,7 +477,7 @@ public class MiscTask extends BukkitRunnable {
          }
 
          String actiobarextras = "";
-         if (KingsButBad.roles.get(player).equals(Role.CRIMINAl)) {
+         if (KingsButBad.roles.get(player).equals(Role.CRIMINAL)) {
             Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Criminals").addPlayer(player);
             player.addPotionEffect(PotionEffectType.GLOWING.createEffect(40, 0));
          }
@@ -526,6 +524,11 @@ public class MiscTask extends BukkitRunnable {
          if (player.getGameMode().equals(GameMode.SURVIVAL)) {
             player.setGameMode(GameMode.ADVENTURE);
          }
+         if(KingsButBad.roles.get(player).equals(Role.CRIMINAL)){
+            if(KingsButBad.isInside(player, KingdomsLoader.activeKingdom.getPrison1(), KingdomsLoader.activeKingdom.getPrison2())){
+               AdvancementManager.giveAdvancement(player, "wrongway");
+            }
+         }
 
          if (KingsButBad.roles.get(player).equals(Role.PRISONER)) {
             if (!player.hasCooldown(Material.TERRACOTTA)
@@ -537,12 +540,12 @@ public class MiscTask extends BukkitRunnable {
                Keys.inPrison.remove(player);
                Bukkit.broadcastMessage(CreateText.addColors("<red><b>>> " + player.getName() + " has escaped the prison!"));
                player.sendTitle(ChatColor.RED + "!!! You're now a criminal !!!", ChatColor.GRAY + "You escaped");
-               KingsButBad.roles.put(player, Role.CRIMINAl);
+               KingsButBad.roles.put(player, Role.CRIMINAL);
                player.playSound(player, Sound.ENTITY_SILVERFISH_DEATH, 1.0F, 0.5F);
             }
 
             if (!DisguiseAPI.isDisguised(player)) {
-               PlayerDisguise prisoner = new PlayerDisguise("leonrobiclone");
+               PlayerDisguise prisoner = new PlayerDisguise("YanJos3");
                prisoner.setName("Prisoner " + new Random().nextInt(1000, 9999));
                DisguiseAPI.disguiseEntity(player, prisoner);
                DisguiseAPI.setActionBarShown(player, false);
@@ -564,8 +567,8 @@ public class MiscTask extends BukkitRunnable {
             } else {
                player.setWalkSpeed(0.1F);
             }
-
-            player.sendActionBar(
+            if(!Keys.vanish.get(player, false))
+               player.sendActionBar(
                CreateText.addColors("<gray>Sentence Left: <red><b>" + parseTicksToTime(KingsButBad.prisonTimer.get(player))) + tooltip
             );
             if (KingsButBad.prisonTimer.get(player) <= 0) {
@@ -582,7 +585,8 @@ public class MiscTask extends BukkitRunnable {
 
             if (KingsButBad.king != null) {
                if (KingsButBad.king2 == null) {
-                  player.sendActionBar(
+                  if(!Keys.vanish.get(player, false))
+                     player.sendActionBar(
                      CreateText.addColors(
                            "<gray>Current king<gray>: <gradient:#FFFF52:#FFBA52><b>"
                               + KingsButBad.kingGender.toUpperCase()
@@ -592,7 +596,8 @@ public class MiscTask extends BukkitRunnable {
                         + actiobarextras
                   );
                } else {
-                  player.sendActionBar(
+                  if(!Keys.vanish.get(player, false))
+                     player.sendActionBar(
                      CreateText.addColors(
                            "<gray>Current king<gray>: <gradient:#FFFF52:#FFBA52><b>"
                               + KingsButBad.kingGender.toUpperCase()
@@ -611,8 +616,8 @@ public class MiscTask extends BukkitRunnable {
                if (KingsButBad.cooldown > 0) {
                   iscool = "<gradient:#ff2f00:#fcff3d><b>On Cooldown... <gray>[" + parseTicksToTime(KingsButBad.prisonTimer.getOrDefault(player, 0)) + "]";
                }
-
-               player.sendActionBar(CreateText.addColors("<gray>Current king<gray>: " + iscool) + actiobarextras);
+               if(!Keys.vanish.get(player, false))
+                  player.sendActionBar(CreateText.addColors("<gray>Current king<gray>: " + iscool) + actiobarextras);
             }
          }
       }

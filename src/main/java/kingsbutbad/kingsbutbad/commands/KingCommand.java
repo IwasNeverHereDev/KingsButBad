@@ -13,16 +13,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
-public class KingCommand implements CommandExecutor {
-   public static HashMap<UUID, Integer> kinglasttimer = new HashMap<>();
-   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+public class KingCommand implements CommandExecutor { // TODO: Clean up This File (KingCommand.java)
+   public static HashMap<UUID, Integer> kingLastTimer = new HashMap<>();
+   @SuppressWarnings("deprecation")
+   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
       if (sender instanceof Player p) {
          if (KingsButBad.roles.get(p).equals(Role.PRISONER)) {
-            p.sendMessage(ChatColor.RED + "You can't become a king as a prisoner. Stay in, scum.");
+            p.sendMessage(CreateText.addColors("<red>You can't become a king as a prisoner. Stay in, scum."));
             return true;
          }
 
@@ -54,9 +57,9 @@ public class KingCommand implements CommandExecutor {
          if (KingsButBad.king == null) {
             if (KingsButBad.cooldown <= 0) {
                if (p == KingsButBad.lastKing || p == KingsButBad.lastKing2) {
-                  p.sendMessage(CreateText.addColors("<red>You were king last time! <gray>(<white>"+ MiscTask.parseTicksToTime(kinglasttimer.getOrDefault(((Player) sender).getUniqueId(), 20*60*5)) +"<gray>)"));
-                  if(!kinglasttimer.containsKey(((Player) sender).getUniqueId()))
-                     kinglasttimer.put(((Player) sender).getUniqueId(), 20*60*5);
+                  p.sendMessage(CreateText.addColors("<red>You were king last time! <gray>(<white>"+ MiscTask.parseTicksToTime(kingLastTimer.getOrDefault(((Player) sender).getUniqueId(), 20*60*5)) +"<gray>)"));
+                  if(!kingLastTimer.containsKey(((Player) sender).getUniqueId()))
+                     kingLastTimer.put(((Player) sender).getUniqueId(), 20*60*3);
                   return true;
                }
 
@@ -67,9 +70,12 @@ public class KingCommand implements CommandExecutor {
                RoleManager.showKingMessages(p, Role.KING.objective);
                RoleManager.givePlayerRole(p);
                KingsButBad.kingGender = "King";
+               KingsButBad.taxesPerctage = 0;
                AdvancementManager.giveAdvancement(p, "king");
 
                for (Player pe : Bukkit.getOnlinePlayers()) {
+                   if(p.isInsideVehicle())
+                       Objects.requireNonNull(pe.getVehicle()).removePassenger(pe);
                   if(pe == KingsButBad.king) continue;
                   Role role = KingsButBad.roles.getOrDefault(pe, Role.PEASANT);
                   if(role.isPowerful){
@@ -83,6 +89,11 @@ public class KingCommand implements CommandExecutor {
             }
 
             return true;
+         }
+
+         if(KingsButBad.king == p && args.length > 0 && args[0].equals("taxes")){
+               p.sendMessage(CreateText.addColors("<red>Coming soon..."));
+               return true;
          }
 
          if (KingsButBad.king == p && args.length > 0 && args[0].equals("sidekick") && KingsButBad.king2 == null && args.length > 2) {
@@ -101,9 +112,14 @@ public class KingCommand implements CommandExecutor {
                   return true;
                }
                RoleManager.setKingGender(false, args[1]);
+               if(KingsButBad.lastKing == pe || KingsButBad.lastKing2 == pe){
+                  sender.sendMessage(CreateText.addColors("<red>Sorry, You can't SideKick this Player! <gray>(<white>They were last King!<white>)"));
+                  return true;
+               }
                if (KingsButBad.roles.get(pe) == Role.PEASANT) {
                   KingsButBad.invitations.put(pe, Role.KING);
-                  pe.sendMessage(
+                  if(pe != null)
+                     pe.sendMessage(
                      CreateText.addColors(
                         "<gradient:#FFFF52:#FFBA52><b>"
                            + KingsButBad.kingGender.toUpperCase()
@@ -112,7 +128,8 @@ public class KingCommand implements CommandExecutor {
                            + "</b><blue> has invited you to being <gradient:#FFFF52:#FFBA52><b>their sidekick</b><gradient:#FFFF52:#FFBA52>! <red>use /accept to accept."
                      )
                   );
-                  sender.sendMessage(
+                  if(pe != null)
+                   sender.sendMessage(
                           CreateText.addColors(
                                   "<gradient:#FFFF52:#FFBA52><b>"
                                           + KingsButBad.kingGender.toUpperCase()
@@ -168,7 +185,8 @@ public class KingCommand implements CommandExecutor {
                      }
                      if (KingsButBad.roles.get(pe) == Role.PEASANT) {
                         KingsButBad.invitations.put(pe, Role.KNIGHT);
-                        pe.sendMessage(
+                        if(pe != null)
+                           pe.sendMessage(
                            CreateText.addColors(
                               "<gradient:#FFFF52:#FFBA52><b>"
                                  + RoleManager.getKingGender(p)
@@ -177,7 +195,8 @@ public class KingCommand implements CommandExecutor {
                                  + "</b><blue> has invited you to being a <gray>knight! <red>use /accept to accept."
                            )
                         );
-                        sender.sendMessage(
+                        if(pe != null)
+                           sender.sendMessage(
                                 CreateText.addColors(
                                         "<gradient:#FFFF52:#FFBA52><b>"
                                                 + RoleManager.getKingGender(p)
@@ -239,9 +258,14 @@ public class KingCommand implements CommandExecutor {
                      }
 
                      Player pe = Bukkit.getPlayer(args[1]);
+                     if(KingsButBad.lastKing == pe || KingsButBad.lastKing2 == pe){
+                        sender.sendMessage(CreateText.addColors("<red>Sorry, You can't /king Prince this Player! <gray>(<white>They were last King!<white>)"));
+                        return true;
+                     }
                      if (KingsButBad.roles.get(pe) == Role.PEASANT) {
                         KingsButBad.invitations.put(pe, Role.PRINCE);
-                        pe.sendMessage(
+                        if(pe != null)
+                           pe.sendMessage(
                            CreateText.addColors(
                               "<gradient:#FFFF52:#FFBA52><b>"
                                  + RoleManager.getKingGender(p)
@@ -250,13 +274,14 @@ public class KingCommand implements CommandExecutor {
                                  + "</b><blue> has invited you to being <yellow>The Prince! <red>use /accept to accept."
                            )
                         );
-                        sender.sendMessage(
+                        if(pe != null)
+                           sender.sendMessage(
                                 CreateText.addColors(
                                         "<gradient:#FFFF52:#FFBA52><b>"
                                                 + RoleManager.getKingGender(p)
                                                 + " "
                                                 + p.getName().toUpperCase()
-                                                + "</b><blue> you, have invited "+ ((Player) sender).getPlayer().getName() +" to become a <yellow>The Prince!"
+                                                + "</b><blue> you, have invited "+ Objects.requireNonNull(((Player) sender).getPlayer()).getName() +" to become a <yellow>The Prince!"
                                 )
                         );
                      } else {
@@ -288,26 +313,27 @@ public class KingCommand implements CommandExecutor {
                         );
                         return true;
                      }
+                     if(pe == null) return true;
                      if (KingsButBad.roles.get(pe) == Role.PEASANT) {
                         KingsButBad.invitations.put(pe, Role.PRISON_GUARD);
-                        pe.sendMessage(
-                           CreateText.addColors(
-                              "<gradient:#FFFF52:#FFBA52><b>"
-                                 + RoleManager.getKingGender(p)
-                                 + " "
-                                 + p.getName().toUpperCase()
-                                 + "</b><blue> has invited you to being a <blue><b>Prison Guard<reset><blue>! <red>use /accept to accept."
-                           )
-                        );
-                        sender.sendMessage(
-                                CreateText.addColors(
-                                        "<gradient:#FFFF52:#FFBA52><b>"
-                                                + RoleManager.getKingGender(p)
-                                                + " "
-                                                + p.getName().toUpperCase()
-                                                + "</b><blue> you, have invited "+pe.getName()+" to become a <blue><b>Prison Guard<reset><blue>!"
-                                )
-                        );
+                         pe.sendMessage(
+                         CreateText.addColors(
+                            "<gradient:#FFFF52:#FFBA52><b>"
+                               + RoleManager.getKingGender(p)
+                               + " "
+                               + p.getName().toUpperCase()
+                               + "</b><blue> has invited you to being a <blue><b>Prison Guard<reset><blue>! <red>use /accept to accept."
+                         )
+                      );
+                         sender.sendMessage(
+                              CreateText.addColors(
+                                      "<gradient:#FFFF52:#FFBA52><b>"
+                                              + RoleManager.getKingGender(p)
+                                              + " "
+                                              + p.getName().toUpperCase()
+                                              + "</b><blue> you, have invited "+pe.getName()+" to become a <blue><b>Prison Guard<reset><blue>!"
+                              )
+                      );
                      } else {
                         p.sendMessage(
                            CreateText.addColors(
@@ -347,27 +373,28 @@ public class KingCommand implements CommandExecutor {
                         );
                         return true;
                      }
+                     if(pe == null) return true;
                      if (KingsButBad.roles.get(pe) == Role.PEASANT) {
                         KingsButBad.bodyLink.put(pe, p);
                         KingsButBad.invitations.put(pe, Role.BODYGUARD);
-                        pe.sendMessage(
-                           CreateText.addColors(
-                              "<gradient:#FFFF52:#FFBA52><b>"
-                                 + RoleManager.getKingGender(p)
-                                 + " "
-                                 + p.getName().toUpperCase()
-                                 + "</b><blue> has invited you to being a <dark_gray><b>Body Guard<reset><blue>! <red>use /accept to accept."
-                           )
-                        );
-                        sender.sendMessage(
-                                CreateText.addColors(
-                                        "<gradient:#FFFF52:#FFBA52><b>"
-                                                + RoleManager.getKingGender(p)
-                                                + " "
-                                                + p.getName().toUpperCase()
-                                                + "</b><blue> you, have invited "+pe.getName()+" to become a <dark_gray><b>Body Guard<reset><blue>!"
-                                )
-                        );
+                         pe.sendMessage(
+                         CreateText.addColors(
+                            "<gradient:#FFFF52:#FFBA52><b>"
+                               + RoleManager.getKingGender(p)
+                               + " "
+                               + p.getName().toUpperCase()
+                               + "</b><blue> has invited you to being a <dark_gray><b>Body Guard<reset><blue>! <red>use /accept to accept."
+                         )
+                      );
+                         sender.sendMessage(
+                              CreateText.addColors(
+                                      "<gradient:#FFFF52:#FFBA52><b>"
+                                              + RoleManager.getKingGender(p)
+                                              + " "
+                                              + p.getName().toUpperCase()
+                                              + "</b><blue> you, have invited "+pe.getName()+" to become a <dark_gray><b>Body Guard<reset><blue>!"
+                              )
+                      );
                      } else {
                         p.sendMessage(
                            CreateText.addColors(
@@ -407,10 +434,11 @@ public class KingCommand implements CommandExecutor {
                         );
                         return true;
                      }
-                     if (KingsButBad.roles.get(pe) != Role.PEASANT && KingsButBad.roles.get(pe) != Role.KING) {
+                     if(pe == null) return true;
+                     if (KingsButBad.roles.get(pe) != Role.KING && KingsButBad.roles.get(pe).isPowerful) {
                         KingsButBad.roles.put(pe, Role.PEASANT);
                         RoleManager.givePlayerRole(pe);
-                        sender.sendMessage(CreateText.addColors("<gray>You have banished <white>"+pe.getName()+"<gray>from under your command."));
+                        sender.sendMessage(CreateText.addColors("<gray>You have banished <white>"+pe.getName()+" <gray>from under your command."));
                      } else {
                         p.sendMessage(
                            CreateText.addColors(
@@ -418,7 +446,7 @@ public class KingCommand implements CommandExecutor {
                                  + RoleManager.getKingGender(p)
                                  + " "
                                  + p.getName().toUpperCase()
-                                 + "</b><blue>, that player <red>is a peasant."
+                                 + "</b><blue>, that player <red>is not under your command."
                            )
                         );
                      }
@@ -446,7 +474,7 @@ public class KingCommand implements CommandExecutor {
                   p.sendMessage(CreateText.addColors("<blue> Your goal is to <red>survive long<blue> and be <gold>powerful."));
                   p.sendMessage(
                      CreateText.addColors(
-                        "<red>To get started, I'd reccomend getting some <gradient:#0095ff:#1e00ff>Knights<red> to help you in <dark_red>combat."
+                        "<red>To get started, I'd recommend getting some <gradient:#0095ff:#1e00ff>Knights<red> to help you in <dark_red>combat."
                      )
                   );
                   p.sendMessage("");

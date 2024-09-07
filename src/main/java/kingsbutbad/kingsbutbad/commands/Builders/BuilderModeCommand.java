@@ -14,12 +14,12 @@ import org.jetbrains.annotations.NotNull;
 public class BuilderModeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-            Player targetPlayer = null;
-            if(strings.length == 0 && commandSender instanceof Player p) targetPlayer=p;
-            if(targetPlayer == null) targetPlayer = Bukkit.getPlayer(strings[0]);
-            boolean isBuilderMode = Keys.isBuilderMode.get(targetPlayer, false);
-            if (targetPlayer != null)
-                Keys.isBuilderMode.set(targetPlayer, !isBuilderMode);
+        Player targetPlayer = null;
+        if(strings.length == 0 && commandSender instanceof Player p) targetPlayer=p;
+        if(targetPlayer == null) targetPlayer = Bukkit.getPlayer(strings[0]);
+        if(targetPlayer == null) return true;
+        boolean isBuilderMode = Keys.isBuilderMode.get(targetPlayer, false);
+        Keys.isBuilderMode.set(targetPlayer, !isBuilderMode);
         targetPlayer.sendMessage(CreateText.addColors("<gray>Your builder mode has been <white>"+isEnabled(!isBuilderMode)+" <gray>by <white>"+commandSender.getName()+"<gray>!"));
         BotManager.getBuilderChannel().sendMessage(DiscordUtils.deformat(targetPlayer.getName()) + " builder mode has been "+isEnabled(!isBuilderMode)+" by "+DiscordUtils.deformat(commandSender.getName())+"!").queue();
         return false;

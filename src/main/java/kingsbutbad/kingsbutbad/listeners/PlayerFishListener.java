@@ -12,14 +12,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerFishListener implements Listener {
    @EventHandler
+   @SuppressWarnings("deprecation")
    public void onPlayerFish(PlayerFishEvent event) {
       if (event.getState().equals(State.CAUGHT_FISH)) {
          event.getCaught().remove();
          Player player = event.getPlayer();
          if (!player.hasCooldown(Material.FISHING_ROD)) {
-            player.getInventory().addItem(new ItemStack[]{new ItemStack(Material.SALMON)});
+            player.getInventory().addItem(new ItemStack(Material.SALMON));
             if (player.getItemInHand().getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
-               player.getInventory().addItem(new ItemStack[]{new ItemStack(Material.SALMON, new Random().nextInt(0, 3))});
+               player.getInventory().addItem(new ItemStack(Material.SALMON, new Random().nextInt(0, 3)));
             }
          }
       }

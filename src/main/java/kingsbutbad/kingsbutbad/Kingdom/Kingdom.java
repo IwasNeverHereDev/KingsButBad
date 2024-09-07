@@ -46,7 +46,7 @@ public class Kingdom {
    private final Location blackMarketInsidePrisoner;
    private final Location blackMarketExitPrisoner;
    private final List<Location> cells;
-   private final  Location bmSafe;
+   private final List<Location> bmSafe;
    private final Location prisonGuardSpawn;
    private final Location bmPrison1;
    private final Location bmPrison2;
@@ -90,7 +90,7 @@ public class Kingdom {
            Location prison2,
            Location bm1,
            Location bm2,
-           Location prisonLightPowerBlock, Location blackMarketInsidePrisoner, Location blackMarketExitPrisoner, List<Location> cells, Location bmSafe, Location prisonGuardSpawn, Location bmPrison1, Location bmPrison2, Location bmPrisonTrader, Location raidSpawn
+           Location prisonLightPowerBlock, Location blackMarketInsidePrisoner, Location blackMarketExitPrisoner, List<Location> cells, List<Location> bmSafe, Location prisonGuardSpawn, Location bmPrison1, Location bmPrison2, Location bmPrisonTrader, Location raidSpawn
    ) {
       this.material = material;
       this.isPublic = isPublic;
@@ -305,7 +305,7 @@ public class Kingdom {
       return cells;
    }
 
-   public Location getBmSafe() {
+   public List<Location> getBmSafe() {
       return bmSafe;
    }
 

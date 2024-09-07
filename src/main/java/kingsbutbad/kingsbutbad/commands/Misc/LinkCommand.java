@@ -20,9 +20,7 @@ public class LinkCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (commandSender instanceof Player p) {
-            // Check if player is already linked
-            if (Keys.link != null && Keys.link.has(p)) {
-                // Safely retrieve the bot user by ID
+            if (Keys.link.has(p)) {
                 String linkedUserId = Keys.link.get(p);
                 if (linkedUserId != null) {
                     var user = BotManager.getBot().getUserById(linkedUserId);
@@ -36,20 +34,14 @@ public class LinkCommand implements CommandExecutor {
                 }
                 return true;
             }
-
-            // Check if a code has already been generated for the player
             if (codes.containsKey(p)) {
                 commandSender.sendMessage(CreateText.addColors("<gray>You have already been given a code! (<white>" + codes.get(p) + "<gray>)"));
                 return true;
             }
-
-            // Generate and assign a new code
             Random random = new Random();
             int code = random.nextInt(1000, 9999);
             codes.put(p, String.valueOf(code));
             commandSender.sendMessage(CreateText.addColors("<gray>Your code to link your account is <white>" + code + "<gray> it will timeout in 1 min!"));
-
-            // Schedule task to remove the code after 1 minute
             Bukkit.getScheduler().scheduleSyncDelayedTask(KingsButBad.pl, () -> {
                 if (codes.containsKey(p)) {
                     p.sendMessage(CreateText.addColors("<gray>Your code has expired!"));

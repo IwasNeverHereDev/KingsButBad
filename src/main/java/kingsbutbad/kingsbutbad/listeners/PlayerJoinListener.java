@@ -2,6 +2,8 @@ package kingsbutbad.kingsbutbad.listeners;
 
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.keys.DatabaseManager;
+import kingsbutbad.kingsbutbad.keys.Key;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.DiscordUtils;
@@ -16,10 +18,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.io.File;
+import java.util.UUID;
+
 public class PlayerJoinListener implements Listener {
 
    @EventHandler
+   @SuppressWarnings("deprecation")
    public void onPlayerJoin(PlayerJoinEvent event) {
+      DatabaseManager dbManager = DatabaseManager.loadData(new File(DatabaseManager.getDataFolder(), "playerdata.db").getPath());
+      UUID playerId = event.getPlayer().getUniqueId();
+      for (Key<?> key : Keys.values()) {
+         Object value = key.get(event.getPlayer());
+         if (value != null) {
+            dbManager.setValue(playerId, key.name(), value);
+         }
+      }
+      dbManager.saveData(new File(DatabaseManager.getDataFolder(), "playerdata.db").getPath());
       updateTab(event.getPlayer());
       sendDiscordMessage(event.getPlayer());
       if(Keys.vanish.get(event.getPlayer(), false)) {
@@ -50,7 +65,7 @@ public class PlayerJoinListener implements Listener {
          RoleManager.givePlayerRole(event.getPlayer());
       }
    }
-
+   @SuppressWarnings("deprecation")
    public static void updateTab(Player target) {
       int playercount = 0;
       for(Player p : Bukkit.getOnlinePlayers())
@@ -103,7 +118,7 @@ public class PlayerJoinListener implements Listener {
    }
    private void sendDiscordMessage(Player p){
       if(Keys.link.has(p)) return;
-      p.sendMessage(CreateText.addColors("<gray>You haven't linked your <light_blue>Discord <white>account<gray>!"));
+      p.sendMessage(CreateText.addColors("<gray>You haven't linked your <blue>Discord <white>account<gray>!"));
       Bukkit.dispatchCommand(p, "discord");
    }
 }

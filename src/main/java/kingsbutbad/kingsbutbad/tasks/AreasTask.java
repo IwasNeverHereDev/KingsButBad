@@ -2,9 +2,9 @@ package kingsbutbad.kingsbutbad.tasks;
 
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -12,10 +12,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import static kingsbutbad.kingsbutbad.tasks.MiscTask.bossbar;
 
 public class AreasTask extends BukkitRunnable {
-    private static final String PRISON_TITLE = ChatColor.GOLD + "-= The Prison =-";
-    private static final String CASTLE_TITLE = ChatColor.GRAY + "-= The Castle =-";
-    private static final String OUTSIDE_TITLE = ChatColor.GREEN + "-= The Outside =-";
-    private static final String STAY_IN_PRISON_TITLE = ChatColor.RED + "Stay in the prison!";
+    private static final String PRISON_TITLE = CreateText.addColors("<gray>-= <gold>The Prison <gray>=-");
+    private static final String CASTLE_TITLE = CreateText.addColors("<gray>-= <white>The Castle <gray>=-");
+    private static final String OUTSIDE_TITLE = CreateText.addColors("<gray>-= <green>The Outside <gray>=-");
+    private static final String STAY_IN_PRISON_TITLE = CreateText.addColors("<red>Stay in the prison!");
 
     public void run() {
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -23,7 +23,7 @@ public class AreasTask extends BukkitRunnable {
             handlePrisonGuard(player);
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void updatePlayerZone(Player player) {
         int currentZone = KingsButBad.currentZone.getOrDefault(player, 0);
 
@@ -46,6 +46,7 @@ public class AreasTask extends BukkitRunnable {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void handlePrisonGuard(Player player) {
         Role playerRole = KingsButBad.roles.get(player);
 
@@ -60,9 +61,8 @@ public class AreasTask extends BukkitRunnable {
     }
 
     private void removePassengers(Player player) {
-        for (Entity passenger : player.getPassengers()) {
-            passenger.leaveVehicle();
-        }
+        for (Entity passenger : player.getPassengers())
+            player.removePassenger(passenger);
     }
 
     private void teleportToPrison(Player player) {

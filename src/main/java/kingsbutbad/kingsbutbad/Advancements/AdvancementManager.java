@@ -14,7 +14,7 @@ public class AdvancementManager {
         Advancement advancement = Bukkit.getAdvancement(key);
 
         if (advancement == null) {
-            Bukkit.getLogger().warning("Advancement " + key.toString() + " does not exist.");
+            Bukkit.getLogger().warning("Advancement " + key + " does not exist.");
             return;
         }
 
@@ -26,6 +26,6 @@ public class AdvancementManager {
         for (String criterion : progress.getRemainingCriteria())
             progress.awardCriteria(criterion);
 
-        Bukkit.getLogger().info("Granted advancement " + key.toString() + " to player " + player.getName());
+        Bukkit.getLogger().info("Granted advancement " + key + " to player " + player.getName());
     }
 }

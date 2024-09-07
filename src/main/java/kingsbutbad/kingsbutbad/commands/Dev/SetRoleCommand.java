@@ -1,6 +1,7 @@
 package kingsbutbad.kingsbutbad.commands.Dev;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Role;
 import kingsbutbad.kingsbutbad.utils.RoleManager;
 import org.bukkit.Bukkit;
@@ -13,16 +14,14 @@ import org.jetbrains.annotations.NotNull;
 public class SetRoleCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        // Check if the correct number of arguments are provided
         if (strings.length < 2) {
-            commandSender.sendMessage("Usage: /setrole <player> <role>");
+            commandSender.sendMessage(CreateText.addColors("<red>Usage<gray>: <white>/SetRole <player> <role>"));
             return false;
         }
 
-        // Retrieve and validate the player
         Player p = Bukkit.getPlayer(strings[0]);
         if (p == null) {
-            commandSender.sendMessage("Player not found.");
+            commandSender.sendMessage(CreateText.addColors("<red>Player not found."));
             if(commandSender instanceof Player)
                 p = Bukkit.getPlayer(commandSender.getName());
             else
@@ -32,13 +31,12 @@ public class SetRoleCommand implements CommandExecutor {
         try {
             role = Role.valueOf(strings[1].toUpperCase());
         } catch (IllegalArgumentException e) {
-            commandSender.sendMessage("Invalid role specified.");
+            commandSender.sendMessage(CreateText.addColors("<red>Invalid role specified."));
             return false;
         }
         KingsButBad.roles.put(p, role);
         RoleManager.givePlayerRole(p);
-        commandSender.sendMessage("Role set successfully.");
-
+        commandSender.sendMessage(CreateText.addColors("<green>Role set successfully."));
         return true;
     }
 }

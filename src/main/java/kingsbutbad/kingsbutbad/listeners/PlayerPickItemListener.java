@@ -12,7 +12,6 @@ public class PlayerPickItemListener implements Listener {
         if(Keys.vanish.get(event.getPlayer(), false)) {
             event.getPlayer().sendMessage(CreateText.addColors("<gray>You can't pickup items in Vanish!"));
             event.setCancelled(true);
-            return;
         }
     }
 }

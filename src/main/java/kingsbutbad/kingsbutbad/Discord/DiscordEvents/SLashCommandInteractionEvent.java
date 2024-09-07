@@ -24,14 +24,11 @@ public class SLashCommandInteractionEvent extends ListenerAdapter {
         String commandName = event.getName();
 
         if (commandName.equals("link")) {
-            // Ensure the "code" option is present and not null
             if (event.getOption("code") != null) {
                 String code = event.getOption("code").getAsString();
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    // Check if the player has a code and if it matches
                     if (LinkCommand.codes.containsKey(p) && code.equals(LinkCommand.codes.get(p))) {
-                        // Ensure the interaction and member objects are not null
                         if (event.getInteraction() != null && event.getInteraction().getMember() != null) {
                             p.sendMessage(CreateText.addColors("<gray>You have been now linked! (<white>" + event.getInteraction().getMember().getEffectiveName() + "<gray>)"));
                             Keys.link.set(p, event.getMember().getId());
@@ -43,8 +40,6 @@ public class SLashCommandInteractionEvent extends ListenerAdapter {
                         return;
                     }
                 }
-
-                // If code doesn't match or no player found
                 event.reply("Invalid code or no player found with that code.").setEphemeral(true).queue();
             } else {
                 event.reply("Error: You must provide a code.").setEphemeral(true).queue();
@@ -53,23 +48,23 @@ public class SLashCommandInteractionEvent extends ListenerAdapter {
         if(commandName.equals("players")){
             int playerCount = 0;
             int vanishCount = 0;
-            String players = "";
-            String vanishedPlayers = "";
+            StringBuilder players = new StringBuilder();
+            StringBuilder vanishedPlayers = new StringBuilder();
             for(Player p : Bukkit.getOnlinePlayers()) {
                 String playerlistname = ChatColor.stripColor(p.getPlayerListName());
                 if (Keys.vanish.get(p, false)) {
-                    vanishedPlayers += playerlistname+"\n";
+                    vanishedPlayers.append(playerlistname).append("\n");
                     vanishCount++;
                 } else {
                     playerCount++;
-                    players += playerlistname+"\n";
+                    players.append(playerlistname).append("\n");
                 }
             }
-            vanishedPlayers += "\n(VISIBLE TO STAFF ONLY)\n";
+            vanishedPlayers.append("\n(VISIBLE TO STAFF ONLY)\n");
             EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.addField("**Online Players**: `"+playerCount+"`", players, false);
+            embedBuilder.addField("**Online Players**: `"+playerCount+"`", players.toString(), false);
             if(event.getMember().hasPermission(Permission.MESSAGE_MANAGE))
-                embedBuilder.addField("**Vanish Players **: `"+vanishCount+"`", vanishedPlayers, false);
+                embedBuilder.addField("**Vanish Players **: `"+vanishCount+"`", vanishedPlayers.toString(), false);
             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
         }
         if(commandName.equals("whatkingdom") || commandName.equals("whatmap")){
@@ -82,10 +77,10 @@ public class SLashCommandInteractionEvent extends ListenerAdapter {
             if(player.hasPlayedBefore()){
                 embedBuilder.setColor(Color.RED);
                 embedBuilder.setTitle(username+"'s Alts");
-                String alts = "";
+                StringBuilder alts = new StringBuilder();
                 for(CBPlayer name : KingsButBad.cbp.getDatabase().getCBPlayer(player.getUniqueId()).getSameIps())
-                    alts += "`"+name.getName()+"`,\n";
-                embedBuilder.setDescription(alts);
+                    alts.append("`").append(name.getName()).append("`,\n");
+                embedBuilder.setDescription(alts.toString());
                 event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
             }else{
                 event.reply("This player has never played before!").queue();

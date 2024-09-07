@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class StaffChatCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -24,6 +26,7 @@ public class StaffChatCommand implements CommandExecutor {
         sendStaffChat(sender, message);
         return true;
     }
+    @SuppressWarnings("deprecation")
     public static void sendStaffChat(CommandSender sender, String msg){
         if(!sender.hasPermission("kbb.staff")) {
             sender.sendMessage(CreateText.addColors("<red>You don't have access to Staff Chat! <gray>(<white>If your Builder change your selected Chat Settings<gray>)"));
@@ -31,7 +34,7 @@ public class StaffChatCommand implements CommandExecutor {
         }
         String prefix = "";
         if(sender instanceof Player)
-            prefix = "<gray>("+CreateText.convertAmpersandToMiniMessage(KingsButBad.api.getUserManager().getUser(sender.getName()).getCachedData().getMetaData().getPrefix())+"<gray>) ";
+            prefix = "<gray>("+CreateText.convertAmpersandToMiniMessage(Objects.requireNonNull(Objects.requireNonNull(KingsButBad.api.getUserManager().getUser(sender.getName())).getCachedData().getMetaData().getPrefix()))+"<gray>) ";
         String messageFormated = CreateText.addColors("<gray>[<red>Staff Chat<gray>] "+prefix+sender.getName()+"<gray>: <white>"+msg);
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.hasPermission("kbb.staff")) {

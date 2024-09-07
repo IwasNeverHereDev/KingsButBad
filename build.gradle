@@ -39,14 +39,30 @@ repositories {
 }
 
 dependencies {
+    // jetty Misc (Website)
+    implementation 'org.eclipse.jetty:jetty-server:11.0.0'
+    implementation 'org.eclipse.jetty:jetty-servlet:11.0.0'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
+    // Paper API
     paperweight.paperDevBundle("1.20.3-R0.1-SNAPSHOT")
+
+    // Miscellaneous (Chat)
     implementation "cc.ekblad:4koma:1.2.0"
     implementation 'net.kyori:adventure-text-minimessage:4.12.0'
+
+    // Spigot dependencies (excluded SpigotMC group to avoid conflict)
     compileOnly("LibsDisguises:LibsDisguises:10.0.31") {
         exclude group: "org.spigotmc"
     }
+
+    // LuckPerms API (Ranks)
     compileOnly 'net.luckperms:api:5.4'
+
+    // Discord JDA (Discord Bot)
     implementation "net.dv8tion:JDA:5.0.0-beta.18"
+
+    // Local jar file (Punishment System)
     compileOnly files("src/main/java/kingsbutbad/kingsbutbad/utils/CBP/CBP.jar")
 }
 

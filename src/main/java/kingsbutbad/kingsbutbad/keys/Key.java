@@ -18,6 +18,13 @@ public record Key<Z>(String name, NamespacedKey key, KeyType<Z> type) {
             return defaultValue;
         return value;
     }
+    public boolean getBoolean(PersistentDataHolder player, Z defaultValue) {
+        var value = get(player);
+
+        if (value == null || type != KeyTypes.BOOLEAN)
+            return (boolean) defaultValue;
+        return (boolean) value;
+    }
 
     public boolean has(PersistentDataHolder player) {
         var pdc = player.getPersistentDataContainer();
@@ -27,12 +34,6 @@ public record Key<Z>(String name, NamespacedKey key, KeyType<Z> type) {
     public void set(PersistentDataHolder player, Z value) {
         var pdc = player.getPersistentDataContainer();
         pdc.set(key, type.dataType(), value);
-    }
-    public void addInt(PersistentDataHolder player, Z value) {
-        var pdc = player.getPersistentDataContainer();
-        int currentValue = pdc.getOrDefault(key, PersistentDataType.INTEGER, 0);
-        int newValue = currentValue + (Integer) value;
-        pdc.set(key, PersistentDataType.INTEGER, newValue);
     }
     public void addDouble(PersistentDataHolder player, Z value) {
         var pdc = player.getPersistentDataContainer();

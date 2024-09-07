@@ -8,10 +8,8 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 public class PlayerToggleSneakListener implements Listener {
    @EventHandler
    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-      if (event.isSneaking()) {
-         for (Entity passenger : event.getPlayer().getPassengers()) {
+      if (event.isSneaking())
+         for (Entity passenger : event.getPlayer().getPassengers())
             passenger.leaveVehicle();
-         }
-      }
    }
 }

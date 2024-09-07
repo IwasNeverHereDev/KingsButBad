@@ -1,6 +1,5 @@
 package kingsbutbad.kingsbutbad.Discord;
 
-import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReactMessageEvent;
 import kingsbutbad.kingsbutbad.Discord.DiscordEvents.SLashCommandInteractionEvent;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReceiveMessageEvent;
@@ -11,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.ForumChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.NewsChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
@@ -25,6 +25,7 @@ public class BotManager {
    private static TextChannel stafflogChannel;
    private static TextChannel builderChannel;
    private static ForumChannel reportChannel;
+   private static NewsChannel updateChannel;
    private static Role updateRole;
    private static Role startRole;
    private static Role stopRole;
@@ -43,7 +44,6 @@ public class BotManager {
                     .enableCache(CacheFlag.VOICE_STATE)
                     .setActivity(Activity.playing("Playing KingsButBad.minehut.gg!"))
                     .addEventListeners(new SLashCommandInteractionEvent())
-                    .addEventListeners(new ReactMessageEvent())
                     .build();
             bot.awaitReady();
 
@@ -58,6 +58,7 @@ public class BotManager {
             updateRole = getRoleById("UpdateRoleID");
             startRole = getRoleById("StartRoleID");
             stopRole = getRoleById("StopRoleID");
+            updateChannel = getNewsChannelById("ChangelogChannelID");
 
          } catch (Exception e) {
             logError("An error occurred while initializing the Discord bot.", e);
@@ -73,6 +74,10 @@ public class BotManager {
       return stafflogChannel;
    }
 
+   public static NewsChannel getUpdateChannel() {
+      return updateChannel;
+   }
+
    private static void saveConfigWithDefaultToken(String discordToken) {
       KingsButBad.pl.getConfig().set("DISCORD_BOT_TOKEN", discordToken);
       KingsButBad.pl.saveConfig();
@@ -84,6 +89,14 @@ public class BotManager {
       TextChannel channel = bot.getTextChannelById(channelId);
       if (channel == null) {
          logSevere("Channel not found! [" + configKey + ": CONFIG.YML]");
+      }
+      return channel;
+   }
+   private static NewsChannel getNewsChannelById(String configKey) {
+      String channelId = getConfigString(configKey, "0");
+      NewsChannel channel = bot.getNewsChannelById(channelId);
+      if (channel == null) {
+         logSevere("News Channel not found! [" + configKey + ": CONFIG.YML]");
       }
       return channel;
    }
@@ -175,7 +188,7 @@ public class BotManager {
    }
 
    private static void logError(String message, Exception e) {
-      KingsButBad.pl.getLogger().severe(message);
-      e.printStackTrace();
+      Bukkit.getLogger().severe(message);
+      Bukkit.getLogger().severe(e.getMessage());
    }
 }

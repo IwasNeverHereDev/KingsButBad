@@ -20,6 +20,7 @@ public class FailsafeTask extends BukkitRunnable {
          handleWaterDamage(p);
       }
    }
+   @SuppressWarnings("deprecation")
    public void handleWaterDamage(Player p) {
       if (p.getLocation().getBlock().getType().equals(Material.WATER)) {
          p.setNoDamageTicks(0);
@@ -29,7 +30,7 @@ public class FailsafeTask extends BukkitRunnable {
          piranha.setSilent(true);
          piranha.setGravity(false);
          piranha.setCustomName("Piranha");
-         p.damage(5, piranha);
+         p.damage(10, piranha);
          piranha.remove();
       }
    }

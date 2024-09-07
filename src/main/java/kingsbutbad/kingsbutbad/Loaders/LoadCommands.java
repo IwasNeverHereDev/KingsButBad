@@ -7,6 +7,9 @@ import kingsbutbad.kingsbutbad.commands.Builders.BuilderModeCommand;
 import kingsbutbad.kingsbutbad.commands.Builders.MapsCommand;
 import kingsbutbad.kingsbutbad.commands.Builders.SwapKingdomCommand;
 import kingsbutbad.kingsbutbad.commands.Dev.*;
+import kingsbutbad.kingsbutbad.commands.Clans.ClanCommand;
+import kingsbutbad.kingsbutbad.commands.Leaderboards.LeaderboardCommand;
+import kingsbutbad.kingsbutbad.commands.Misc.ChangelogCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.DiscordCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.LinkCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.UnLinkCommand;
@@ -23,11 +26,9 @@ public class LoadCommands {
       setExecutor("setMoney", new SetMoneyCommand());
       setExecutor("resign", new ResignCommand());
       setExecutor("discord", new DiscordCommand());
-      setExecutor("soundWaves", new SoundWavesCommand());
       setExecutor("resetVillagers", new ResetVillagersCommand());
       setExecutor("pay", new PayCommand());
       setExecutor("swapKingdom", new SwapKingdomCommand());
-      setExecutor("serverStats", new ServerStatsCommand());
       setExecutor("maps", new MapsCommand());
       setExecutor("cells", new CellCommand());
       setExecutor("builderMode", new BuilderModeCommand());
@@ -44,6 +45,13 @@ public class LoadCommands {
       setExecutor("rules", new RulesCommand());
       setExecutor("reboot", new RebootCommand());
       setExecutor("playtime", new PlaytimeCommand());
+      setExecutor("changelog", new ChangelogCommand());
+      setExecutor("hello", new HelloCommand());
+      setExecutor("key", new KeysCommand());
+      setExecutor("leaderboard", new LeaderboardCommand());
+      setExecutor("clan", new ClanCommand());
+      setExecutor("debugclan", new DebugClanCommand());
+      setExecutor("kingdomreload", new KingdomReloadCommand());
    }
 
    private static void setExecutor(String cmd, CommandExecutor executor) {

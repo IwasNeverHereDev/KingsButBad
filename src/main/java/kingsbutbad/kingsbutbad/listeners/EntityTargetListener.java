@@ -7,16 +7,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.potion.PotionEffectType;
 
 public class EntityTargetListener implements Listener {
    @EventHandler
    public void onEntityTarget(EntityTargetEvent event) {
-      if (!event.getReason().equals(TargetReason.TARGET_ATTACKED_ENTITY)
-         && event.getTarget() instanceof Player player
-              && event.getEntity().getType().equals(EntityType.ZOMBIE)
-         && !KingsButBad.roles.get(player).equals(Role.CRIMINAl)) {
-         event.setCancelled(true);
+      if (event.getTarget() instanceof Player player) {
+         EntityType type = event.getEntity().getType();
+         Role role = KingsButBad.roles.getOrDefault(player, Role.PEASANT);
+         if(type.equals(EntityType.ZOMBIE)) {
+            if (role == Role.CRIMINAL || role == Role.OUTLAW) return;
+            event.setCancelled(true);
+         }else if(type.equals(EntityType.WITHER_SKELETON))
+            if(player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE) || player.getNoDamageTicks() >= 5) event.setCancelled(true);
       }
    }
 }

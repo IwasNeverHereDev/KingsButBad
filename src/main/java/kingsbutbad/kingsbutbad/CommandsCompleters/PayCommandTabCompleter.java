@@ -1,9 +1,5 @@
 package kingsbutbad.kingsbutbad.CommandsCompleters;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import kingsbutbad.kingsbutbad.keys.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,8 +8,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PayCommandTabCompleter implements TabCompleter {
-   private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+(\\.\\d+)?");
 
    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
       List<String> suggestions = new ArrayList<>();

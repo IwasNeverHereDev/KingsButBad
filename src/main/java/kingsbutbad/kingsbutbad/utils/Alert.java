@@ -27,7 +27,7 @@ public class Alert {
       executor.sendMessage(ChatColor.translateAlternateColorCodes('&', alertMessage));
    }
 
-   public static enum AlertType {
-      FILTERs;
+   public enum AlertType {
+      FILTERs
    }
 }

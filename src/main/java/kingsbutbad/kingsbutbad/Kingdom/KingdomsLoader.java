@@ -6,8 +6,8 @@ import kingsbutbad.kingsbutbad.tasks.MiscTask;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,32 +17,38 @@ import org.bukkit.entity.Villager.Profession;
 public class KingdomsLoader {
    public static Kingdom activeKingdom;
 
-   public KingdomsLoader(Kingdom kingdom) {
+   public KingdomsLoader(Kingdom kingdom, boolean isReload) {
       activeKingdom = kingdom;
-      for (Player p : Bukkit.getOnlinePlayers()) {
-         if(Keys.isBuilderMode.get(p, false)) {p.sendMessage(CreateText.addColors("<gray>That kingdom has been swapped to "+kingdom.getDisplayName()+"<gray> Kingdom! (You haven't been teleported for you are in Builder mode!)"));continue;}
-         p.sendMessage(CreateText.addColors("\n<gray>After the long voyage you have arrived at <white>" + kingdom.getDisplayName() + "<gray> Kingdom!\n"));
-         switch (KingsButBad.roles.getOrDefault(p, Role.PEASANT)) {
-            case KING:
-            case PRINCE:
-            case BODYGUARD:
-               this.tp(p, kingdom.getKingSpawn());
-               break;
-            case KNIGHT:
-               this.tp(p, kingdom.getKnightsSpawn());
-               break;
-            case PEASANT:
-            case SERVANT:
-               this.tp(p, kingdom.getSpawn());
-               break;
-            case CRIMINAl:
-               this.tp(p, kingdom.getMafiaSpawn());
-               break;
-            case PRISONER:
-               this.tp(p, MiscTask.cells.get(0));
-            case PRISON_GUARD:
-               this.tp(p, kingdom.getPrisonGuardSpawn());
-            case OUTLAW: this.tp(p, kingdom.getMafiaSpawn());
+      if(!isReload) {
+         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (Keys.isBuilderMode.get(p, false)) {
+               p.sendMessage(CreateText.addColors("<gray>That kingdom has been swapped to " + kingdom.getDisplayName() + "<gray> Kingdom! (You haven't been teleported for you are in Builder mode!)"));
+               continue;
+            }
+            p.sendMessage(CreateText.addColors("\n<gray>After the long voyage you have arrived at <white>" + kingdom.getDisplayName() + "<gray> Kingdom!\n"));
+            switch (KingsButBad.roles.getOrDefault(p, Role.PEASANT)) {
+               case KING:
+               case PRINCE:
+               case BODYGUARD:
+                  this.tp(p, kingdom.getKingSpawn());
+                  break;
+               case KNIGHT:
+                  this.tp(p, kingdom.getKnightsSpawn());
+                  break;
+               case PEASANT:
+               case SERVANT:
+                  this.tp(p, kingdom.getSpawn());
+                  break;
+               case CRIMINAL:
+                  this.tp(p, kingdom.getMafiaSpawn());
+                  break;
+               case PRISONER:
+                  this.tp(p, MiscTask.cells.get(0));
+               case PRISON_GUARD:
+                  this.tp(p, kingdom.getPrisonGuardSpawn());
+               case OUTLAW:
+                  this.tp(p, kingdom.getMafiaSpawn());
+            }
          }
       }
 
@@ -52,7 +58,7 @@ public class KingdomsLoader {
    public static void setActiveKingdomByName(String kingdomName) {
       for (Kingdom kingdom : KingdomsReader.kingdomsList) {
          if (kingdom.getName().equalsIgnoreCase(kingdomName)) {
-            new KingdomsLoader(kingdom);
+            new KingdomsLoader(kingdom, false);
             return;
          }
       }
@@ -62,14 +68,15 @@ public class KingdomsLoader {
 
    private void tp(Player p, Location loc) {
       if (loc.getWorld() == null) {
-         p.sendMessage(ChatColor.RED + "Sorry, I couldn't tp you! (Null World) Pls Contact _Aquaotter_.");
+         p.sendMessage(CreateText.addColors("<red>Sorry, I couldn't tp you! (Null World) Pls Contact _Aquaotter_."));
       } else {
          p.teleport(loc);
       }
    }
 
+   @SuppressWarnings("deprecation")
    private static Villager createVillager(Location location, String name, Profession profession) {
-      Villager villager = (Villager)Bukkit.getWorld("world").spawnEntity(location, EntityType.VILLAGER);
+      Villager villager = (Villager)getWorld().spawnEntity(location, EntityType.VILLAGER);
       villager.setCustomName(CreateText.addColors(name));
       villager.setCustomNameVisible(true);
       villager.setInvulnerable(true);
@@ -81,9 +88,16 @@ public class KingdomsLoader {
    private static Villager createVillager(Location location, String name) {
       return createVillager(location, name, Profession.NONE);
    }
+   private static World getWorld(){
+      World result = Bukkit.getWorld("world");
+      if(result == null) return Bukkit.getWorlds().get(0);
+      return result;
+   }
 
    public static void setupVillagers(Kingdom kingdom) {
-      for (Entity entity : Bukkit.getWorld("world").getEntities()) {
+      World world = Bukkit.getWorld("world");
+      if(world == null) return;
+      for (Entity entity : world.getEntities()) {
          if (entity instanceof Villager) {
             entity.remove();
          }

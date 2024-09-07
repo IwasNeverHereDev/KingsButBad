@@ -23,18 +23,14 @@ public class NoNoWords {
       File dataFolder = KingsButBad.pl.getDataFolder();
       File filterFile = new File(dataFolder, "filter.json");
 
-      if (!dataFolder.exists()) {
-         dataFolder.mkdirs(); // Create the folder if it does not exist
-      }
-
-      // Check if filter.json exists, if not, create it
+      if (!dataFolder.exists())
+         dataFolder.mkdirs();
       if (!filterFile.exists()) {
          try {
             if (filterFile.createNewFile()) {
-               // Create an empty JSON array as the initial content
                try (FileOutputStream fos = new FileOutputStream(filterFile);
                     OutputStreamWriter writer = new OutputStreamWriter(fos)) {
-                  writer.write("[]"); // Write an empty JSON array
+                  writer.write("[]");
                   Bukkit.getLogger().info("filter.json created with an empty array.");
                }
             } else {
@@ -50,12 +46,13 @@ public class NoNoWords {
            InputStreamReader reader = new InputStreamReader(fis)) {
 
          Gson gson = new Gson();
-         Type type = new TypeToken<List<String>>() {}.getType();
+         Type type = new TypeToken<List<String>>() {
+         }.getType();
          filteredWords = gson.fromJson(reader, type);
 
          if (filteredWords == null) {
             Bukkit.getLogger().warning("filter.json is empty or invalid.");
-            filteredWords = List.of(); // Initialize to an empty list
+            filteredWords = List.of();
          } else {
             Bukkit.getLogger().info("Filtered words loaded!");
          }
@@ -63,9 +60,6 @@ public class NoNoWords {
       } catch (IOException e) {
          Bukkit.getLogger().severe("Failed to load filter.json: " + e.getMessage());
       }
-   }
-   public List<String> getFilteredWords() {
-      return filteredWords;
    }
    public static HashMap<Player, String> previouslysaid = new HashMap<>();
 
@@ -135,7 +129,7 @@ public class NoNoWords {
 
       private final String msg;
 
-      private FilterReplacements(String msg) {
+      FilterReplacements(String msg) {
          this.msg = msg;
       }
 

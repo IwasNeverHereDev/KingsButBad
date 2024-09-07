@@ -8,7 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+
 public class VanishTask extends BukkitRunnable {
+    public static HashMap<Player, Integer> vanishPlayerTimeOfVanish = new HashMap<>();
     @Override
     public void run() {
         for(Player p : Bukkit.getOnlinePlayers()) {

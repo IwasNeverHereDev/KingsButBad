@@ -1,16 +1,13 @@
 package kingsbutbad.kingsbutbad.listeners;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
-import kingsbutbad.kingsbutbad.Kingdom.KingdomsReader;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.FormatUtils;
 import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.*;
@@ -19,15 +16,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.Random;
+
+@SuppressWarnings("deprecation")
 public class PlayerInteractListener implements Listener {
    @EventHandler
    public void onPlayerInteractEvent(PlayerInteractEvent event) {
       if(event.getClickedBlock() != null && event.getClickedBlock().getType().equals(Material.CAULDRON)){
          Player p = event.getPlayer();
-         if(KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.PRISONER || KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.PEASANT || KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.CRIMINAl || KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.OUTLAW){
+         if(KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.PRISONER) {
             p.teleport(KingdomsLoader.activeKingdom.getBlackMarketInsidePrisoner());
+            event.getPlayer().sendTitle("", CreateText.addColors("<gray>=-= BlackMarket (Prison) =-="), 0, 3,0);
          }
          event.setCancelled(true);
          return;
@@ -36,22 +40,63 @@ public class PlayerInteractListener implements Listener {
          if (event.getItem().getType().equals(Material.CLAY_BALL) && !event.getPlayer().isInsideVehicle() && !event.getPlayer().hasCooldown(Material.CLAY_BALL)
             )
           {
-            event.getPlayer().setCooldown(Material.CLAY_BALL, 80);
+             Location loc = event.getPlayer().getLocation();
+
+             for (int x = -1; x <= 1; x++) {
+                for (int y = 0; y <= 3; y++) { // Check only the player's level (y=0) and one block above (y=1)
+                   for (int z = -1; z <= 1; z++) {
+                      Block block = loc.clone().add(x, y, z).getBlock();
+                      if (!block.getType().equals(Material.AIR)) {
+                         event.getPlayer().sendMessage(CreateText.addColors("<red>Sorry, Try in a a More Open Area"));
+                         return;
+                      }
+                   }
+                }
+             }
+             if(event.getPlayer().getLocation().set(0, -1, 0).getBlock().getType() == Material.AIR){
+                event.getPlayer().sendMessage(CreateText.addColors("<red>Sorry, Try in a a More Open Area"));
+                return;
+             }
+             event.getPlayer().setCooldown(Material.CLAY_BALL, 80);
             Horse horse = (Horse)event.getPlayer().getWorld().spawnEntity(event.getPlayer().getLocation(), EntityType.HORSE);
             horse.setCustomName(event.getPlayer().getName() + "'s horse");
             horse.addPassenger(event.getPlayer());
             horse.setTamed(true);
+            horse.setJumpStrength(0);
             horse.getInventory().setArmor(new ItemStack(Material.IRON_HORSE_ARMOR));
             horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
          }
 
          if (event.getItem().getItemMeta() != null && event.getItem().getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Adrenaline Shot")) {
             event.getItem().setAmount(event.getItem().getAmount() - 1);
-            event.getPlayer().addPotionEffect(PotionEffectType.LUCK.createEffect(400, 0));
+            event.getPlayer().setCooldown(event.getItem().getType(), 20);
+            int amount = 0;
+            if(event.getPlayer().hasPotionEffect(PotionEffectType.LUCK))
+               amount = event.getPlayer().getPotionEffect(PotionEffectType.LUCK).getDuration();
+            if(amount >= 20 * 60 * 3){
+               event.setCancelled(true);
+               event.getPlayer().damage(10);
+               event.getPlayer().sendTitle("", CreateText.addColors("<red>Over Dose..."), 0, 5, 0);
+               event.getPlayer().addPotionEffect(PotionEffectType.SLOW.createEffect(amount/5, 0));
+               return;
+            }
+            event.getPlayer().addPotionEffect(PotionEffectType.LUCK.createEffect(amount+(20 * 20), 0));
          }
       }
 
       if (event.getClickedBlock() != null) {
+         if(event.getClickedBlock().getType().equals(Material.WATER)){
+             event.getPlayer().getInventory().getItemInMainHand();
+             if(event.getPlayer().getItemInHand().getType().equals(Material.GLASS_BOTTLE)){
+               event.setCancelled(true);
+               event.getPlayer().getInventory().remove(new ItemStack(Material.POTION, 1));
+               ItemStack bottle = new ItemStack(Material.GLASS_BOTTLE, 1);
+               PotionMeta potionMeta = (PotionMeta) bottle.getItemMeta();
+               potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 3, 1), false);
+               bottle.setItemMeta(potionMeta);
+               event.getPlayer().getInventory().addItem(bottle);
+            }
+         }
          if (event.getClickedBlock().getType() == Material.END_PORTAL_FRAME) {
             event.setCancelled(true);
             if(!KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT).isPowerful){
@@ -107,7 +152,7 @@ public class PlayerInteractListener implements Listener {
                return;
             }
          }
-         ArrayList<Material> untouchables = new ArrayList<Material>() {
+         ArrayList<Material> untouchables = new ArrayList<>() {
          };
          untouchables.add(Material.SWEET_BERRY_BUSH);
          untouchables.add(Material.SPRUCE_TRAPDOOR);

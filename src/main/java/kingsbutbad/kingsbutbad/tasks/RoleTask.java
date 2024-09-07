@@ -1,11 +1,10 @@
 package kingsbutbad.kingsbutbad.tasks;
 
+import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
-import kingsbutbad.kingsbutbad.utils.CreateText;
-import kingsbutbad.kingsbutbad.utils.Role;
-import kingsbutbad.kingsbutbad.utils.RoleManager;
+import kingsbutbad.kingsbutbad.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -18,57 +17,48 @@ public class RoleTask extends BukkitRunnable {
    @Override
    public void run() {
       for (Player player : Bukkit.getOnlinePlayers()) {
-         if (player == null) continue; // Skip if player is null
+         if (player == null) continue;
          addTicksToRolesTimer(player);
+         checkIfPeasantIsPure(player);
 
-         // Assign default role if not already assigned
          KingsButBad.roles.putIfAbsent(player, Role.PEASANT);
 
-         // Assign default prince gender if not already assigned
          KingsButBad.princeGender.putIfAbsent(player, "Prince");
 
-         // Check if the player is in a restricted area and has a powerful role
          Location restrictedAreaStart = KingdomsLoader.activeKingdom.getBm1();
          Location restrictedAreaEnd = KingdomsLoader.activeKingdom.getBm2();
          if (KingsButBad.roles.get(player).isPowerful &&
                  KingsButBad.isInside(player, restrictedAreaStart, restrictedAreaEnd)) {
 
-            // Teleport player to a safe location
-            Location safeLocation = KingdomsLoader.activeKingdom.getBmSafe();
+            for (Entity passenger : player.getPassengers())
+               player.removePassenger(passenger);
+            if(player.isInsideVehicle())
+               player.getVehicle().removePassenger(player);
+            Location safeLocation = Cell.findClosestLocation(KingdomsLoader.activeKingdom.getBmSafe(), player.getLocation());
             if (safeLocation.getWorld() != null) {
                player.teleport(safeLocation);
             }
 
-            // Remove all passengers (if any)
-            for (Entity passenger : player.getPassengers()) {
-               if (passenger != null) {
-                  passenger.leaveVehicle();
-               }
-            }
-
-            // Notify the player
             player.sendMessage(CreateText.addColors("<red><b>>> </b>You can't be in here!"));
          }
-
-         // Update the player's display name and list name based on their role and prefix
          updatePlayerNames(player);
-
-         // Check if the second king is online, if not, reset the king
          if (KingsButBad.king2 != null && !KingsButBad.king2.isOnline()) {
             KingsButBad.king2 = null;
          }
-
-         // If the player is no longer king, revert their role to Peasant
          if (KingsButBad.roles.get(player).equals(Role.KING) && !RoleManager.isKingAtAll(player)) {
             KingsButBad.roles.put(player, Role.PEASANT);
             RoleManager.givePlayerRole(player);
          }
       }
    }
+   private void checkIfPeasantIsPure(Player p){
+      if(Keys.PEASANTTicks.get(p, 0.0) >= 20*60*60*2)
+         AdvancementManager.giveAdvancement(p, "purepeasant");
+   }
    private void addTicksToRolesTimer(Player p){
       switch (KingsButBad.roles.getOrDefault(p, Role.PEASANT)){
          case PRISONER -> Keys.PRISONERTicks.addDouble(p, 1.0);
-         case CRIMINAl -> Keys.CRIMINALTicks.addDouble(p, 1.0);
+         case CRIMINAL -> Keys.CRIMINALTicks.addDouble(p, 1.0);
          case KING -> Keys.KINGTicks.addDouble(p, 1.0);
          case PRINCE -> Keys.PRINCETicks.addDouble(p, 1.0);
          case PEASANT -> Keys.PEASANTTicks.addDouble(p, 1.0);
@@ -80,14 +70,8 @@ public class RoleTask extends BukkitRunnable {
          default -> p.sendActionBar("Your not going up Contact _Aquaotter_ About this!");
       }
    }
-
-   /**
-    * Updates the player's display name and player list name based on their role and prefix.
-    *
-    * @param player The player whose name is being updated.
-    */
    private void updatePlayerNames(Player player) {
-      if (player == null) return; // Skip if player is null
+      if (player == null) return;
 
       String prefix = null;
       if (KingsButBad.api.getPlayerAdapter(Player.class).getUser(player).getCachedData().getMetaData().getPrefix() != null) {
@@ -112,7 +96,7 @@ public class RoleTask extends BukkitRunnable {
                  + KingsButBad.kingGender2.toUpperCase()
                  + "<dark_gray></b><dark_gray>] ";
       } else if (KingsButBad.roles.get(player).equals(Role.PRINCE)) {
-         rolePart = "[<gradient:#FFFF52:#FFBA52>"
+         rolePart = "<dark_gray>[<gradient:#FFFF52:#FFBA52>"
                  + KingsButBad.princeGender.get(player).toUpperCase()
                  + "<dark_gray>] ";
       } else {
@@ -126,16 +110,14 @@ public class RoleTask extends BukkitRunnable {
       ) + KingsButBad.roles.get(player).chatColor
               + player.getName();
 
-      // Set player list name and display name
       player.setPlayerListName(playerListName+" "+getPing(player));
       player.setDisplayName(playerListName);
    }
    public static String getPing(Player p){
       int ping = p.getPing();
-      String pingText = "<green>"+ping;
-      if(ping >= 1000) return CreateText.addColors("<red>"+ping);
-      if(ping >= 500) return CreateText.addColors("<gold>"+ping);
-      if(ping >= 250) return CreateText.addColors("<yellow>"+ping);
-      return CreateText.addColors("<gray>("+pingText+"ms<gray>)");
+      if(ping >= 1000) return CreateText.addColors("<gray>(<red>"+ping+"ms<gray>)");
+      if(ping >= 500) return CreateText.addColors("<gray>(<gold>"+ping+"ms<gray>)");
+      if(ping >= 250) return CreateText.addColors("<gray>(<yellow>"+ping+"ms<gray>)");
+      return CreateText.addColors("<gray>(<green>"+ ping +"ms<gray>)");
    }
 }

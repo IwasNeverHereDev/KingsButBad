@@ -23,10 +23,6 @@ public class CBPListener implements Listener {
     public void onWarn(PostWarnEvent event){
         CBPUtils.getWarnEmbed(event.getPlayerName(), event.getStaffName(), event.getReason());
     }
-    /*@EventHandler
-    public void onReport(ReportEvent event){
-        CBPUtils.getReportEmbed(event.getPlayerName(), event.getReport(), event.getReporter());
-    }*/
 
     @EventHandler
     public void onUnban(UnbanEvent event) {

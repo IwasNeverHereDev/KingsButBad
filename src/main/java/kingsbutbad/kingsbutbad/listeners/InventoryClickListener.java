@@ -6,22 +6,15 @@ import kingsbutbad.kingsbutbad.Kingdom.Kingdom;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsReader;
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.keys.Key;
+import kingsbutbad.kingsbutbad.keys.KeyTypes;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.tasks.MiscTask;
 import kingsbutbad.kingsbutbad.utils.CreateText;
+import kingsbutbad.kingsbutbad.utils.Item;
 import kingsbutbad.kingsbutbad.utils.Role;
 import kingsbutbad.kingsbutbad.utils.RoleManager;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -33,14 +26,20 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static kingsbutbad.kingsbutbad.utils.Item.createItem;
 import static kingsbutbad.kingsbutbad.utils.RoleManager.isSettable;
 
-public class InventoryClickListener implements Listener {
+@SuppressWarnings("deprecation")
+public class InventoryClickListener implements Listener { // TODO: Clean up This File (InventoryClickListener.java)
    @EventHandler
    public void onPlayerQuit(InventoryClickEvent event) {
       if (event.getWhoClicked().hasCooldown(Material.FISHING_ROD)
@@ -63,17 +62,18 @@ public class InventoryClickListener implements Listener {
          BotManager.getBuilderChannel().sendMessage(event.getWhoClicked().getName() + " has selected and been teleported to "+ChatColor.stripColor(CreateText.addColors(targetKingdom.getDisplayName()))+" Kingdom!").queue();
       }
       if(event.getView().getTitle().equals(CreateText.addColors("<gold>KingsButBad Settings"))){
+         Player p = (Player) event.getWhoClicked();
+         Material type = event.getCurrentItem().getType();
          event.setCancelled(true);
-         if(event.getCurrentItem().getType().equals(Material.BLACK_CANDLE)){
-            Keys.isAutoShoutEnabled.set(event.getWhoClicked(), !Keys.isAutoShoutEnabled.get(event.getWhoClicked(), true));
-            event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Auto Shout has been set to "+Keys.isAutoShoutEnabled.get(event.getWhoClicked(), false))+"!");
-            return;
-         }
-         if(event.getCurrentItem().getType().equals(Material.COAL)){
-            Keys.showMineMessages.set(event.getWhoClicked(), !Keys.showMineMessages.get(event.getWhoClicked(), true));
-            event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Show Mine Messages has been set to "+Keys.showMineMessages.get(event.getWhoClicked(), false))+"!");
-         }
-         if(event.getCurrentItem().getType().equals(Material.PAPER)){
+         if(type.equals(Material.BLACK_CANDLE))
+            changeSettings(p, Keys.isAutoShoutEnabled, "Auto Shout");
+         if(type.equals(Material.NAME_TAG))
+            changeSettings(p, Keys.SHORTEN_SHOUTMSG, "Shorten Shout Message");
+         if(type.equals(Material.GOLD_INGOT))
+            changeSettings(p, Keys.PING_NOISES, "Ping On Mentioned");
+         if(type.equals(Material.COAL))
+            changeSettings(p, Keys.showMineMessages, "Show Mine Messages");
+         if(type.equals(Material.PAPER)){
             String chat;
             if(!Keys.selectedChat.get(event.getWhoClicked(), false))
                chat = "<white>Builder Chat<gray>";
@@ -82,10 +82,12 @@ public class InventoryClickListener implements Listener {
             event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Your Selected Chat has been set to "+chat+" Shortcut!"));
             Keys.selectedChat.set(event.getWhoClicked(), !Keys.selectedChat.get(event.getWhoClicked(), false));
          }
-         if(event.getCurrentItem().getType().equals(Material.CLOCK)){
-            Keys.displayRoleStats.set(event.getWhoClicked(), !Keys.displayRoleStats.get(event.getWhoClicked(), false));
-            event.getWhoClicked().sendMessage(CreateText.addColors("<gray>Settings Changed: <white>Your Displayed Role Stats settings (Tab) has been set to "+Keys.displayRoleStats.get(event.getWhoClicked(), false)+"!"));
-         }
+         if(type.equals(Material.CLOCK))
+            changeSettings(p, Keys.displayRoleStats, "Display Roles Playtime");
+         if(type.equals(Material.BOOK))
+            changeSettings(p, Keys.SHORTEN_ROLES_MSG, "Shorten Roles Messages");
+         if(type.equals(Material.WRITABLE_BOOK))
+            changeSettings(p, Keys.SHORTEN_RANKS_MSG, "Shorten Ranks Messages");
          PlayerJoinListener.updateTab((Player) event.getWhoClicked());
          Bukkit.dispatchCommand(event.getWhoClicked(), "kbbsettings");
          return;
@@ -194,12 +196,12 @@ public class InventoryClickListener implements Listener {
             mafiaSwordMeta.setUnbreakable(true);
             List<String> lore = new ArrayList<>();
             mafiaSword.setItemMeta(mafiaSwordMeta);
-            Map<Enchantment, Integer> enchantments = new HashMap<>();
-            enchantments.put(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-            ItemStack mafiaHelmet = createItem(Material.GOLDEN_HELMET, "<gold>Outlaw Helmet", lore, enchantments);
-            ItemStack mafiaChestplate = createItem(Material.IRON_CHESTPLATE, "<gold>Outlaw Chestplate", lore, enchantments);
-            ItemStack mafiaLeggings = createItem(Material.GOLDEN_LEGGINGS, "<gold>Outlaw Leggings", lore, enchantments);
-            ItemStack mafiaBoots = createItem(Material.IRON_BOOTS, "<gold>Outlaw Boots", lore, enchantments);
+            ItemStack mafiaHelmet = createItem(Material.IRON_HELMET, "<gold>Outlaw Helmet", lore, null);
+            ItemStack mafiaChestplate = createItem(Material.LEATHER_CHESTPLATE, "<gold>Outlaw Chestplate", lore, null);
+            ItemStack mafiaLeggings = createItem(Material.IRON_LEGGINGS, "<gold>Outlaw Leggings", lore, null);
+            ItemStack mafiaBoots = createItem(Material.LEATHER_BOOTS, "<gold>Outlaw Boots", lore, null);
+            Item.applyDye(mafiaChestplate, Color.ORANGE);
+            Item.applyDye(mafiaBoots, Color.ORANGE);
             PlayerInventory inv = p.getInventory();
             inv.addItem(mafiaSword);
             if (isSettable(mafiaBoots))
@@ -282,8 +284,8 @@ public class InventoryClickListener implements Listener {
          if (event.getCurrentItem().getType().equals(Material.MAP)) {
             event.getWhoClicked().closeInventory();
             event.getWhoClicked().sendMessage(ChatColor.GOLD + "PRISON'S STATS");
-            Integer prisonercount = 0;
-            Integer guardcount = 0;
+            int prisonercount = 0;
+            int guardcount = 0;
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                if (KingsButBad.roles.get(p).equals(Role.PRISONER)) {
@@ -302,6 +304,11 @@ public class InventoryClickListener implements Listener {
 
          if (event.getCurrentItem().getType().equals(Material.RED_CONCRETE)) {
             Player p = (Player)event.getWhoClicked();
+            if(KingsButBad.king == p || KingsButBad.king2 == p || KingsButBad.roles.getOrDefault(p, Role.PEASANT).isPowerful){
+               p.sendMessage(CreateText.addColors("<red>You can't in prison yourself! <gray>(<white>Criminal,Outlaw,Peasant can turn themself in!<gray>)"));
+               event.setCancelled(true);
+               return;
+            }
             Bukkit.broadcastMessage(CreateText.addColors("<red>>> <b>" + p.getName() + "<gold> </b> turned themselves in, for some reason.."));
             KingsButBad.prisonTimer.put(p, 2400);
             KingsButBad.roles.put(p, Role.PRISONER);
@@ -315,7 +322,7 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 150.0) {
                Keys.money.subtractDouble(p, 150.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.GOLDEN_APPLE)});
+               p.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
                AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
@@ -350,7 +357,7 @@ public class InventoryClickListener implements Listener {
                ptmeta.setDisplayName(ChatColor.BLUE + "Water");
                ptmeta.setColor(Color.BLUE);
                cod.setItemMeta(ptmeta);
-               p.getInventory().addItem(new ItemStack[]{cod});
+               p.getInventory().addItem(cod);
             }
          }
 
@@ -358,29 +365,28 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 300.0) {
                Keys.money.subtractDouble(p, 300.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.IRON_SWORD)});
+               p.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
             }
          }
 
          if (event.getCurrentItem().getType().equals(Material.CHAINMAIL_HELMET)) {
             Player p = (Player)event.getWhoClicked();
+            if(p.getInventory().getChestplate().getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE) == 1) {
+               p.sendMessage(CreateText.addColors("<red>Your gear is already Upgraded!"));
+               return;
+            }
             if (Keys.money.get(p, 0.0) >= 2500.0) {
+               if(p.getInventory().getChestplate().getType() == Material.CHAINMAIL_CHESTPLATE){
+                     p.sendMessage(CreateText.addColors("<red>You have already Upgraded your Chestplate!"));
+                     return;
+               }
                Keys.money.subtractDouble(p, 2500.0);
-               ItemStack orangechest = new ItemStack(Material.LEATHER_CHESTPLATE);
-               orangechest.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-               LeatherArmorMeta chestmeta = (LeatherArmorMeta)orangechest.getItemMeta();
-               chestmeta.setColor(Color.RED);
-               chestmeta.setDisplayName("Armor " + ChatColor.RED + ChatColor.MAGIC + "[CONTRABAND]");
-               orangechest.setItemMeta(chestmeta);
-               ItemStack orangeleg = new ItemStack(Material.CHAINMAIL_LEGGINGS);
-               orangechest.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
-               ItemMeta orangelegItemMeta = orangeleg.getItemMeta();
-               orangelegItemMeta.setDisplayName("Armor " + ChatColor.RED + ChatColor.MAGIC + "[CONTRABAND]");
-               orangeleg.setItemMeta(orangelegItemMeta);
-               p.getInventory().setHelmet(new ItemStack(Material.CHAINMAIL_HELMET));
-               p.getInventory().setChestplate(orangechest);
-               p.getInventory().setLeggings(orangeleg);
-               p.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
+               PlayerInventory inv = p.getInventory();
+               p.sendMessage(CreateText.addColors("<gray>Your Chestplate & Boots is now Upgraded!"));
+               ItemStack chestplate = inv.getChestplate();
+               ItemStack boots = inv.getBoots();
+               Item.applyEnchmanent(chestplate, Enchantment.PROTECTION_PROJECTILE, 1);
+               Item.applyEnchmanent(boots, Enchantment.PROTECTION_ENVIRONMENTAL, 1);
             }
          }
 
@@ -388,7 +394,7 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 30.0) {
                Keys.money.subtractDouble(p, 30.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.WOODEN_SWORD)});
+               p.getInventory().addItem(new ItemStack(Material.WOODEN_SWORD));
             }
          }
 
@@ -400,7 +406,7 @@ public class InventoryClickListener implements Listener {
                ItemMeta cardm = card.getItemMeta();
                cardm.setDisplayName(ChatColor.BLUE + "Adrenaline Shot");
                card.setItemMeta(cardm);
-               p.getInventory().addItem(new ItemStack[]{card});
+               p.getInventory().addItem(card);
             }
          }
 
@@ -408,7 +414,7 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 150.0) {
                Keys.money.subtractDouble(p, 150.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.STONE_AXE)});
+               p.getInventory().addItem(new ItemStack(Material.STONE_AXE));
                AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
@@ -417,7 +423,7 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p,0.0) >= 50.0) {
                Keys.money.subtractDouble(p, 50.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.ARROW, 32)});
+               p.getInventory().addItem(new ItemStack(Material.ARROW, 32));
             }
          }
 
@@ -425,26 +431,14 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 100.0) {
                Keys.money.subtractDouble(p, 100.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.BOW)});
+               p.getInventory().addItem(new ItemStack(Material.BOW));
             }
          }
 
          if (event.getCurrentItem().getType().equals(Material.YELLOW_CONCRETE)) {
-            Player p = (Player)event.getWhoClicked();ArrayList<String> dialouges = new ArrayList<String>() {
-            };
-            dialouges.add(
-               "Kid, you really make me remember that person who tried to talk to me.. that one time... that they.. talked to me.. darn, i sure am lonely and an outcast (laugh track)"
-            );
-            dialouges.add("After so many years in the agency, it's finnally fun to see someone who isn't about to be put on a mission to their death! Hi, kid!");
-            dialouges.add("Gosh, I sure am old!");
-            dialouges.add("the IRS are on our asses");
-            dialouges.add("Hello, Aquaotter is a terrible dev fr fr -_Aquaotter_");
-            dialouges.add(
-               "Earth isn't really, we all live on one big flat world, one big, blocky, green, flat landscape. The walls are obstructing our views. There is nothing beyond us. Wake up. BTU THAT'S JUST A THEORY! A GAME THEORY!!!!!!!!!!!!!!!!!!!!!!1"
-            );
-            dialouges.add("Hi, I'm arthur Join! (laugh track)");
-            dialouges.add("God, I sure am comedical! (Laugh track)");
-            p.sendMessage(CreateText.addColors("<green>archer johnm <gray><b>>></gray><white> " + dialouges.get(new Random().nextInt(0, dialouges.size()))));
+            Player p = (Player)event.getWhoClicked();
+            ArrayList<String> dialogues = getDialougesStrings();
+            p.sendMessage(CreateText.addColors("<green>archer johnm <gray><b>>></gray><white> " + dialogues.get(new Random().nextInt(0, dialogues.size()))));
          }
 
          if (event.getCurrentItem().getType().equals(Material.ENCHANTED_BOOK)) {
@@ -456,7 +450,7 @@ public class InventoryClickListener implements Listener {
 
                   for (ItemStack i : p.getInventory()) {
                      if (i != null && i.getType().equals(Material.BOW)) {
-                        if(i.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) >= 4) continue;
+                        if(i.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) >= 1) continue;
                         if (i.getEnchantments().containsKey(Enchantment.ARROW_DAMAGE)) {
                            i.addEnchantment(Enchantment.ARROW_DAMAGE, i.getEnchantmentLevel(Enchantment.ARROW_DAMAGE) + 1);
                            Keys.money.subtractDouble(p, 400.0);
@@ -519,7 +513,7 @@ public class InventoryClickListener implements Listener {
                ItemMeta cardm = card.getItemMeta();
                cardm.setDisplayName(ChatColor.BLUE + "Keycard");
                card.setItemMeta(cardm);
-               p.getInventory().addItem(new ItemStack[]{card});
+               p.getInventory().addItem(card);
                AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
@@ -532,7 +526,7 @@ public class InventoryClickListener implements Listener {
                ItemMeta cardm = card.getItemMeta();
                cardm.setDisplayName(ChatColor.BLUE + "Get-Out-Of-Jail-Free Card");
                card.setItemMeta(cardm);
-               p.getInventory().addItem(new ItemStack[]{card});
+               p.getInventory().addItem(card);
             }
          }
 
@@ -540,7 +534,7 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 15.0) {
                Keys.money.subtractDouble(p, 15.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.COOKED_COD, 16)});
+               p.getInventory().addItem(new ItemStack(Material.COOKED_COD, 16));
             }
          }
 
@@ -548,12 +542,12 @@ public class InventoryClickListener implements Listener {
             Player p = (Player)event.getWhoClicked();
             if (Keys.money.get(p, 0.0) >= 32.0) {
                Keys.money.subtractDouble(p, 32.0);
-               p.getInventory().addItem(new ItemStack[]{new ItemStack(Material.GOLDEN_CARROT, 16)});
+               p.getInventory().addItem(new ItemStack(Material.GOLDEN_CARROT, 16));
             }
          }
 
          if (event.getCurrentItem().getType().equals(Material.FISHING_ROD) && !event.getWhoClicked().getInventory().contains(Material.FISHING_ROD)) {
-            event.getWhoClicked().getInventory().addItem(new ItemStack[]{new ItemStack(Material.FISHING_ROD)});
+            event.getWhoClicked().getInventory().addItem(new ItemStack(Material.FISHING_ROD));
          }
 
          if (event.getCurrentItem().getType().equals(Material.WOODEN_HOE) && !event.getWhoClicked().getInventory().contains(Material.WOODEN_HOE)) {
@@ -561,7 +555,7 @@ public class InventoryClickListener implements Listener {
             ItemMeta woodenhoemeta = woodenhoe.getItemMeta();
             woodenhoemeta.setDestroyableKeys(Collections.singleton(NamespacedKey.minecraft("wheat")));
             woodenhoe.setItemMeta(woodenhoemeta);
-            event.getWhoClicked().getInventory().addItem(new ItemStack[]{woodenhoe});
+            event.getWhoClicked().getInventory().addItem(woodenhoe);
          }
 
          if (event.getCurrentItem().getType().equals(Material.IRON_PICKAXE) && !event.getWhoClicked().getInventory().contains(Material.IRON_PICKAXE)) {
@@ -569,7 +563,7 @@ public class InventoryClickListener implements Listener {
             ItemMeta woodenhoemeta = woodenhoe.getItemMeta();
             woodenhoemeta.setDestroyableKeys(Collections.singleton(NamespacedKey.minecraft("deepslate_coal_ore")));
             woodenhoe.setItemMeta(woodenhoemeta);
-            event.getWhoClicked().getInventory().addItem(new ItemStack[]{woodenhoe});
+            event.getWhoClicked().getInventory().addItem(woodenhoe);
          }
 
          if (event.getCurrentItem().getType().equals(Material.STONE_PICKAXE) && !event.getWhoClicked().getInventory().contains(Material.STONE_PICKAXE)) {
@@ -577,7 +571,7 @@ public class InventoryClickListener implements Listener {
             ItemMeta woodenhoemeta = woodenhoe.getItemMeta();
             woodenhoemeta.setDestroyableKeys(Collections.singleton(NamespacedKey.minecraft("coal_ore")));
             woodenhoe.setItemMeta(woodenhoemeta);
-            event.getWhoClicked().getInventory().addItem(new ItemStack[]{woodenhoe});
+            event.getWhoClicked().getInventory().addItem(woodenhoe);
          }
 
          if (event.getCurrentItem().getType().equals(Material.BONE) && !event.getWhoClicked().getInventory().contains(Material.BONE)) {
@@ -585,16 +579,16 @@ public class InventoryClickListener implements Listener {
             ItemMeta woodenhoemeta = woodenhoe.getItemMeta();
             woodenhoemeta.setDestroyableKeys(Collections.singleton(NamespacedKey.minecraft("brown_concrete_powder")));
             woodenhoe.setItemMeta(woodenhoemeta);
-            event.getWhoClicked().getInventory().addItem(new ItemStack[]{woodenhoe});
+            event.getWhoClicked().getInventory().addItem(woodenhoe);
          }
 
          if (event.getCurrentItem().getType().equals(Material.WHEAT)) {
-            Integer iii = 0;
+            int iii = 0;
             if (!event.getWhoClicked().hasCooldown(Material.WOODEN_HOE)) {
                int wheat = 0;
                for (ItemStack ixxxx : event.getWhoClicked().getInventory()) {
                   if (ixxxx != null && ixxxx.getType().equals(Material.WHEAT)) {
-                     Integer originalamount = ixxxx.getAmount();
+                     int originalamount = ixxxx.getAmount();
                      wheat += originalamount;
                      if(wheat >= 1000)
                         AdvancementManager.giveAdvancement((Player) event.getWhoClicked(), "farmerjoe");
@@ -627,11 +621,11 @@ public class InventoryClickListener implements Listener {
          }
 
          if (event.getCurrentItem().getType().equals(Material.COAL_ORE)) {
-            Integer iii = 0;
+            int iii = 0;
             if (!event.getWhoClicked().hasCooldown(Material.STONE_PICKAXE)) {
                for (ItemStack ixxxxx : event.getWhoClicked().getInventory()) {
                   if (ixxxxx != null && ixxxxx.getType().equals(Material.COAL_ORE)) {
-                     Integer originalamount = ixxxxx.getAmount();
+                     int originalamount = ixxxxx.getAmount();
                      Bukkit.getScheduler()
                         .runTaskLater(
                            KingsButBad.getPlugin(KingsButBad.class),
@@ -660,11 +654,11 @@ public class InventoryClickListener implements Listener {
          }
 
          if (event.getCurrentItem().getType().equals(Material.BROWN_CONCRETE)) {
-            Integer iii = 0;
+            int iii = 0;
             if (!event.getWhoClicked().hasCooldown(Material.BONE)) {
                for (ItemStack ixxxxxx : event.getWhoClicked().getInventory()) {
                   if (ixxxxxx != null && ixxxxxx.getType().equals(Material.BROWN_DYE)) {
-                     Integer originalamount = ixxxxxx.getAmount();
+                     int originalamount = ixxxxxx.getAmount();
                      Bukkit.getScheduler()
                         .runTaskLater(
                            KingsButBad.getPlugin(KingsButBad.class),
@@ -680,11 +674,11 @@ public class InventoryClickListener implements Listener {
                                           p.playSound(p, Sound.ENTITY_ITEM_PICKUP, 1.0F, 1.0F);
                                           Keys.money.addDouble(p, 15.0);
                                        },
-                                       (long)ii
+                                            ii
                                     );
                               }
                            },
-                           (long)iii.intValue()
+                                iii
                         );
                      iii = iii + originalamount;
                   }
@@ -693,11 +687,11 @@ public class InventoryClickListener implements Listener {
          }
 
          if (event.getCurrentItem().getType().equals(Material.WATER_BUCKET)) {
-            Integer iii = 0;
+            int iii = 0;
             if (!event.getWhoClicked().hasCooldown(Material.FISHING_ROD)) {
                for (ItemStack ixxxxxxx : event.getWhoClicked().getInventory()) {
                   if (ixxxxxxx != null && ixxxxxxx.getType().equals(Material.SALMON)) {
-                     Integer originalamount = ixxxxxxx.getAmount();
+                     int originalamount = ixxxxxxx.getAmount();
                      Bukkit.getScheduler()
                         .runTaskLater(
                            KingsButBad.getPlugin(KingsButBad.class),
@@ -713,11 +707,11 @@ public class InventoryClickListener implements Listener {
                                           p.playSound(p, Sound.ENTITY_ITEM_PICKUP, 1.0F, 1.0F);
                                           Keys.money.addDouble(p, 100.0);
                                        },
-                                       (long)ii
+                                            ii
                                     );
                               }
                            },
-                           (long)iii.intValue()
+                                iii
                         );
                      iii = iii + originalamount;
                   }
@@ -725,5 +719,31 @@ public class InventoryClickListener implements Listener {
             }
          }
       }
+   }
+
+   @NotNull
+   private static ArrayList<String> getDialougesStrings() {
+      ArrayList<String> dialouges = new ArrayList<>() {
+       };
+      dialouges.add(
+         "Kid, you really make me remember that person who tried to talk to me.. that one time... that they.. talked to me.. darn, i sure am lonely and an outcast (laugh track)"
+      );
+      dialouges.add("After so many years in the agency, it's finnally fun to see someone who isn't about to be put on a mission to their death! Hi, kid!");
+      dialouges.add("Gosh, I sure am old!");
+      dialouges.add("the IRS are on our asses");
+      dialouges.add("Hello, Aquaotter is a terrible dev fr fr -_Aquaotter_");
+      dialouges.add(
+         "Earth isn't really, we all live on one big flat world, one big, blocky, green, flat landscape. The walls are obstructing our views. There is nothing beyond us. Wake up. BTU THAT'S JUST A THEORY! A GAME THEORY!!!!!!!!!!!!!!!!!!!!!!1"
+      );
+      dialouges.add("Hi, I'm arthur Join! (laugh track)");
+      dialouges.add("God, I sure am comedical! (Laugh track)");
+      return dialouges;
+   }
+
+   private void changeSettings(Player p, Key key, String settingName){
+         if(key.type() != KeyTypes.BOOLEAN) return;
+         key.set(p, !key.getBoolean(p, false));
+         p.sendMessage(CreateText.addColors("<gray>Settings Changed: <white>"+settingName+" <gray>has been set to <white>"+key.getBoolean(p, false)+"<gray>!"));
+
    }
 }

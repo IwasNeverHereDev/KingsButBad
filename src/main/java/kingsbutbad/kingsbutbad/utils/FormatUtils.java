@@ -15,7 +15,7 @@ public class FormatUtils {
             } else {
                 String[] suffixes = new String[]{"", "K", "M", "B", "T", "P", "E", "Z", "Y"};
                 int magnitude = Math.min((int)Math.log10(bal) / 3, suffixes.length - 1);
-                double scaledValue = bal / Math.pow(1000.0, (double)magnitude);
+                double scaledValue = bal / Math.pow(1000.0, magnitude);
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
                 formatter.setMaximumFractionDigits(1);
                 return (isNegative ? "-" : "") + formatter.format(scaledValue) + suffixes[magnitude];

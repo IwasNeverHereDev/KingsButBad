@@ -2,8 +2,10 @@ package kingsbutbad.kingsbutbad.commands.Staff;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
+import kingsbutbad.kingsbutbad.tasks.VanishTask;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import org.bukkit.Bukkit;
+import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,13 +18,13 @@ public class VanishCommand implements CommandExecutor {
         if(!(commandSender instanceof Player p)) return true;
         boolean isInVanish = Keys.vanish.get(p, false);
         Keys.vanish.set(p, !isInVanish);
-        if(!isInVanish)
+        if(!isInVanish) {
             commandSender.sendMessage(CreateText.addColors("<gray>You are now in Vanish! <gray>(<white>Only Staff can see you now!<gray>)"));
-        else {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                player.showPlayer(KingsButBad.pl, p);
-            });
+            VanishTask.vanishPlayerTimeOfVanish.put(p, p.getStatistic(Statistic.PLAY_ONE_MINUTE));
+        } else {
+            Bukkit.getOnlinePlayers().forEach(player -> player.showPlayer(KingsButBad.pl, p));
             commandSender.sendMessage(CreateText.addColors("<gray>You are no longer in Vanish! <gray>(<white>Everyone can see you now!<gray>)"));
+            VanishTask.vanishPlayerTimeOfVanish.remove(p);
         }
         return false;
     }

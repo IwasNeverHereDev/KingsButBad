@@ -10,14 +10,11 @@ depend:
   - LibsDisguises
   - CustomBansPlus
 description: The Plugin for KingsButBad
-website: agmas.repl.co
+website: https://github.com/Aquaotter/KingsButBad
 commands:
   king:
     description: "King Controls/Claiming"
     usage: /king
-  soundWaves:
-    description: ";)"
-    usage: /soundwaves
   resetVillagers:
     description: "resets villagers"
     usage: /resetVillagers
@@ -39,13 +36,11 @@ commands:
     usage: /pay <player> <money>
   swapKingdom:
     permission: kbb.builder.swap
-  serverStats:
-    description: "Gives debug info about the Server."
   showBorders:
   maps:
     permission: kbb.builder.maps
   cells:
-    permission: kbb.dev.cells
+    permission: kbb.debug.cells
   builderMode:
     permission: kbb.builder.mode
   setRole:
@@ -53,6 +48,7 @@ commands:
   link:
   unlink:
   whois:
+    permission: kbb.debug.whois
   reloadFilter:
     permission: kbb.debug.reloadfilter
   kbbSettings:
@@ -83,5 +79,24 @@ commands:
     permission: kbb.staff.clearchat
   rules:
   reboot:
-    permission: kbb.dev.reboot
+    permission: kbb.debug.reboot
   playtime:
+  changelog:
+    aliases:
+      - updates
+      - update
+      - discordUpdates
+  hello:
+    aliases:
+      - info
+      - serverstats
+  key:
+    permission: kbb.debug.key
+  leaderboard:
+    permission: kbb.debug.leaderboards
+  clan:
+    permission: kbb.clan
+  debugclan:
+    permission: kbb.debug.clan;
+  kingdomreload:
+    permission: kbb.debug.reloadkingdom

@@ -1,31 +1,29 @@
 package kingsbutbad.kingsbutbad.Kingdom;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 
 public class KingdomsReader {
    private final Path kingdomsFilePath;
-   private final Gson gson;
-   public static List<Kingdom> kingdomsList = new ArrayList<>();
+    public static List<Kingdom> kingdomsList = new ArrayList<>();
 
    public KingdomsReader(Path kingdomsFilePath) {
       this.kingdomsFilePath = kingdomsFilePath;
-      this.gson = new Gson();
    }
 
-   public Map<String, Kingdom> read() {
-      Map<String, Kingdom> kingdoms = new HashMap<>();
+   public void read() {
 
       try (FileReader reader = new FileReader(this.kingdomsFilePath.toFile())) {
          JsonElement rootElement = JsonParser.parseReader(reader);
@@ -34,7 +32,6 @@ public class KingdomsReader {
          kingdomsList = new ArrayList<>();
 
          for (Entry<String, JsonElement> entry : kingdomsObject.entrySet()) {
-            String key = entry.getKey();
             JsonObject kingdomObject = entry.getValue().getAsJsonObject();
             String material = kingdomObject.get("material").getAsString();
             boolean isPublic = kingdomObject.get("isPublic").getAsBoolean();
@@ -76,7 +73,15 @@ public class KingdomsReader {
             Location mafiaVillager = this.readLocation(kingdomObject.getAsJsonObject("MafiaRecruiter"));
             Location blackMarketInsidePrisoner = this.readLocation(kingdomObject.getAsJsonObject("blackMarketInsidePrisoner"));
             Location blackMarketExitPrisoner = this.readLocation(kingdomObject.getAsJsonObject("blackMarketExitPrisoner"));
-            Location bmSafe = this.readLocation(kingdomObject.getAsJsonObject("bmSafe"));
+            JsonArray bmSafes = kingdomObject.getAsJsonArray("bmSafe");
+            List<Location> bmSafeLocations = new ArrayList<>();
+            if (bmSafes != null) {
+               for (JsonElement cellElement : bmSafes) {
+                  JsonObject cellObject = cellElement.getAsJsonObject();
+                  Location cellLocation = this.readLocation(cellObject);
+                  bmSafeLocations.add(cellLocation);
+               }
+            }
             Location prisonGuardSpawn = this.readLocation(kingdomObject.getAsJsonObject("prisonGuardSpawn"));
             Location bmPrison1 = this.readLocation(kingdomObject.getAsJsonObject("bmPrison1"));
             Location bmPrison2 = this.readLocation(kingdomObject.getAsJsonObject("bmPrison2"));
@@ -133,7 +138,7 @@ public class KingdomsReader {
                     blackMarketInsidePrisoner,
                     blackMarketExitPrisoner,
                     cells,
-                    bmSafe,
+                    bmSafeLocations,
                     prisonGuardSpawn,
                     bmPrison1,
                     bmPrison2,
@@ -141,13 +146,11 @@ public class KingdomsReader {
                     raidSpawn
             );
             kingdomsList.add(kingdom);
-            kingdoms.put(key, kingdom);
          }
       } catch (IOException var50) {
-         var50.printStackTrace();
+         Bukkit.getLogger().severe(var50.getMessage());
       }
 
-      return kingdoms;
    }
 
    private Location readLocation(JsonObject locationObject) {

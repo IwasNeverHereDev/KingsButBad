@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.Loaders;
 
+import kingsbutbad.kingsbutbad.CommandsCompleters.Dev.LeaderboardTabCompleter;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.CommandsCompleters.KingCommandTabCompleter;
 import kingsbutbad.kingsbutbad.CommandsCompleters.PayCommandTabCompleter;
@@ -14,6 +15,7 @@ public class LoadTabCompleters {
       setTabCompleter("setMoney", new SetMoneyTabCompleter());
       setTabCompleter("pay", new PayCommandTabCompleter());
       setTabCompleter("swapKingdom", new SwapKingdomTabCompleter());
+      setTabCompleter("leaderboard", new LeaderboardTabCompleter());
    }
 
    private static void setTabCompleter(String cmd, TabCompleter tabCompleter) {

@@ -27,7 +27,6 @@ public class WhoisCommand implements CommandExecutor {
                     try {
                         User user = BotManager.getBot().getUserById(discordId);
                         if (user != null) {
-                            // Fetching Discord username and discriminator
                             String username = user.getName();
                             discordInfo = "Linked to Discord ID: " + username;
                         } else {
@@ -35,7 +34,7 @@ public class WhoisCommand implements CommandExecutor {
                         }
                     } catch (Exception e) {
                         discordInfo = "Linked to Discord ID: " + discordId + " (Error fetching Discord user info)";
-                        e.printStackTrace(); // Log the exception
+                        Bukkit.getLogger().severe(e.getMessage());
                     }
                 } else {
                     discordInfo = "Not linked to a Discord account";
@@ -43,7 +42,7 @@ public class WhoisCommand implements CommandExecutor {
 
                 sender.sendMessage(CreateText.addColors(
                         "<gray>Player: <white>" + target.getName() +
-                                "<gray>\nUUID: <white>" + target.getUniqueId().toString() +
+                                "<gray>\nUUID: <white>" + target.getUniqueId() +
                                 "<gray>\n" + discordInfo
                 ));
             } else if (target == null) {
@@ -52,7 +51,7 @@ public class WhoisCommand implements CommandExecutor {
                 sender.sendMessage(CreateText.addColors("<red>Player is offline."));
             }
         } else {
-            sender.sendMessage(CreateText.addColors("<red>Usage: /whois <playername>"));
+            sender.sendMessage(CreateText.addColors("<red>Usage: /whois <playerName>"));
         }
         return true;
     }

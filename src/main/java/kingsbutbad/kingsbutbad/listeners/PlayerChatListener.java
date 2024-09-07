@@ -4,7 +4,6 @@ import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.NoNoWords;
 import kingsbutbad.kingsbutbad.commands.Builders.BuilderChatCommand;
-import kingsbutbad.kingsbutbad.commands.Misc.DiscordCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.StaffChatCommand;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
@@ -12,6 +11,7 @@ import kingsbutbad.kingsbutbad.utils.DiscordUtils;
 import kingsbutbad.kingsbutbad.utils.Role;
 import me.libraryaddict.disguise.DisguiseAPI;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.kyori.adventure.key.Key;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -25,7 +25,8 @@ import java.awt.Color;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class PlayerChatListener implements Listener {
+@SuppressWarnings("deprecation")
+public class PlayerChatListener implements Listener { // TODO: Clean up This File (PlayerChatListener.java)
    @EventHandler
    public void onPlayerChatEvent(PlayerChatEvent event) {
       Player player = event.getPlayer();
@@ -66,6 +67,12 @@ public class PlayerChatListener implements Listener {
          message = this.formatPowerfulMessage(message);
          message = this.replaceRoleNamesInMessage(message);
       }
+      for(Player p : Bukkit.getOnlinePlayers())
+         if (event.getMessage().toLowerCase().contains(p.getName().toLowerCase()) && Keys.PING_NOISES.get(player, true))
+            p.playSound(net.kyori.adventure.sound.Sound.sound()
+                    .type(Key.key("block.note_block.pling"))
+                    .pitch(2f)
+                    .build());
 
       event.setCancelled(true);
       if(event.getMessage().startsWith("# ") || event.getMessage().startsWith("@ ") || event.getMessage().startsWith("* ") || event.getMessage().startsWith("! ")) {
@@ -83,7 +90,7 @@ public class PlayerChatListener implements Listener {
          event.setFormat("%1$s" + ChatColor.GRAY + ": %2$s");
          message = NoNoWords.filtermsg(player, message);
          if (!NoNoWords.isClean(message)) {
-            message = this.getFilteredMessage(player);
+            message = this.getFilteredMessage();
             this.handleLocalChat(event,message);
             return;
          }
@@ -102,7 +109,7 @@ public class PlayerChatListener implements Listener {
                if(KingsButBad.king2 == player && role == Role.KING)
                   rolePrefix = KingsButBad.kingGender2;
             }
-            BotManager.getInGameChatChannel().sendMessage(prefix + " **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(DiscordUtils.deformat(message)) + "`").queue();
+            BotManager.getInGameChatChannel().sendMessage(prefix + " **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(DiscordUtils.deformatMsg(message)) + "`").queue();
             this.handleLocalChat(event, message);
          }
       }
@@ -142,7 +149,7 @@ public class PlayerChatListener implements Listener {
             case OUTLAW:
                message = message.replace(p.getName(), CreateText.addColors("<gold>Outlaw " + p.getName()) + KingsButBad.roles.get(p).chatColor);
                break;
-            case CRIMINAl:
+            case CRIMINAL:
                message = message.replace(p.getName(), CreateText.addColors("<red>Criminal " + p.getName()) + KingsButBad.roles.get(p).chatColor);
                break;
             case PRISONER:
@@ -153,7 +160,7 @@ public class PlayerChatListener implements Listener {
       return message;
    }
 
-   private String getFilteredMessage(Player player) {
+   private String getFilteredMessage() {
       return NoNoWords.getRandomReplacement().getMsg();
    }
 
@@ -191,6 +198,7 @@ public class PlayerChatListener implements Listener {
    }
 
 
+   @SuppressWarnings("deprecation")
    private void broadcastIntercomMessage(Player executor, String message) {
       for (Player p : Bukkit.getOnlinePlayers()) {
          p.playSound(p, Sound.ENTITY_BEE_LOOP_AGGRESSIVE, 1.0F, 0.75F);
@@ -202,7 +210,7 @@ public class PlayerChatListener implements Listener {
       embed.setTitle("**INTERCOM**"); // Title of the embed
       embed.setDescription("`" + DiscordUtils.deformat(ChatColor.stripColor(message)) + "`"); // Main message content
       embed.setFooter("sent by "+DiscordUtils.deformat(executor.getName()), null); // Optional footer
-      BotManager.getInGameChatChannel().sendMessageEmbeds(embed.build()).queue();;
+      BotManager.getInGameChatChannel().sendMessageEmbeds(embed.build()).queue();
    }
 
    private void handleLocalChat(PlayerChatEvent event, String message) {
@@ -238,24 +246,51 @@ public class PlayerChatListener implements Listener {
    }
 
    private void sendShoutMessage(Player sender, Player receiver, String msg) {
+      String displayName = sender.getDisplayName();
+      if(Keys.SHORTEN_RANKS_MSG.get(receiver, false))
+         displayName = shortenRank(sender, displayName);
+      if(Keys.SHORTEN_ROLES_MSG.get(receiver, false))
+         displayName = shortenRoles(displayName);
       String shout = ChatColor.GRAY + "[SHOUT] ";
+      String shoutShort = ChatColor.GRAY + "[S] ";
       if (DisguiseAPI.isDisguised(sender)) {
-         receiver.sendMessage(
-            shout
-               + ChatColor.DARK_GRAY
-               + "["
-               + ChatColor.GOLD
-               + "PRISONER"
-               + ChatColor.DARK_GRAY
-               + "] "
-               + DisguiseAPI.getDisguise(sender).getWatcher().getCustomName()
-               + ChatColor.GRAY
-               + ": "
-               + ChatColor.WHITE
-               + msg
-         );
+         if(Keys.SHORTEN_ROLES_MSG.get(receiver, false)){
+            receiver.sendMessage(
+                    shout
+                            + ChatColor.DARK_GRAY
+                            + "["
+                            + ChatColor.GOLD
+                            + "P"
+                            + ChatColor.DARK_GRAY
+                            + "] "
+                            + DisguiseAPI.getDisguise(sender).getWatcher().getCustomName()
+                            + ChatColor.GRAY
+                            + ": "
+                            + ChatColor.WHITE
+                            + msg
+            );
+         }else{
+            receiver.sendMessage(
+                    shout
+                            + ChatColor.DARK_GRAY
+                            + "["
+                            + ChatColor.GOLD
+                            + "PRISONER"
+                            + ChatColor.DARK_GRAY
+                            + "] "
+                            + DisguiseAPI.getDisguise(sender).getWatcher().getCustomName()
+                            + ChatColor.GRAY
+                            + ": "
+                            + ChatColor.WHITE
+                            + msg
+            );
+         }
       } else {
-         receiver.sendMessage(shout + sender.getPlayerListName() + ChatColor.GRAY + ": " + ChatColor.WHITE + msg);
+         if(Keys.SHORTEN_SHOUTMSG.get(receiver, false)){
+            receiver.sendMessage(shoutShort + displayName + ChatColor.GRAY + ": " + ChatColor.WHITE + msg);
+         }else{
+            receiver.sendMessage(shout + displayName + ChatColor.GRAY + ": " + ChatColor.WHITE + msg);
+         }
       }
    }
 
@@ -275,7 +310,20 @@ public class PlayerChatListener implements Listener {
                + message
          );
       } else {
-         receiver.sendMessage(sender.getPlayerListName() + ChatColor.GRAY + ": " + ChatColor.WHITE + message);
+         receiver.sendMessage(sender.getDisplayName() + ChatColor.GRAY + ": " + ChatColor.WHITE + message);
       }
+   }
+   private String shortenRoles(String message){
+      for(Role role : Role.values()){
+         if(role == Role.KING || role == Role.PRINCE) return message;
+         message = message.replaceAll(role.name().toUpperCase().replaceAll("_", " "), role.smallTag);
+      }
+      return message;
+   }
+   private String shortenRank(Player sender, String message){
+      if(Objects.requireNonNull(KingsButBad.api.getUserManager().getUser(sender.getUniqueId())).getCachedData().getMetaData().getPrefix() == null) return message;
+      if(Objects.requireNonNull(KingsButBad.api.getUserManager().getUser(sender.getUniqueId())).getCachedData().getMetaData().getMetaValue("shortPrefix") == null) return message;
+      message = message.replaceAll(ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(Objects.requireNonNull(KingsButBad.api.getUserManager().getUser(sender.getUniqueId())).getCachedData().getMetaData().getPrefix())), ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(Objects.requireNonNull(KingsButBad.api.getUserManager().getUser(sender.getUniqueId())).getCachedData().getMetaData().getMetaValue("shortPrefix"))));
+      return message;
    }
 }

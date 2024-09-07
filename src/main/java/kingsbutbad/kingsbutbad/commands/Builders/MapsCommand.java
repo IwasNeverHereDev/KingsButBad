@@ -26,7 +26,7 @@ public class MapsCommand implements CommandExecutor {
             itemStack.setItemMeta(itemMeta);
             inv.addItem(itemStack);
         }
-        if(commandSender instanceof Player p ){
+        if(commandSender instanceof Player p){
             p.openInventory(inv);
         }
         return false;

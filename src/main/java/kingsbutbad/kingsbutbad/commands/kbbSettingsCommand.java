@@ -20,6 +20,7 @@ import java.util.List;
 
 public class kbbSettingsCommand implements CommandExecutor {
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(!(commandSender instanceof Player p)) return true;
         Inventory inv = Bukkit.createInventory(null, 9*6, CreateText.addColors("<gold>KingsButBad Settings"));
@@ -28,19 +29,25 @@ public class kbbSettingsCommand implements CommandExecutor {
         List<String> loreShout = new ArrayList<>();
         loreShout.add(isEnabled(isAutoShoutEnabled, "Auto Shout"));
         List<String> loreRolePlaytime = new ArrayList<>();
-        List<String> loreshowMineMessages = new ArrayList<>();
-        loreRolePlaytime.add(isEnabled(isRolePlayerTimeDisplayed, "Auto Shout"));
+        List<String> loreShowMineMessages = new ArrayList<>();
+        loreRolePlaytime.add(isEnabled(isRolePlayerTimeDisplayed, "Lore Playtime Displayed"));
         ItemStack displayPlaytimeItem = clearData(Item.createItem(Material.CLOCK, "<yellow>Display Role Playtime", loreRolePlaytime, null));
-        ItemStack showMineMessagesItem = clearData(Item.createItem(Material.COAL, "<yellow>Show Mine Messages", loreshowMineMessages, null));
-        ItemStack comingSoonItem = clearData(Item.createItem(Material.BARRIER, "<red>Coming Soon!", new ArrayList<>(), null));
+        ItemStack showMineMessagesItem = clearData(Item.createItem(Material.COAL, "<yellow>Show Mine Messages", loreShowMineMessages, null));
+        //ItemStack comingSoonItem = clearData(Item.createItem(Material.BARRIER, "<red>Coming Soon!", new ArrayList<>(), null));
         ItemStack shoutItem = clearData(Item.createItem(Material.BLACK_CANDLE, "<yellow>Auto Shout", loreShout, null));
         ItemStack chatItem = clearData(Item.createItem(Material.PAPER, "<yellow>Chat Selected", getChatSelectedLore(p), null));
+        ItemStack shoutShortItem = clearData(Item.createItem(Material.NAME_TAG, "<yellow>Shorten Shout Msg", new ArrayList<>(), null));
+        ItemStack pingItem = clearData(Item.createItem(Material.GOLD_INGOT, "<yellow>Ping On Mentioned", new ArrayList<>(), null));
+        ItemStack shortRoleItem = clearData(Item.createItem(Material.BOOK, "<yellow>Shorten Roles", new ArrayList<>(), null));
+        ItemStack shortPrefixItem = clearData(Item.createItem(Material.WRITABLE_BOOK, "<yellow>Shorten Prefix", new ArrayList<>(), null));
         inv.setItem(10,shoutItem);
-        inv .setItem(13, chatItem);
-        inv.setItem(16, displayPlaytimeItem);
-        inv.setItem(37, showMineMessagesItem);
-        inv.setItem(40, comingSoonItem);
-        inv.setItem(43, comingSoonItem);
+        inv .setItem(12, chatItem);
+        inv.setItem(14, displayPlaytimeItem);
+        inv.setItem(16, showMineMessagesItem);
+        inv.setItem(37, shoutShortItem);
+        inv.setItem(39, pingItem);
+        inv.setItem(41, shortRoleItem);
+        inv.setItem(43, shortPrefixItem);
         p.openInventory(inv);
         return false;
     }
