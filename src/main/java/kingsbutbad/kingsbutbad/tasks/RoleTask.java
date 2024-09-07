@@ -67,7 +67,7 @@ public class RoleTask extends BukkitRunnable {
          case SERVANT -> Keys.SERVANTTicks.addDouble(p, 1.0);
          case KNIGHT -> Keys.KNIGHTTicks.addDouble(p, 1.0);
          case OUTLAW -> Keys.OUTLAWTicks.addDouble(p, 1.0);
-         default -> p.sendActionBar("Your not going up Contact _Aquaotter_ About this!");
+         default -> p.sendActionBar("You role isn't set properly! Please contact Server Administrators.");
       }
    }
    private void updatePlayerNames(Player player) {

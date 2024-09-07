@@ -39,7 +39,7 @@ public class HelloCommand implements CommandExecutor {
         commandSender.sendMessage(CreateText.addColors("<gray>Hello, <white>" + playerName + "<gray>!"));
         commandSender.sendMessage(CreateText.addColors("<gray>Server Version: <white>" + serverVersion));
         commandSender.sendMessage(CreateText.addColors("<gray>Online Players: <white>" + onlinePlayers + "<gray>/<white>" + maxPlayers));
-        commandSender.sendMessage(CreateText.addColors("<gray>All Time Players: <white>" + allLifeTimePlayers));
+        commandSender.sendMessage(CreateText.addColors("<gray>Unique Players: <white>" + allLifeTimePlayers));
         commandSender.sendMessage(CreateText.addColors("<gray>Clans Count: <white>" + clanCount));
         commandSender.sendMessage(CreateText.addColors("<gray>Server Uptime: <white>" + hours + " hours, " + minutes + " minutes, " + seconds + " seconds"));
         commandSender.sendMessage(CreateText.addColors("<gray>Current Kingdom ID (Map): <white>" + KingdomsLoader.activeKingdom.getName()));

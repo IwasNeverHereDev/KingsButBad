@@ -19,7 +19,7 @@ public class Cell {
 
         Location randomLocation = cells.get(randomIndex);
         p.teleport(randomLocation);
-        p.sendMessage(CreateText.addColors("<gray>You have been put in a <white>Cell "+(randomIndex+1)+"<gray>!"));
+        p.sendMessage(CreateText.addColors("<gray>You have been put in <white>Cell "+(randomIndex+1)+"<gray>!"));
     }
     public static Location findClosestLocation(List<Location> locations, Location input) {
         if (locations == null || locations.isEmpty() || input == null) {
