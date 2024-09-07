@@ -113,7 +113,7 @@ public class KingCommand implements CommandExecutor { // TODO: Clean up This Fil
                }
                RoleManager.setKingGender(false, args[1]);
                if(KingsButBad.lastKing == pe || KingsButBad.lastKing2 == pe){
-                  sender.sendMessage(CreateText.addColors("<red>Sorry, You can't SideKick this Player! <gray>(<white>They were last King!<white>)"));
+                  sender.sendMessage(CreateText.addColors("<red>Sorry, You can't sidekick this Player! <gray>(<white>They've been king too recently!<white>)"));
                   return true;
                }
                if (KingsButBad.roles.get(pe) == Role.PEASANT) {

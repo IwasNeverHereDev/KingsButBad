@@ -84,7 +84,7 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
          return;
       }
       if (NoNoWords.previouslysaid.containsKey(player) && NoNoWords.previouslysaid.get(player).equalsIgnoreCase(message)) {
-         player.sendMessage(ChatColor.RED + "No Spamming!");
+         player.sendMessage(ChatColor.RED + "You can't send the same message twice!");
       } else {
          NoNoWords.previouslysaid.put(player, message);
          event.setFormat("%1$s" + ChatColor.GRAY + ": %2$s");

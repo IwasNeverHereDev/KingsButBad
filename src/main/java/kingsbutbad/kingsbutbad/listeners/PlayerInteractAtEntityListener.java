@@ -56,7 +56,7 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
 
       if (event.getRightClicked().getType().equals(EntityType.VILLAGER)) {
          if(Keys.vanish.get(event.getPlayer(), false)) {
-            event.getPlayer().sendMessage(CreateText.addColors("<gray>The NPC can't see vanish players!"));
+            event.getPlayer().sendMessage(CreateText.addColors("<gray>The NPC can't see vanished players!"));
             event.setCancelled(true);
             return;
          }

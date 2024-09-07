@@ -10,7 +10,7 @@ public enum Role {
    PEASANT(CreateText.addColors("<#59442B>PEASANT"), CreateText.addColors("<gray>Survive.<gray>"), "<#59442B>PEASANT", false, ChatColor.GRAY, "P"),
    SERVANT(CreateText.addColors("<#867143>SERVANT"), CreateText.addColors("<gray>Serve the king.<gray>"), "<#867143>SERVANT", false, ChatColor.GRAY, "S"),
    CRIMINAL(CreateText.addColors("<red>CRIMINAL"), CreateText.addColors("<gray>Don't get caught!<gray>"), "<red>CRIMINAL", false, ChatColor.GRAY, "C"),
-   OUTLAW(CreateText.addColors("<gold>OUTLAW"), CreateText.addColors("<gray>OVER THROW THE KING!<gray>"), "<gold>OUTLAW", false, ChatColor.GRAY, "O"),
+   OUTLAW(CreateText.addColors("<gold>OUTLAW"), CreateText.addColors("<gray>Overthrow the monarchs!<gray>"), "<gold>OUTLAW", false, ChatColor.GRAY, "O"),
    KNIGHT(CreateText.addColors("<gray>KNIGHT"), CreateText.addColors("<blue>Keep the kingdom safe!<gray>"), "<gray>KNIGHT", true, ChatColor.GRAY, "K"),
    BODYGUARD(
       CreateText.addColors("<dark_gray>BODYGUARD"), CreateText.addColors("<blue>Keep the monarchs safe!<gray>"), "<dark_gray>BODYGUARD", true, ChatColor.GRAY, "BG"

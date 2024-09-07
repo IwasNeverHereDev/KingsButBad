@@ -238,14 +238,14 @@ public class MiscTask extends BukkitRunnable {
                && !KingsButBad.isInside(
                   player, new Location(Bukkit.getWorld("world"), -136.0, -53.0, -6.0), new Location(Bukkit.getWorld("world"), -132.0, -57.0, 23.0)
                )) {
-               player.sendTitle("", CreateText.addColors("<red><b>GET IN YOUR CELL, FILTH!"), 0, 20, 0);
+               player.sendTitle("", CreateText.addColors("<red><b>Get to your cell!"), 0, 20, 0);
                prisonersnotincell = prisonersnotincell + 1;
             }
          }
 
          for (Player player : Bukkit.getOnlinePlayers()) {
             if (KingsButBad.roles.get(player).equals(Role.PRISON_GUARD) && prisonersnotincell != 0) {
-               player.sendTitle("", CreateText.addColors("<red><b>" + prisonersnotincell + " PRISONERS ARE NOT IN THEIR CELLS!"), 0, 20, 0);
+               player.sendTitle("", CreateText.addColors("<red><b>" + prisonersnotincell + " prisoners are not in their cells!"), 0, 20, 0);
                prisonersnotincell = prisonersnotincell + 1;
             }
          }
@@ -506,7 +506,7 @@ public class MiscTask extends BukkitRunnable {
          if (RoleManager.isKingAtAll(player)
             && player.getLocation().getBlock().getType().equals(Material.YELLOW_CARPET)
             ) {
-            actiobarextras = actiobarextras + ChatColor.GRAY + " | " + CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>+0.25$ for sitting on the throne.");
+            actiobarextras = actiobarextras + ChatColor.GRAY + " | " + CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>+0.25$ for being on the throne.");
             Keys.money.addDouble(player,0.25);
          }
 
@@ -561,12 +561,7 @@ public class MiscTask extends BukkitRunnable {
                   + CreateText.addColors("<gray> | <gold>MINE <red><b>" + KingsButBad.prisonQuota.get(player) + "<gold></b> BLOCKS! <gray>or +80s");
             }
 
-            if (player.getLocation().getPitch() < 30.0F) {
-               tooltip = tooltip + CreateText.addColors("<gray> | <red>Tip: Look down to go faster.");
-               player.setWalkSpeed(0.02F);
-            } else {
-               player.setWalkSpeed(0.1F);
-            }
+            player.setWalkSpeed(0.1F);
             if(!Keys.vanish.get(player, false))
                player.sendActionBar(
                CreateText.addColors("<gray>Sentence Left: <red><b>" + parseTicksToTime(KingsButBad.prisonTimer.get(player))) + tooltip

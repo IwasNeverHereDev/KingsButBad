@@ -27,7 +27,7 @@ public class BlockBreakListener implements Listener {
          event.getBlock().setType(Material.DEEPSLATE);
          if(KingsButBad.roles.get(event.getPlayer()).equals(Role.PRISONER)){
             KingsButBad.prisonTimer.put(event.getPlayer(), KingsButBad.prisonTimer.getOrDefault(event.getPlayer(), 0) - 10);
-            event.getPlayer().sendTitle("", CreateText.addColors("<gray>PrisonTime... -10s."), 0, 3,0);
+            event.getPlayer().sendTitle("", CreateText.addColors("<gray>-10s"), 0, 3,0);
             event.getPlayer().getInventory().addItem(new ItemStack(Material.COAL));
          }
          Bukkit.getScheduler()

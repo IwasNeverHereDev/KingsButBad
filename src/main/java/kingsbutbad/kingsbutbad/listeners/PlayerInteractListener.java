@@ -31,7 +31,7 @@ public class PlayerInteractListener implements Listener {
          Player p = event.getPlayer();
          if(KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.PRISONER) {
             p.teleport(KingdomsLoader.activeKingdom.getBlackMarketInsidePrisoner());
-            event.getPlayer().sendTitle("", CreateText.addColors("<gray>=-= BlackMarket (Prison) =-="), 0, 3,0);
+            event.getPlayer().sendTitle("", CreateText.addColors("<gray>=-= PrisonMarket =-="), 0, 3,0);
          }
          event.setCancelled(true);
          return;
@@ -47,14 +47,14 @@ public class PlayerInteractListener implements Listener {
                    for (int z = -1; z <= 1; z++) {
                       Block block = loc.clone().add(x, y, z).getBlock();
                       if (!block.getType().equals(Material.AIR)) {
-                         event.getPlayer().sendMessage(CreateText.addColors("<red>Sorry, Try in a a More Open Area"));
+                         event.getPlayer().sendMessage(CreateText.addColors("<red>Sorry, try this in a more open area"));
                          return;
                       }
                    }
                 }
              }
              if(event.getPlayer().getLocation().set(0, -1, 0).getBlock().getType() == Material.AIR){
-                event.getPlayer().sendMessage(CreateText.addColors("<red>Sorry, Try in a a More Open Area"));
+                event.getPlayer().sendMessage(CreateText.addColors("<red>Sorry, try this in a more open area"));
                 return;
              }
              event.getPlayer().setCooldown(Material.CLAY_BALL, 80);
@@ -76,7 +76,7 @@ public class PlayerInteractListener implements Listener {
             if(amount >= 20 * 60 * 3){
                event.setCancelled(true);
                event.getPlayer().damage(10);
-               event.getPlayer().sendTitle("", CreateText.addColors("<red>Over Dose..."), 0, 5, 0);
+               event.getPlayer().sendTitle("", CreateText.addColors("<red>Overdosed..."), 0, 5, 0);
                event.getPlayer().addPotionEffect(PotionEffectType.SLOW.createEffect(amount/5, 0));
                return;
             }
@@ -147,7 +147,7 @@ public class PlayerInteractListener implements Listener {
          if(event.getClickedBlock().getType().equals(Material.BLACK_CANDLE) && event.getAction().isLeftClick()){
             if(KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT) == Role.KING || KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT) == Role.PRINCE){
                KingsButBad.isInterocmEnabled = !KingsButBad.isInterocmEnabled;
-               event.getPlayer().sendMessage(CreateText.addColors("<green>The Intercom being enabled is "+KingsButBad.isInterocmEnabled+" now!"));
+               event.getPlayer().sendMessage(CreateText.addColors("<green>The Intercom is now "+ (KingsButBad.isInterocmEnabled ? "Enabled" : "Disabled") + "!"));
                event.setCancelled(true);
                return;
             }

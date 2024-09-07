@@ -26,7 +26,7 @@ public class ResignCommand implements CommandExecutor {
          }
 
          if(role.equals(Role.CRIMINAL)){
-            sender.sendMessage(CreateText.addColors("Your a wanted Criminal!"));
+            sender.sendMessage(CreateText.addColors("<red>You can't do this as a criminal!"));
             return true;
          }
 
