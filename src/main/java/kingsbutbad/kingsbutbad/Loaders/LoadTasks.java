@@ -13,10 +13,11 @@ public class LoadTasks {
         new AreasTask().runTaskTimer(p, 0L, 5L);
         new FailsafeTask().runTaskTimer(p, 0L, 1L);
         new RoleTask().runTaskTimer(p, 0L, 1L);
-        new VeteranTask().runTaskTimer(p, 0L, 20);
+        new VeteranTask().runTaskTimer(p, 0L, 20*60);
         new RaidTask().runTaskTimer(p, 0L, 1);
         new PrinceTask().runTaskTimer(p, 0L, 1);
         new GangLevelTask().runTaskTimer(p, 0L, 20*5);
         new ReloadVillagersTask().runTaskTimer(p, 0L, 20*60);
+        new PingSpoofingTask().runTaskTimer(p, 0L, 20);
     }
 }

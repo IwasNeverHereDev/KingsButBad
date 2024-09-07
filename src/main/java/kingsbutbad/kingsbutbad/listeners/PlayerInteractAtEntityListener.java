@@ -34,6 +34,11 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
       if (event.getRightClicked().getType().equals(EntityType.ARMOR_STAND)) {
          event.setCancelled(true);
       }
+      if(event.getPlayer().getPing() >= 150){
+         event.getPlayer().sendMessage(CreateText.addColors("<red>Your ping is to high! <gray>(<white>"+event.getPlayer().getPing()+"<gray>)"));
+         event.setCancelled(true);
+         return;
+      }
       if(event.getRightClicked() instanceof Player p){
          if(event.getPlayer().getItemInHand().getType().equals(Material.POTION)){
             Player giver = event.getPlayer();

@@ -155,23 +155,21 @@ public class KingdomsReader {
 
    private Location readLocation(JsonObject locationObject) {
       if (locationObject == null) {
-         // Handle the null case, maybe throw an exception or return a default Location
          Bukkit.getLogger().warning("Attempted to read a null location object.");
-         return new Location(Bukkit.getWorlds().get(0), 0, 0, 0); // Default Location
+         return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
       }
 
-      String worldName = locationObject.has("world") ? locationObject.get("world").getAsString() : "world"; // Default world
-      double x = locationObject.has("x") ? locationObject.get("x").getAsDouble() : 0.0; // Default x
-      double y = locationObject.has("y") ? locationObject.get("y").getAsDouble() : 0.0; // Default y
-      double z = locationObject.has("z") ? locationObject.get("z").getAsDouble() : 0.0; // Default z
-      float yaw = locationObject.has("yaw") ? locationObject.get("yaw").getAsFloat() : 0.0f; // Default yaw
-      float pitch = locationObject.has("pitch") ? locationObject.get("pitch").getAsFloat() : 0.0f; // Default pitch
+      String worldName = locationObject.has("world") ? locationObject.get("world").getAsString() : "world";
+      double x = locationObject.has("x") ? locationObject.get("x").getAsDouble() : 0.0;
+      double y = locationObject.has("y") ? locationObject.get("y").getAsDouble() : 0.0;
+      double z = locationObject.has("z") ? locationObject.get("z").getAsDouble() : 0.0;
+      float yaw = locationObject.has("yaw") ? locationObject.get("yaw").getAsFloat() : 0.0f;
+      float pitch = locationObject.has("pitch") ? locationObject.get("pitch").getAsFloat() : 0.0f;
 
-      // Validate the world
       World world = Bukkit.getWorld(worldName);
-      if (world == null) {
-         world = Bukkit.getWorlds().get(0); // Use the first loaded world if the specified world is not found
-      }
+
+      if (world == null)
+         world = Bukkit.getWorlds().get(0);
 
       return new Location(world, x, y, z, yaw, pitch);
    }

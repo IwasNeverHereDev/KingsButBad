@@ -1,4 +1,4 @@
-package kingsbutbad.kingsbutbad.commands.Builders;
+package kingsbutbad.kingsbutbad.commands.Builders.KingdomsCommands;
 
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.Kingdom.Kingdom;

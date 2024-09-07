@@ -2,10 +2,9 @@ package kingsbutbad.kingsbutbad.Loaders;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.commands.*;
-import kingsbutbad.kingsbutbad.commands.Builders.BuilderChatCommand;
-import kingsbutbad.kingsbutbad.commands.Builders.BuilderModeCommand;
-import kingsbutbad.kingsbutbad.commands.Builders.MapsCommand;
-import kingsbutbad.kingsbutbad.commands.Builders.SwapKingdomCommand;
+import kingsbutbad.kingsbutbad.commands.Builders.*;
+import kingsbutbad.kingsbutbad.commands.Builders.KingdomsCommands.MapsCommand;
+import kingsbutbad.kingsbutbad.commands.Builders.KingdomsCommands.SwapKingdomCommand;
 import kingsbutbad.kingsbutbad.commands.Dev.*;
 import kingsbutbad.kingsbutbad.commands.Clans.ClanCommand;
 import kingsbutbad.kingsbutbad.commands.Leaderboards.LeaderboardCommand;

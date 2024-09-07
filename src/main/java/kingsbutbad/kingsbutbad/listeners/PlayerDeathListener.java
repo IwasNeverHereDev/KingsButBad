@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.listeners;
 
+import com.comphenix.protocol.PacketType;
 import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
@@ -17,6 +18,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +57,15 @@ public class PlayerDeathListener implements Listener { // TODO: Clean up This Fi
       else
          event.setDeathMessage(ChatColor.stripColor(event.getDeathMessage()));
       if (event.getPlayer().getKiller() != null && event.getPlayer().getKiller().getInventory().getItemInMainHand().getType().equals(Material.IRON_SHOVEL)) {
-         if(event.getPlayer().getKiller().getPassengers().isEmpty()) {
+         if(event.getPlayer().getKiller().getPassengers().isEmpty() && !event.getPlayer().hasPotionEffect(PotionEffectType.SLOW))  {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(KingsButBad.pl, () -> {
+               if(event.getPlayer().getVehicle() instanceof Player && event.getPlayer().getKiller().getPassengers().contains(event.getPlayer())) {
+                  event.getPlayer().getVehicle().removePassenger(event.getPlayer());
+                  killer.sendMessage(CreateText.addColors("<red>Handcuffs rusted away!"));
+                  event.getPlayer().sendMessage(CreateText.addColors("<green>Handcuffs rusted away! <gray>(<white>FREEDOM!!!<gray>)"));
+                  event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20*5,0));
+               }
+            }, 20*15);
             event.setCancelled(true);
             event.getPlayer().getKiller().addPassenger(event.getPlayer());
             event.getPlayer().setHealth(event.getPlayer().getMaxHealth());

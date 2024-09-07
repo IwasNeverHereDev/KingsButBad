@@ -42,6 +42,12 @@ import static kingsbutbad.kingsbutbad.utils.RoleManager.isSettable;
 public class InventoryClickListener implements Listener { // TODO: Clean up This File (InventoryClickListener.java)
    @EventHandler
    public void onPlayerQuit(InventoryClickEvent event) {
+      if(event.getWhoClicked() instanceof Player user)
+         if(user.getPing() >= 150){
+            event.setCancelled(true);
+            user.closeInventory();
+            user.sendMessage(CreateText.addColors("<red>Sorry, Your ping is to high!"));
+         }
       if (event.getWhoClicked().hasCooldown(Material.FISHING_ROD)
          || event.getWhoClicked().hasCooldown(Material.WOODEN_HOE)
          || event.getWhoClicked().hasCooldown(Material.BONE)
@@ -323,7 +329,8 @@ public class InventoryClickListener implements Listener { // TODO: Clean up This
             if (Keys.money.get(p, 0.0) >= 150.0) {
                Keys.money.subtractDouble(p, 150.0);
                p.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
-               AdvancementManager.giveAdvancement(p, "undertable");
+               if(!event.getCurrentItem().getItemMeta().getLore().contains(ChatColor.GRAY + "A strong tool to keep yourself safe."))
+                  AdvancementManager.giveAdvancement(p, "undertable");
             }
          }
 
