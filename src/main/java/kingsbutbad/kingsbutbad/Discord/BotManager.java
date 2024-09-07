@@ -19,6 +19,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class BotManager {
    private static JDA bot;
    private static TextChannel inGameChatChannel;
+   private static TextChannel rulesChannel;
    private static TextChannel commandsChannel;
    private static TextChannel filterChannel;
    private static TextChannel punishmentChannel;
@@ -59,11 +60,16 @@ public class BotManager {
             startRole = getRoleById("StartRoleID");
             stopRole = getRoleById("StopRoleID");
             updateChannel = getNewsChannelById("ChangelogChannelID");
+            rulesChannel = getChannelById("RulesChannelID");
 
          } catch (Exception e) {
             logError("An error occurred while initializing the Discord bot.", e);
          }
       }
+   }
+
+   public static TextChannel getRulesChannel() {
+      return rulesChannel;
    }
 
    public static TextChannel getBuilderChannel() {

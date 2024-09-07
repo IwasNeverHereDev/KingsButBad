@@ -57,7 +57,7 @@ public class PlayerDeathListener implements Listener { // TODO: Clean up This Fi
       else
          event.setDeathMessage(ChatColor.stripColor(event.getDeathMessage()));
       if (event.getPlayer().getKiller() != null && event.getPlayer().getKiller().getInventory().getItemInMainHand().getType().equals(Material.IRON_SHOVEL)) {
-         if(event.getPlayer().getKiller().getPassengers().isEmpty() && !event.getPlayer().hasPotionEffect(PotionEffectType.SLOW))  {
+         if(event.getPlayer().getKiller().getPassengers().isEmpty() && !event.getPlayer().hasPotionEffect(PotionEffectType.SLOW) && event.getPlayer().isOnline())  {
             Bukkit.getScheduler().scheduleSyncDelayedTask(KingsButBad.pl, () -> {
                if(event.getPlayer().getVehicle() instanceof Player && event.getPlayer().getKiller().getPassengers().contains(event.getPlayer())) {
                   event.getPlayer().getVehicle().removePassenger(event.getPlayer());

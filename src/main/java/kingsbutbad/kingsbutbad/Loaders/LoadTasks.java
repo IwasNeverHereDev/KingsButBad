@@ -18,6 +18,5 @@ public class LoadTasks {
         new PrinceTask().runTaskTimer(p, 0L, 1);
         new GangLevelTask().runTaskTimer(p, 0L, 20*5);
         new ReloadVillagersTask().runTaskTimer(p, 0L, 20*60);
-        new PingSpoofingTask().runTaskTimer(p, 0L, 20);
     }
 }

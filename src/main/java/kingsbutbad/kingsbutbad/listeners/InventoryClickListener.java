@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -42,12 +43,6 @@ import static kingsbutbad.kingsbutbad.utils.RoleManager.isSettable;
 public class InventoryClickListener implements Listener { // TODO: Clean up This File (InventoryClickListener.java)
    @EventHandler
    public void onPlayerQuit(InventoryClickEvent event) {
-      if(event.getWhoClicked() instanceof Player user)
-         if(user.getPing() >= 150){
-            event.setCancelled(true);
-            user.closeInventory();
-            user.sendMessage(CreateText.addColors("<red>Sorry, Your ping is to high!"));
-         }
       if (event.getWhoClicked().hasCooldown(Material.FISHING_ROD)
          || event.getWhoClicked().hasCooldown(Material.WOODEN_HOE)
          || event.getWhoClicked().hasCooldown(Material.BONE)
@@ -593,6 +588,7 @@ public class InventoryClickListener implements Listener { // TODO: Clean up This
             int iii = 0;
             if (!event.getWhoClicked().hasCooldown(Material.WOODEN_HOE)) {
                int wheat = 0;
+               event.getWhoClicked().closeInventory();
                for (ItemStack ixxxx : event.getWhoClicked().getInventory()) {
                   if (ixxxx != null && ixxxx.getType().equals(Material.WHEAT)) {
                      int originalamount = ixxxx.getAmount();
