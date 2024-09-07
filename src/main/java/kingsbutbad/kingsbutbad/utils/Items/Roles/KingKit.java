@@ -49,31 +49,31 @@ public class KingKit {
         return crown;
     }
     public static ItemStack getOtherHelmet(){
-        return Item.createItem(Material.CHAINMAIL_HELMET, "King's Helmet", new ArrayList<>(), null);
+        return Item.createItem(Material.CHAINMAIL_HELMET, "Monarch's Helmet", new ArrayList<>(), null);
     }
     private static ItemStack getChestplate(){
-        ItemStack itemStack = Item.createItem(Material.LEATHER_CHESTPLATE, "<gold>King's Chestplate", new ArrayList<>(), null);
+        ItemStack itemStack = Item.createItem(Material.LEATHER_CHESTPLATE, "<gold>Monarch's Chestplate", new ArrayList<>(), null);
         Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 2);
         Item.applyDye(itemStack, Color.ORANGE);
         return itemStack;
     }
     private static ItemStack getLeggings(){
-        ItemStack itemStack = Item.createItem(Material.CHAINMAIL_LEGGINGS, "<gold>King's Leggings", new ArrayList<>(), null);
+        ItemStack itemStack = Item.createItem(Material.CHAINMAIL_LEGGINGS, "<gold>Monarch's Leggings", new ArrayList<>(), null);
         Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 2);
         return itemStack;
     }
     private static ItemStack getBoots(){
-        ItemStack itemStack = Item.createItem(Material.LEATHER_BOOTS, "<gold>King's Boots", new ArrayList<>(), null);
+        ItemStack itemStack = Item.createItem(Material.LEATHER_BOOTS, "<gold>Monarch's Boots", new ArrayList<>(), null);
         Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 1);
         Item.applyDye(itemStack, Color.ORANGE);
         return itemStack;
     }
     private static ItemStack getSword(){
-        ItemStack itemStack = Item.createItem(Material.GOLDEN_SWORD, "<gold>King's Dagger", new ArrayList<>(), null);
+        ItemStack itemStack = Item.createItem(Material.GOLDEN_SWORD, "<gold>Monarch's Dagger", new ArrayList<>(), null);
         Item.applyEnchmanent(itemStack, Enchantment.DAMAGE_ALL, 5);
         return itemStack;
     }
     private static ItemStack getBow(){
-        return Item.createItem(Material.BOW, "<gold>King's Bow", new ArrayList<>(),null);
+        return Item.createItem(Material.BOW, "<gold>Monarch's Bow", new ArrayList<>(),null);
     }
 }

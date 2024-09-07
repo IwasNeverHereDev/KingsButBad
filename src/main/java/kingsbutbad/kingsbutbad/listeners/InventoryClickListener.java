@@ -130,12 +130,12 @@ public class InventoryClickListener implements Listener { // TODO: Clean up This
                }
                KingsButBad.prisonTimer.put(p, KingsButBad.prisonTimer.getOrDefault(p, 0) - 25*20);
                if(KingsButBad.prisonTimer.getOrDefault(p, 0) < 0) KingsButBad.prisonTimer.remove(p);
-               p.sendMessage(CreateText.addColors("<gray>You have purchased a Less Time!"));
+               p.sendMessage(CreateText.addColors("<gray>You have purchased less time!"));
                AdvancementManager.giveAdvancement(p, "undertable");
                return;
 
             } else {
-               p.sendMessage(CreateText.addColors("<gray>You need <white>5 Coal<gray> to Remove some of your time!"));
+               p.sendMessage(CreateText.addColors("<gray>You need <white>5 Coal<gray> to remove some of your time!"));
             }
             return;
          }
@@ -330,7 +330,7 @@ public class InventoryClickListener implements Listener { // TODO: Clean up This
          if (event.getCurrentItem().getType().equals(Material.IRON_NUGGET)) {
             Player p = (Player)event.getWhoClicked();
             if(RoleManager.isKingAtAll(p)){
-               p.sendMessage(CreateText.addColors("<gray>Sorry, King i will not allow you to become a servant..."));
+               p.sendMessage(CreateText.addColors("<red>You can't be a servant!"));
                return;
             }
             KingsButBad.roles.put(p, Role.SERVANT);
@@ -372,17 +372,17 @@ public class InventoryClickListener implements Listener { // TODO: Clean up This
          if (event.getCurrentItem().getType().equals(Material.CHAINMAIL_HELMET)) {
             Player p = (Player)event.getWhoClicked();
             if(p.getInventory().getChestplate().getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE) == 1) {
-               p.sendMessage(CreateText.addColors("<red>Your gear is already Upgraded!"));
+               p.sendMessage(CreateText.addColors("<red>Your gear is already upgraded!"));
                return;
             }
             if (Keys.money.get(p, 0.0) >= 2500.0) {
                if(p.getInventory().getChestplate().getType() == Material.CHAINMAIL_CHESTPLATE){
-                     p.sendMessage(CreateText.addColors("<red>You have already Upgraded your Chestplate!"));
+                     p.sendMessage(CreateText.addColors("<red>You have already upgraded your Chestplate!"));
                      return;
                }
                Keys.money.subtractDouble(p, 2500.0);
                PlayerInventory inv = p.getInventory();
-               p.sendMessage(CreateText.addColors("<gray>Your Chestplate & Boots is now Upgraded!"));
+               p.sendMessage(CreateText.addColors("<gray>Your chestplate and boots now have Protection!"));
                ItemStack chestplate = inv.getChestplate();
                ItemStack boots = inv.getBoots();
                Item.applyEnchmanent(chestplate, Enchantment.PROTECTION_PROJECTILE, 1);

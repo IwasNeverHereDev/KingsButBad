@@ -32,9 +32,7 @@ public class EntityDeathListener implements Listener {
                 }
             }
         }else if (event.getEntity() instanceof Zombie){
-            String msg = CreateText.addColors("<red>One of you Royal Patrols has died... <gray>(<white> Royal Patrols Left...");
-            if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getPlayer() != null)
-                msg = CreateText.addColors("<red>One of you Royal Patrols was killed by <b>"+event.getEntity().getKiller().getPlayer().getName()+"</b>... <gray>(<white>"+getRoyalPatrols()+" Royal Patrols Left...");
+            String msg = CreateText.addColors("<red>A royal patroller has died!");
             KingsButBad.king.sendMessage(msg);
             KingsButBad.king2.sendMessage(msg);
         }
@@ -61,27 +59,23 @@ public class EntityDeathListener implements Listener {
         KingsButBad.raidEnemies.clear();
         KingsButBad.raidCooldown = 20*60*5;
         KingsButBad.isRaidActive = false;
-        Bukkit.broadcastMessage(CreateText.addColors("<red>Raid has ended! "+didWinString(didWin)));
+        String raidMessage = CreateText.addColors(didWin ? "<green>Raid won!" : "<red>Raid lost...");
         if(didWin) {
             if (KingsButBad.king != null && wasInRaid(KingsButBad.king)) {
                 Keys.money.addDouble(KingsButBad.king, 10000.0);
-                KingsButBad.king.sendMessage(CreateText.addColors("<gray>The raid has ended! (<white>10k<gray>)"));
+                KingsButBad.king.sendMessage(raidMessage + CreateText.addColors("<gray> (<white>10k<gray>)"));
             }
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (!KingsButBad.roles.getOrDefault(p, Role.PEASANT).isPowerful) {
                     Keys.money.addDouble(p, 1500.0);
-                    p.sendMessage(CreateText.addColors("<gray>The raid has ended! (<white>1.5k<gray>)"));
+                    p.sendMessage(raidMessage + CreateText.addColors("<gray> (<white>1.5k<gray>)"));
                     continue;}
                 if (KingsButBad.king == p) continue;
                 if(!wasInRaid(p)) continue;
                 Keys.money.addDouble(KingsButBad.king, 2500.0);
-                p.sendMessage(CreateText.addColors("<gray>The raid has ended! (<white>2.5k<gray>)"));
+                p.sendMessage(raidMessage + CreateText.addColors("<gray> (<white>2.5k<gray>)"));
             }
         }
-    }
-    private static String didWinString(boolean DidWin){
-        if(DidWin) return "Win";
-        return "Lost";
     }
     public static boolean wasInRaid(Player p) {
         for (Player user : KingsButBad.inRaid)

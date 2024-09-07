@@ -34,7 +34,7 @@ public class PlayerDeathListener implements Listener { // TODO: Clean up This Fi
       else {
          RoleManager.givePlayerRole(event.getPlayer());
          event.setCancelled(true);
-         event.getPlayer().sendMessage(CreateText.addColors("<red>(Staff) You were give you role back due to in vanish!"));
+         event.getPlayer().sendMessage(CreateText.addColors("<red>(Staff) You were given your role back due to vanish!"));
          return;
       }
       Player killer = event.getPlayer().getKiller();
