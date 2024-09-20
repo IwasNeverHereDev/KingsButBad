@@ -1,0 +1,12 @@
+{
+  "Upgrade": {
+    "Blackmarket": {
+      "Type": "BUILDING",
+      "Itemstack": "GRASS_BLOCK",
+      "KingdomName": "Default",
+      "DisplayName": "Building_spears",
+      "Cost": 1500.0,
+      "Path": "building.mcfunction"
+    }
+  }
+}

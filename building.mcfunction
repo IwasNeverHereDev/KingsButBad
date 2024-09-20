@@ -1,0 +1,50 @@
+tellraw @a "\u00a7 Spears have been unlocked!"
+setblock 69 22 204 minecraft:campfire[facing=west,lit=false,signal_fire=false,waterlogged=false]
+setblock 69 22 205 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 69 22 206 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 69 22 207 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 69 22 208 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 70 22 205 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 70 22 206 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 70 22 207 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 70 22 208 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 71 22 208 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 71 22 207 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 71 22 206 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 71 22 205 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 71 22 204 minecraft:campfire[facing=west,lit=false,signal_fire=false,waterlogged=false]
+setblock 72 22 204 minecraft:campfire[facing=west,lit=false,signal_fire=false,waterlogged=false]
+setblock 72 22 205 minecraft:campfire[facing=west,lit=false,signal_fire=false,waterlogged=false]
+setblock 72 22 206 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 72 22 207 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 72 22 208 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+setblock 70 22 204 minecraft:campfire[facing=east,lit=false,signal_fire=false,waterlogged=false]
+
+
+setblock 69 22 209 minecraft:spruce_wall_sign[facing=south,waterlogged=false]
+setblock 70 22 209 minecraft:spruce_wall_sign[facing=south,waterlogged=false]{back_text:{color:"black",has_glowing_text:0b,messages:['""','""','""','""']},front_text:{color:"black",has_glowing_text:0b,messages:['"Secret sign"','"WIP"','""','""']},is_waxed:0b}
+setblock 71 22 209 minecraft:spruce_wall_sign[facing=south,waterlogged=false]
+setblock 72 22 209 minecraft:spruce_wall_sign[facing=south,waterlogged=false]
+setblock 73 22 208 minecraft:spruce_wall_sign[facing=east,waterlogged=false]
+setblock 73 22 207 minecraft:spruce_wall_sign[facing=east,waterlogged=false]
+setblock 73 22 206 minecraft:spruce_wall_sign[facing=east,waterlogged=false]
+setblock 73 22 205 minecraft:spruce_wall_sign[facing=east,waterlogged=false]
+setblock 73 22 204 minecraft:spruce_wall_sign[facing=east,waterlogged=false]
+setblock 72 22 203 minecraft:spruce_wall_sign[facing=north,waterlogged=false]
+setblock 71 22 203 minecraft:spruce_wall_sign[facing=north,waterlogged=false]
+setblock 70 22 203 minecraft:spruce_wall_sign[facing=north,waterlogged=false]
+setblock 69 22 203 minecraft:spruce_wall_sign[facing=north,waterlogged=false]
+setblock 68 22 204 minecraft:spruce_wall_sign[facing=west,waterlogged=false]
+setblock 68 22 205 minecraft:spruce_wall_sign[facing=west,waterlogged=false]
+setblock 68 22 206 minecraft:spruce_wall_sign[facing=west,waterlogged=false]
+setblock 68 22 207 minecraft:spruce_wall_sign[facing=west,waterlogged=false]
+setblock 68 22 208 minecraft:spruce_wall_sign[facing=west,waterlogged=false]
+
+summon minecraft:villager 70.50 22.50 206.50 {Silent: 1b, Bukkit.updateLevel: 2, LeftHanded: 0b, AbsorptionAmount: 0.0f, FoodLevel: 0b, LastRestock: 0L, AgeLocked: 0b, Invulnerable: 1b, Paper.Origin: [70.5d, 22.5d, 206.5d], ArmorDropChances: [0.085f, 0.085f, 0.085f, 0.085f], HandDropChances: [0.085f, 0.085f], Bukkit.Aware: 1b, ForcedAge: 0, CustomName: '{"text":"Spears & Junk","color":"dark_gray"}', ArmorItems: [{}, {}, {}, {}], NoAI: 1b, Inventory: [], Spigot.ticksLived: 838, Gossips: [], WorldUUIDLeast: -5474481326537269560L, Motion: [0.0d, 0.0d, 0.0d], CanPickUpLoot: 1b, Fire: 0s, PersistenceRequired: 0b, Paper.SpawnReason: "COMMAND", DeathTime: 0s, OnGround: 0b, RestocksToday: 0, Xp: 0, Attributes: [{Name: "minecraft:generic.movement_speed", Base: 0.5d}, {Name: "minecraft:generic.max_health", Base: 20.0d}], Brain: {memories: {}}, Age: 0, Rotation: [180.0f, 0.0f], HurtByTimestamp: 0, WorldUUIDMost: -725484658051364977L, HandItems: [{}, {}], Air: 300s, Offers: {Recipes: [{xp: 30, buy: {id: "minecraft:emerald", Count: 19b}, sell: {id: "minecraft:diamond_sword", Count: 1b, tag: {Damage: 0, Enchantments: [{id: "minecraft:sharpness", lvl: 2s}]}}, uses: 0, priceMultiplier: 0.2f, Paper.IgnoreDiscounts: 0b, maxUses: 3, rewardExp: 1b, demand: 0, specialPrice: 0, buyB: {id: "minecraft:air", Count: 0b}}]}, FallDistance: 0.0f, NoGravity: 1b, VillagerData: {type: "minecraft:plains", profession: "minecraft:weaponsmith", level: 5}, Paper.OriginWorld: [I; -168915060, 450512783, -1274627011, 305962696], Health: 20.0f, HurtTime: 0s, FallFlying: 0b}
+
+setblock 70 20 206 minecraft:chest[facing=west,type=single,waterlogged=false]{CustomName:'{"text":"","extra":[{"text":"Spears & Junk","italic":false,"color":"black"}]}',Items:[{Count:1b,Slot:0b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:1b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:2b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:3b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:4b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:5b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:6b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:7b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:8b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:9b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:10b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:11b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:12b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:13b,id:"minecraft:stick",tag:{display:{Lore:['["",{"text":"Buy $2500","italic":false,"color":"green"}]'],Name:'["",{"text":"Spears","italic":false,"color":"#663300"}]'}}},{Count:1b,Slot:14b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:15b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:16b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:17b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:18b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:19b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:20b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:21b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:22b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:23b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:24b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:25b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}},{Count:1b,Slot:26b,id:"minecraft:gray_stained_glass_pane",tag:{display:{Name:'["",{"text":" ","italic":false}]'}}}]}
+
+setblock 70 22 202 minecraft:ladder[facing=south,waterlogged=false]
+setblock 70 23 202 minecraft:ladder[facing=south,waterlogged=false]
+setblock 70 24 202 minecraft:ladder[facing=south,waterlogged=false]
+setblock 70 25 202 minecraft:ladder[facing=south,waterlogged=false]
