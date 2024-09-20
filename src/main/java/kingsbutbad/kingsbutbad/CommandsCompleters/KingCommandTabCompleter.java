@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class KingCommandTabCompleter implements TabCompleter {
-   private static final List<String> COMMANDS = Arrays.asList("help", "gender", "knight", "fire", "prisonguard", "bodyguard", "sidekick", "prince", "taxes");
+   private static final List<String> COMMANDS = Arrays.asList("help", "prefix", "knight", "fire", "prisonguard", "bodyguard", "sidekick", "prince", "taxes");
 
    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
        if (sender instanceof Player player) {
@@ -28,8 +28,9 @@ public class KingCommandTabCompleter implements TabCompleter {
                    String subCommand = args[0];
                    if (subCommand.equals("taxes"))
                        return Arrays.asList("0", "25", "50");
-                   if (subCommand.equals("gender")) {
-                       return Arrays.asList("male", "female", "sussy");
+                   if (subCommand.equals("prefix")) {
+                       if(KingsButBad.roles.getOrDefault(player, Role.PEASANT) == Role.KING) return Arrays.asList("king", "queen", "monarch");
+                       return Arrays.asList("prince", "princess", "cringe");
                    }
 
                    if (subCommand.equals("knight")
@@ -52,7 +53,7 @@ public class KingCommandTabCompleter implements TabCompleter {
            }
 
        }
-       return Collections.emptyList();
+       return Arrays.asList("Sorry, Your not a King or Sidekick!");
    }
 
    private List<String> getMatchingSuggestions(String current, List<String> options) {

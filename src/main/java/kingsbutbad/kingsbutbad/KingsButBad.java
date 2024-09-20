@@ -4,17 +4,18 @@ import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.Loaders.*;
 import kingsbutbad.kingsbutbad.WebServer.WebServerManager;
 import kingsbutbad.kingsbutbad.utils.Role;
+import kingsbutbad.kingsbutbad.utils.Seasons;
 import me.coralise.spigot.CustomBansPlus;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jetty.server.Server;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -33,7 +34,7 @@ public final class KingsButBad extends JavaPlugin { // TODO: Clean up This File 
    public static Boolean joesUnlocked = false;
    public static Boolean coalCompactor = false;
    public static HashMap<UUID, List<Role>> listOfKilledRoles = new HashMap<>();
-   public static HashMap<Player, Integer> prisonTimer = new HashMap<>();
+   public static HashMap<Player, Float> prisonTimer = new HashMap<>();
    public static HashMap<Player, Integer> prisonQuota = new HashMap<>();
    public static HashMap<Player, Role> invitations = new HashMap<>();
    public static LuckPerms api;
@@ -54,22 +55,26 @@ public final class KingsButBad extends JavaPlugin { // TODO: Clean up This File 
    public static Villager littleJoes;
    public static Villager mafiaRecruiter;
    public static Villager bmPrisonTrader;
-   public static HashMap<Player, String> princeGender = new HashMap<>();
+   public static HashMap<Player, String> princePrefix = new HashMap<>();
    public static Villager servant;
    public static Villager miner;
-   public static String kingGender = "King";
-   public static String kingGender2 = "King";
+   public static String kingPrefix = "King";
+   public static String kingPrefix2 = "King";
    public static int cooldown = 100;
-   public static Player lastKing;
-   public static Player lastKing2;
+   public static UUID lastKing;
+   public static UUID lastKing2;
    public static HashMap<Player, Integer> currentZone = new HashMap<>();
-   public static HashMap<Player, Integer> thirst = new HashMap<>();
-   public static boolean isInterocmEnabled = false;
+   public static HashMap<Player, Float> thirst = new HashMap<>();
+   public static boolean isIntercomEnabled = false;
    public static CustomBansPlus cbp;
    public static Server server;
    public static Instant startTime;
+   public static Seasons currentSeason;
+   public static int year = 0;
 
    public void onEnable() {
+      currentSeason = Seasons.SUMMER;
+      startTime = Instant.now();
       pl = this;
       api = LuckPermsProvider.get();
       cbp = me.coralise.spigot.CustomBansPlus.getInstance();
@@ -81,23 +86,30 @@ public final class KingsButBad extends JavaPlugin { // TODO: Clean up This File 
       LoadDiscordCommands.init();
       LoadKingdoms.init();
       LoadTasks.init();
+      LoadMisc.init();
       NoNoWords.reload();
-      RemoveAdvancements.init();
       WebServerManager.startWebServer();
       BotManager.getInGameChatChannel().sendMessage(BotManager.getStartRole().getAsMention() + " | Server is Starting...").queue();
+      sendStartUpTime();
       startTime = Instant.now();
    }
 
    public void onDisable() {
-      World world = Bukkit.getWorld("world");
-      if(world == null) world = Bukkit.getWorlds().get(0);
-      for (LivingEntity le : world.getLivingEntities())
-         if (le.getType().equals(EntityType.VILLAGER))
-            le.remove();
-
       BotManager.getBot().shutdown();
       WebServerManager.stopWebServer();
-       BotManager.getInGameChatChannel().sendMessage(BotManager.getStopRole().getAsMention() + " | Server is Stopping...").queue();
+      BotManager.getInGameChatChannel().sendMessage(BotManager.getStopRole().getAsMention() + " | Server is Stopping...").queue();
+   }
+   private void sendStartUpTime(){
+      Duration res = Duration.between(startTime, Instant.now());
+
+      long nanos = res.toNanos();
+      long millis = res.toMillis();
+      long seconds = res.getSeconds();
+
+      Bukkit.getLogger().info(String.format(
+              "\n\n      Startup Time: %d nanoseconds (%d milliseconds or %d seconds)\n\n",
+              nanos, millis, seconds
+      ));
    }
 
    public static boolean isInside(Player player, Location loc1, Location loc2) {

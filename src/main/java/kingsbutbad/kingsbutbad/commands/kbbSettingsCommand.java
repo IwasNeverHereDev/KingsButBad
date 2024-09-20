@@ -33,7 +33,6 @@ public class kbbSettingsCommand implements CommandExecutor {
         loreRolePlaytime.add(isEnabled(isRolePlayerTimeDisplayed, "Lore Playtime Displayed"));
         ItemStack displayPlaytimeItem = clearData(Item.createItem(Material.CLOCK, "<yellow>Display Role Playtime", loreRolePlaytime, null));
         ItemStack showMineMessagesItem = clearData(Item.createItem(Material.COAL, "<yellow>Show Mine Messages", loreShowMineMessages, null));
-        //ItemStack comingSoonItem = clearData(Item.createItem(Material.BARRIER, "<red>Coming Soon!", new ArrayList<>(), null));
         ItemStack shoutItem = clearData(Item.createItem(Material.BLACK_CANDLE, "<yellow>Auto Shout", loreShout, null));
         ItemStack chatItem = clearData(Item.createItem(Material.PAPER, "<yellow>Chat Selected", getChatSelectedLore(p), null));
         ItemStack shoutShortItem = clearData(Item.createItem(Material.NAME_TAG, "<yellow>Shorten Shout Msg", new ArrayList<>(), null));

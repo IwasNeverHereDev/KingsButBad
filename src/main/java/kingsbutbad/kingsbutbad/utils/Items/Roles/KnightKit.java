@@ -1,9 +1,7 @@
 package kingsbutbad.kingsbutbad.utils.Items.Roles;
 
-import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Item;
 import kingsbutbad.kingsbutbad.utils.Items.RoleItems;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,27 +23,21 @@ public class KnightKit {
         inv.addItem(RoleItems.getArrows(64));
     }
     private static ItemStack getHelmet(){
-        ItemStack itemStack = Item.createItem(Material.CHAINMAIL_HELMET, "<gray>Knight's Helmet", new ArrayList<>(), null);
-        return itemStack;
+        return Item.createItem(Material.CHAINMAIL_HELMET, "<gray>Knight's Helmet", new ArrayList<>(), null);
     }
     private static ItemStack getChestplate(){
-        ItemStack itemStack = Item.createItem(Material.IRON_CHESTPLATE, "<gray>Knight's Chestplate", new ArrayList<>(), null);
-        return itemStack;
+        return Item.createItem(Material.IRON_CHESTPLATE, "<gray>Knight's Chestplate", new ArrayList<>(), null);
     }
     private static ItemStack getLeggings(){
-        ItemStack itemStack = Item.createItem(Material.CHAINMAIL_LEGGINGS, "<gray>Knight's Leggings", new ArrayList<>(), null);
-        return itemStack;
+        return Item.createItem(Material.CHAINMAIL_LEGGINGS, "<gray>Knight's Leggings", new ArrayList<>(), null);
     }
     private static ItemStack getBoots(){
-        ItemStack itemStack = Item.createItem(Material.CHAINMAIL_BOOTS, "<gray>Knight's Boots", new ArrayList<>(), null);
-        return itemStack;
+        return Item.createItem(Material.CHAINMAIL_BOOTS, "<gray>Knight's Boots", new ArrayList<>(), null);
     }
     private static ItemStack getSword(){
-        ItemStack itemStack = Item.createItem(Material.STONE_SWORD, "<gray>Knight's Dagger", new ArrayList<>(), null);
-        return itemStack;
+        return Item.createItem(Material.STONE_SWORD, "<gray>Knight's Dagger", new ArrayList<>(), null);
     }
     private static ItemStack getBow(){
-        ItemStack itemStack = Item.createItem(Material.BOW, "<gray>Knight's Bow", new ArrayList<>(),null);
-        return itemStack;
+        return Item.createItem(Material.BOW, "<gray>Knight's Bow", new ArrayList<>(),null);
     }
 }

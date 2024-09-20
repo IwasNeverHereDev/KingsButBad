@@ -173,10 +173,6 @@ public class Kingdom {
       return this.knightsSpawn;
    }
 
-   public Location getJailSpawn() {
-      return this.jailSpawn;
-   }
-
    public Location getFarmerJoeLocation() {
       return this.farmerJoeLocation;
    }
@@ -259,14 +255,6 @@ public class Kingdom {
 
    public Location getCastle2() {
       return this.castle2;
-   }
-
-   public Location getOutside1() {
-      return this.outside1;
-   }
-
-   public Location getOutside2() {
-      return this.outside2;
    }
 
    public Location getPrison1() {

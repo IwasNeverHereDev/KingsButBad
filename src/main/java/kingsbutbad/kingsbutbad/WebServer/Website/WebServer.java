@@ -13,7 +13,6 @@ public class WebServer extends HttpServlet {
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
-        // Serve a "Coming Soon" page
         out.println("<html>");
         out.println("<head>");
         out.println("<title>KingsButBad</title>");

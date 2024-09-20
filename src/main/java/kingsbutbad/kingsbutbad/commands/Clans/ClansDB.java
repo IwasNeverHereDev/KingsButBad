@@ -37,7 +37,7 @@ public class ClansDB implements Serializable {
     public static ClansDB loadData(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
-            System.err.println("File does not exist: " + filePath);
+            Bukkit.getLogger().severe("File does not exist: " + filePath);
             return new ClansDB(new HashMap<>());
         }
 
@@ -61,26 +61,21 @@ public class ClansDB implements Serializable {
         targetGang.setExp(targetGang.getExp() + amount);
     }
     private Clans getPlayerGang(Player player) {
-        // Find the gang the player is part of
         for (Map.Entry<String, Clans> entry : getGangs().entrySet()) {
-            if (entry.getValue().getMembers().contains(player.getUniqueId())) {
+            if (entry.getValue().getMembers().contains(player.getUniqueId()))
                 return entry.getValue();
-            }
-            if (entry.getValue().getGenerals().contains(player.getUniqueId())) {
+            if (entry.getValue().getGenerals().contains(player.getUniqueId()))
                 return entry.getValue();
-            }
-            if (entry.getValue().getLeaders().contains(player.getUniqueId())) {
+            if (entry.getValue().getLeaders().contains(player.getUniqueId()))
                 return entry.getValue();
-            }
         }
         return null;
     }
 
     public static File getDataFolder() {
         File dataFolder = KingsButBad.pl.getDataFolder();
-        if (!dataFolder.exists()) {
+        if (!dataFolder.exists())
             dataFolder.mkdirs();
-        }
         return dataFolder;
     }
 }

@@ -4,6 +4,7 @@ import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.Kingdom.Kingdom;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsReader;
+import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.DiscordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class SwapKingdomCommand implements CommandExecutor {
    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
       if (strings.length == 0) {
-         commandSender.sendMessage(ChatColor.RED + "Please provide the name of the kingdom.");
+         commandSender.sendMessage(CreateText.addColors("<red>Please provide the name of the kingdom."));
          return false;
       } else {
          String kingdomName = strings[0].toUpperCase();
@@ -28,11 +29,11 @@ public class SwapKingdomCommand implements CommandExecutor {
          }
 
          if (targetKingdom == null) {
-            commandSender.sendMessage(ChatColor.RED + "Kingdom not found: " + kingdomName);
+            commandSender.sendMessage(CreateText.addColors("<red>Kingdom not found<white>: <gray>" + kingdomName));
             return false;
          } else {
             new KingdomsLoader(targetKingdom, false);
-            commandSender.sendMessage(ChatColor.GREEN + "Successfully swapped to kingdom: " + targetKingdom.getName());
+            commandSender.sendMessage(CreateText.addColors("<green>Successfully swapped to kingdom: " + targetKingdom.getName()));
             BotManager.getBuilderChannel().sendMessage(DiscordUtils.deformat(commandSender.getName()) + " has swapped the kingdom! ("+targetKingdom.getName()+")");
             return true;
          }

@@ -11,11 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 public class PrinceTask extends BukkitRunnable {
     @Override
     public void run() {
@@ -25,27 +20,40 @@ public class PrinceTask extends BukkitRunnable {
                     KingsButBad.king2 = null;
                 }else {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        if (KingsButBad.lastKing == p || KingsButBad.lastKing2 == p) continue;
+                        if (KingsButBad.lastKing == p.getUniqueId() || KingsButBad.lastKing2 == p.getUniqueId()) continue;
                         if (KingsButBad.roles.getOrDefault(p, Role.PEASANT) == Role.PRINCE) {
                             setKing(p);
                             return;
                         }
                     }
                 }
-            Bukkit.getOnlinePlayers().forEach(this::checkIfKingIsOver2HoursOfTime);
+            Bukkit.getOnlinePlayers().forEach(p -> {
+                checkIfIsPrince(p);
+                checkIfKingIsOver2HoursOfTime(p);
+                checkIfIsSideKick(p);
+            });
+    }
+    private void checkIfIsPrince(Player p){
+        if(KingsButBad.roles.getOrDefault(p, Role.PEASANT) != Role.PRINCE) return;
+        AdvancementManager.giveAdvancement(p, "soonkingdom");
+    }
+    private void checkIfIsSideKick(Player p){
+        if(KingsButBad.roles.getOrDefault(p, Role.PEASANT) != Role.KING) return;
+        if(KingsButBad.king2 == p)
+            AdvancementManager.giveAdvancement(p, "ourkingdom");
     }
     private void checkIfKingIsOver2HoursOfTime(Player p){
         if(Keys.KINGTicks.get(p, 0.0) >= 20*60*60*2)
             AdvancementManager.giveAdvancement(p, "reignofterror");
     }
     public static void setKing(Player p){
-        KingsButBad.thirst.put(p, 300);
+        KingsButBad.thirst.put(p, 300F);
         KingsButBad.invitations.clear();
         KingsButBad.king = p;
         KingsButBad.roles.put(p, Role.KING);
         RoleManager.showKingMessages(p, Role.KING.objective);
         RoleManager.givePlayerRole(p);
-        KingsButBad.kingGender = "King";
+        KingsButBad.kingPrefix = "King";
         KingsButBad.taxesPerctage = 0;
         AdvancementManager.giveAdvancement(p, "king");
 

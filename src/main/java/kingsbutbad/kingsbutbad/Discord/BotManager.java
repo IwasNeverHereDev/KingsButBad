@@ -1,8 +1,9 @@
 package kingsbutbad.kingsbutbad.Discord;
 
-import kingsbutbad.kingsbutbad.Discord.DiscordEvents.SLashCommandInteractionEvent;
+import kingsbutbad.kingsbutbad.Discord.Commands.StaffCommands.HistoryDiscordCommand;
+import kingsbutbad.kingsbutbad.Discord.DiscordEvents.SlashCommandInteractionListener;
 import kingsbutbad.kingsbutbad.KingsButBad;
-import kingsbutbad.kingsbutbad.Discord.DiscordEvents.ReceiveMessageEvent;
+import kingsbutbad.kingsbutbad.Discord.DiscordEvents.MessageReceivedListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -30,6 +31,7 @@ public class BotManager {
    private static Role updateRole;
    private static Role startRole;
    private static Role stopRole;
+   private static Role boosterRole;
    private static Guild guild;
 
    public static void init() {
@@ -40,11 +42,11 @@ public class BotManager {
       } else {
          try {
             bot = JDABuilder.createDefault(discordToken)
-                    .addEventListeners(new ReceiveMessageEvent())
                     .enableIntents(GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS)
                     .enableCache(CacheFlag.VOICE_STATE)
                     .setActivity(Activity.playing("Playing KingsButBad.minehut.gg!"))
-                    .addEventListeners(new SLashCommandInteractionEvent())
+                    .addEventListeners(new MessageReceivedListener())
+                    .addEventListeners(new SlashCommandInteractionListener())
                     .build();
             bot.awaitReady();
 
@@ -59,6 +61,7 @@ public class BotManager {
             updateRole = getRoleById("UpdateRoleID");
             startRole = getRoleById("StartRoleID");
             stopRole = getRoleById("StopRoleID");
+            boosterRole = getRoleById("BoosterRoleID");
             updateChannel = getNewsChannelById("ChangelogChannelID");
             rulesChannel = getChannelById("RulesChannelID");
 
@@ -67,7 +70,9 @@ public class BotManager {
          }
       }
    }
-
+   public static Role getBoosterRole() {
+      return boosterRole;
+   }
    public static TextChannel getRulesChannel() {
       return rulesChannel;
    }

@@ -29,7 +29,6 @@ public class BankCommand implements ClanSubCommand {
         double amount = 0;
         Player targetPlayer;
 
-        // Parse the amount or check if it's a player
         try {
             amount = Double.parseDouble(args[2]);
         } catch (NumberFormatException e) {

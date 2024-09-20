@@ -18,11 +18,11 @@ public class KingLastTask extends BukkitRunnable {
                 else {
                     if(kingLastTimer.getOrDefault(p.getUniqueId(), 0) == 0){
                         kingLastTimer.remove(p.getUniqueId());
-                        if(p == KingsButBad.lastKing) {
+                        if(p.getUniqueId() == KingsButBad.lastKing) {
                             KingsButBad.lastKing = null;
                             p.sendMessage(CreateText.addColors("<gray>You are no longer last king! (<white>timer ran out<gray>)"));
                         }
-                        if(p == KingsButBad.lastKing2) {
+                        if(p.getUniqueId() == KingsButBad.lastKing2) {
                             KingsButBad.lastKing2 = null;
                             p.sendMessage(CreateText.addColors("<gray>You are no longer last king! (<white>timer ran out<gray>)"));
                         }

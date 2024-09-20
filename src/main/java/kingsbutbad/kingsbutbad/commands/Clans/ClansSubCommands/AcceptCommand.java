@@ -2,6 +2,7 @@ package kingsbutbad.kingsbutbad.commands.Clans.ClansSubCommands;
 
 import kingsbutbad.kingsbutbad.commands.Clans.ClanSubCommand;
 import kingsbutbad.kingsbutbad.commands.Clans.Clans;
+import kingsbutbad.kingsbutbad.utils.CreateText;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -14,26 +15,26 @@ public class AcceptCommand implements ClanSubCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if (!(sender instanceof Player p)) {
-            sender.sendMessage("This command can only be used by players.");
+            sender.sendMessage(CreateText.addColors("<red>This command can only be used by players."));
             return false;
         }
         if (args.length < 2) {
-            sender.sendMessage("Usage: /clan accept <gangName>");
+            sender.sendMessage(CreateText.addColors("<red>Usage<gray>: <white>/clan accept <gangName>"));
             return false;
         }
         String gangName = args[1];
         Clans gang = db.getGangs().get(gangName);
         if (gang == null) {
-            sender.sendMessage("Gang not found.");
+            sender.sendMessage(CreateText.addColors("<red>Clan not found."));
             return false;
         }
         if (!pendingInvites.containsKey(p.getUniqueId()) || !pendingInvites.get(p.getUniqueId()).equals(gangName)) {
-            sender.sendMessage("You have no pending invite from this gang.");
+            sender.sendMessage(CreateText.addColors("<red>You have no pending invite from this clan."));
             return false;
         }
         gang.getMembers().add(p.getUniqueId());
         pendingInvites.remove(p.getUniqueId());
-        gang.broadcast(sender.getName()+ " has joined the gang!");
+        gang.broadcast(sender.getName()+ " has joined the clan!");
         return true;
     }
 

@@ -1,7 +1,10 @@
 package kingsbutbad.kingsbutbad.listeners;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.tasks.HandcuffTask;
 import kingsbutbad.kingsbutbad.utils.CreateText;
+import kingsbutbad.kingsbutbad.utils.Items.GetOutOfJailFreeCard;
+import kingsbutbad.kingsbutbad.utils.Items.RoleItems;
 import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -24,6 +27,8 @@ public class ProjectileHitListener implements Listener {
                shooter.sendMessage(CreateText.addColors("<red>You can't do that."));
                event.setCancelled(true);
             }
+            if(shooterRole.isPowerful && targetRole.equals(Role.PEASANT) && !target.getInventory().contains(GetOutOfJailFreeCard.get()))
+               target.getInventory().addItem(GetOutOfJailFreeCard.get());
             if (shooterRole.equals(Role.PEASANT) && targetRole.isPowerful) {
                shooter.sendTitle(CreateText.addColors("<red>!!! You're now a criminal !!!"), CreateText.addColors("<gray>You hit someone of authority."));
                KingsButBad.roles.put(shooter, Role.CRIMINAL);

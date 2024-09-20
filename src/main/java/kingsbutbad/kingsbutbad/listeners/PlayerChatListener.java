@@ -1,5 +1,6 @@
 package kingsbutbad.kingsbutbad.listeners;
 
+import kingsbutbad.kingsbutbad.Advancements.AdvancementManager;
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.NoNoWords;
@@ -50,7 +51,7 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
       if (KingsButBad.king != null) {
          message = message.replace(
             KingsButBad.king.getName(),
-            CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingGender + " " + KingsButBad.king.getName() + "<b></gradient>")
+            CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingPrefix + " " + KingsButBad.king.getName() + "<b></gradient>")
                + playerRole.chatColor
          );
       }
@@ -58,7 +59,7 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
       if (KingsButBad.king2 != null) {
          message = message.replace(
             KingsButBad.king2.getName(),
-            CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingGender2 + " " + KingsButBad.king2.getName() + "<b></gradient>")
+            CreateText.addColors("<gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingPrefix2 + " " + KingsButBad.king2.getName() + "<b></gradient>")
                + playerRole.chatColor
          );
       }
@@ -94,20 +95,23 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
             this.handleLocalChat(event,message);
             return;
          }
+         checkThy(event);
+         checkPiggoPet(event);
+         checkNotKing(event);
 
-         if (this.isKingInIntercomZone(player) && KingsButBad.isInterocmEnabled) {
+         if (this.isKingInIntercomZone(player) && KingsButBad.isIntercomEnabled) {
             this.broadcastIntercomMessage(player, message);
             event.setCancelled(true);
          } else {
             Role role = KingsButBad.roles.getOrDefault(player, Role.PEASANT);
             String rolePrefix = ""+role;
             if(role == Role.KING || role == Role.PRINCE){
-               if(KingsButBad.princeGender.containsKey(player) && role == Role.PRINCE)
-                  rolePrefix = KingsButBad.princeGender.get(player);
+               if(KingsButBad.princePrefix.containsKey(player) && role == Role.PRINCE)
+                  rolePrefix = KingsButBad.princePrefix.get(player);
                if(KingsButBad.king == player && role == Role.KING)
-                  rolePrefix = KingsButBad.kingGender;
+                  rolePrefix = KingsButBad.kingPrefix;
                if(KingsButBad.king2 == player && role == Role.KING)
-                  rolePrefix = KingsButBad.kingGender2;
+                  rolePrefix = KingsButBad.kingPrefix2;
             }
             BotManager.getInGameChatChannel().sendMessage(prefix + " **[" + rolePrefix.toUpperCase() + "]** `" + player.getName() + "` > `" + ChatColor.stripColor(DiscordUtils.deformatMsg(message)) + "`").queue();
             this.handleLocalChat(event, message);
@@ -136,7 +140,7 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
             case PRINCE:
                message = message.replace(
                   p.getName(),
-                  CreateText.addColors("<gradient:#FFFF52:#FFBA52>" + KingsButBad.princeGender.get(p).toUpperCase() + " " + p.getName())
+                  CreateText.addColors("<gradient:#FFFF52:#FFBA52>" + KingsButBad.princePrefix.get(p).toUpperCase() + " " + p.getName())
                      + KingsButBad.roles.get(p).chatColor
                );
                break;
@@ -169,7 +173,6 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
          Location playerLocation = player.getLocation();
          double radius = 2.5;
 
-         // Get the block coordinates around the player within the radius
          int xMin = (int) (playerLocation.getX() - radius);
          int xMax = (int) (playerLocation.getX() + radius);
          int yMin = (int) (playerLocation.getY() - radius);
@@ -312,6 +315,21 @@ public class PlayerChatListener implements Listener { // TODO: Clean up This Fil
       } else {
          receiver.sendMessage(sender.getDisplayName() + ChatColor.GRAY + ": " + ChatColor.WHITE + message);
       }
+   }
+   private void checkThy(PlayerChatEvent event){
+      Role role = KingsButBad.roles.getOrDefault(event.getPlayer(), Role.PEASANT);
+      if(role == Role.KING || role == Role.PRINCE) {
+         if (!event.getMessage().toLowerCase().contains("thy")) return;
+         AdvancementManager.giveAdvancement(event.getPlayer(), "thy");
+      }
+   }
+   private void checkPiggoPet(PlayerChatEvent event){
+      if (!event.getMessage().toLowerCase().contains("piggopet")) return;
+      AdvancementManager.giveAdvancement(event.getPlayer(), "piggo");
+   }
+   private void checkNotKing(PlayerChatEvent event){
+      if (!event.getMessage().toLowerCase().contains("the_king54739")) return;
+      AdvancementManager.giveAdvancement(event.getPlayer(), "notking");
    }
    private String shortenRoles(String message){
       for(Role role : Role.values()){

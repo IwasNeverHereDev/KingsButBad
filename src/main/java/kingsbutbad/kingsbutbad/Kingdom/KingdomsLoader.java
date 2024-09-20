@@ -51,8 +51,6 @@ public class KingdomsLoader {
             }
          }
       }
-
-      setupVillagers(kingdom);
    }
 
    public static void setActiveKingdomByName(String kingdomName) {
@@ -97,11 +95,10 @@ public class KingdomsLoader {
    public static void setupVillagers(Kingdom kingdom) {
       World world = Bukkit.getWorld("world");
       if(world == null) return;
-      for (Entity entity : world.getEntities()) {
-         if (entity instanceof Villager) {
-            entity.remove();
-         }
-      }
+      for (Entity entity : world.getEntities())
+         if (entity instanceof Villager)
+            if(!entity.getScoreboardTags().contains("perm"))
+               entity.remove();
 
       KingsButBad.royalVillager = createVillager(kingdom.getRoyalVillagerLocation(), "<gradient:#FFFF52:#FFBA52>Royal Villager");
       KingsButBad.farmerJoe = createVillager(kingdom.getFarmerJoeLocation(), "<blue>Farmer Joe");

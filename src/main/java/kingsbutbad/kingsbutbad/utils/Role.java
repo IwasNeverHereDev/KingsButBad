@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 @SuppressWarnings("deprecation")
 public enum Role {
    PRISONER(
-      CreateText.addColors("<gold>PRISONER"), CreateText.addColors("<gray>You got caught! Stay for 2m.<gray>"), "<gold>PRISONER", false, ChatColor.GRAY, "P"
+      CreateText.addColors("<gold>PRISONER"), CreateText.addColors("<gray>You got caught!<gray>"), "<gold>PRISONER", false, ChatColor.GRAY, "P"
    ),
    PEASANT(CreateText.addColors("<#59442B>PEASANT"), CreateText.addColors("<gray>Survive.<gray>"), "<#59442B>PEASANT", false, ChatColor.GRAY, "P"),
    SERVANT(CreateText.addColors("<#867143>SERVANT"), CreateText.addColors("<gray>Serve the king.<gray>"), "<#867143>SERVANT", false, ChatColor.GRAY, "S"),

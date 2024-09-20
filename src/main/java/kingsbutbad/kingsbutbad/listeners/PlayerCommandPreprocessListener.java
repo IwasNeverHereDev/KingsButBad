@@ -3,9 +3,11 @@ package kingsbutbad.kingsbutbad.listeners;
 import kingsbutbad.kingsbutbad.Discord.BotManager;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.utils.CBP.CBPUtils;
+import kingsbutbad.kingsbutbad.utils.CreateText;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +21,10 @@ public class PlayerCommandPreprocessListener implements Listener {
     public static HashMap<UUID, Integer> listOfCommandsPerSecond = new HashMap<>();
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event){
+        if(event.getPlayer().getGameMode() == GameMode.SPECTATOR && !event.getPlayer().hasPermission("kbb.respawnbypass")){
+            event.getPlayer().sendMessage(CreateText.addColors("<red>You can't run any command while respawning!"));
+            event.setCancelled(true);
+        }
         if(listOfCommandsPerSecond.getOrDefault(event.getPlayer().getUniqueId(), 0) >= 5)
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kick " + event.getPlayer().getName() + " Command Spam [AUTOMATED]");
         listOfCommandsPerSecond.put(event.getPlayer().getUniqueId(), listOfCommandsPerSecond.getOrDefault(event.getPlayer().getUniqueId(), 0) + 1);

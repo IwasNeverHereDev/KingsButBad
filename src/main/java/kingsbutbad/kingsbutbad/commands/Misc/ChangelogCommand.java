@@ -35,7 +35,6 @@ public class ChangelogCommand implements CommandExecutor, Listener {
             return true;
         }
 
-        // Fetch changelog messages asynchronously
         CompletableFuture.runAsync(() -> {
             List<Message> changelogMessages = getChangelogMessages();
             List<ItemStack> items = parseMessagesIntoItems(changelogMessages);
@@ -49,7 +48,6 @@ public class ChangelogCommand implements CommandExecutor, Listener {
         if (BotManager.getUpdateChannel() == null) {
             return new ArrayList<>();
         }
-        // Limit to the last 25 messages
         return BotManager.getUpdateChannel().getIterableHistory().cache(false).limit(MAX_MESSAGES).complete();
     }
 

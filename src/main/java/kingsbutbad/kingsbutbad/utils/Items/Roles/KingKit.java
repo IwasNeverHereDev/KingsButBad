@@ -53,18 +53,18 @@ public class KingKit {
     }
     private static ItemStack getChestplate(){
         ItemStack itemStack = Item.createItem(Material.LEATHER_CHESTPLATE, "<gold>Monarch's Chestplate", new ArrayList<>(), null);
-        Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 2);
+        Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 5);
         Item.applyDye(itemStack, Color.ORANGE);
         return itemStack;
     }
     private static ItemStack getLeggings(){
         ItemStack itemStack = Item.createItem(Material.CHAINMAIL_LEGGINGS, "<gold>Monarch's Leggings", new ArrayList<>(), null);
-        Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 2);
+        Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_ENVIRONMENTAL, 5);
         return itemStack;
     }
     private static ItemStack getBoots(){
         ItemStack itemStack = Item.createItem(Material.LEATHER_BOOTS, "<gold>Monarch's Boots", new ArrayList<>(), null);
-        Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_PROJECTILE, 1);
+        Item.applyEnchmanent(itemStack, Enchantment.PROTECTION_ENVIRONMENTAL, 5);
         Item.applyDye(itemStack, Color.ORANGE);
         return itemStack;
     }

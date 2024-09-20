@@ -96,45 +96,26 @@ public class Clans implements Serializable {
         BotManager.getStafflogChannel().sendMessage("(Staff) (Clan Spy) "+msg).queue();
     }
     public void sendChat(Player player, String message) {
-        // Get the player's role in the clan
-        String role = getRole(player); // This method should return "General", "Leader", or "Member"
-
-        // Format the chat message with the clan's name, role, and player's username
+        String role = getRole(player);
         String msg = CreateText.addColors("<gray>[<red>" + name + " Clan<gray>] <yellow>" + role + " " + player.getName() + "<gray>: " + message);
 
-        // Send the message to players based on their roles
         for (Player p : Bukkit.getOnlinePlayers()) {
-            // Send to generals
-            if (generals.contains(p.getUniqueId())) {
+            if (generals.contains(p.getUniqueId()))
                 p.sendMessage(msg);
-            }
-            // Send to leaders
-            if (leaders.contains(p.getUniqueId())) {
+            if (leaders.contains(p.getUniqueId()))
                 p.sendMessage(msg);
-            }
-            // Send to members
-            if (members.contains(p.getUniqueId())) {
+            if (members.contains(p.getUniqueId()))
                 p.sendMessage(msg);
-            }
-            // Send to staff with spy permission
-            if (p.hasPermission("kbb.staff.spy")) {
+            if (p.hasPermission("kbb.staff.spy"))
                 p.sendMessage(CreateText.addColors("<red>(Staff) (Clan Spy) <white>") + msg);
-            }
         }
-
-        // Also log the message to the staff log channel (for Discord or other external logs)
         BotManager.getStafflogChannel().sendMessage("(Staff) (Clan Spy) " + msg).queue();
     }
     public String getRole(Player player) {
-        if (generals.contains(player.getUniqueId())) {
+        if (generals.contains(player.getUniqueId()))
             return "General";
-        }
-        if (leaders.contains(player.getUniqueId())) {
+        if (leaders.contains(player.getUniqueId()))
             return "Leader";
-        }
-        if (members.contains(player.getUniqueId())) {
-            return "Member";
-        }
-        return "Member"; // Default role if no specific role is found
+        return "Member";
     }
 }

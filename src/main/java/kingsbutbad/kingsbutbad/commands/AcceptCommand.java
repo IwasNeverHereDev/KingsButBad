@@ -17,7 +17,7 @@ public class AcceptCommand implements CommandExecutor {
             case KING:
                KingsButBad.roles.put(p, Role.KING);
                RoleManager.showKingMessages(
-                  p, CreateText.addColors("<dark_gray>You were sidekicked; Welcome, <gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingGender2.toUpperCase())
+                  p, CreateText.addColors("<dark_gray>You were sidekicked; Welcome, <gradient:#FFFF52:#FFBA52><b>" + KingsButBad.kingPrefix2.toUpperCase())
                );
                KingsButBad.king2 = p;
                RoleManager.givePlayerRole(p);
@@ -42,7 +42,7 @@ public class AcceptCommand implements CommandExecutor {
                p.sendMessage(
                   CreateText.addColors(
                      "<gradient:#FFFF52:#FFBA52><b>"
-                        + KingsButBad.kingGender.toUpperCase()
+                        + KingsButBad.kingPrefix.toUpperCase()
                         + KingsButBad.king.getName().toUpperCase()
                         + "</b><red> hasn't invited you to being any roles."
                   )

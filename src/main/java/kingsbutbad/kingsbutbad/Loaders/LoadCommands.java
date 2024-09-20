@@ -7,11 +7,15 @@ import kingsbutbad.kingsbutbad.commands.Builders.KingdomsCommands.MapsCommand;
 import kingsbutbad.kingsbutbad.commands.Builders.KingdomsCommands.SwapKingdomCommand;
 import kingsbutbad.kingsbutbad.commands.Dev.*;
 import kingsbutbad.kingsbutbad.commands.Clans.ClanCommand;
+import kingsbutbad.kingsbutbad.commands.Dev.Map.*;
 import kingsbutbad.kingsbutbad.commands.Leaderboards.LeaderboardCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.ChangelogCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.DiscordCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.LinkCommand;
 import kingsbutbad.kingsbutbad.commands.Misc.UnLinkCommand;
+import kingsbutbad.kingsbutbad.commands.ShortCuts.GmaCommand;
+import kingsbutbad.kingsbutbad.commands.ShortCuts.GmcCommand;
+import kingsbutbad.kingsbutbad.commands.ShortCuts.GmspCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.ClearChatCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.StaffChatCommand;
 import kingsbutbad.kingsbutbad.commands.Staff.VanishCommand;
@@ -51,6 +55,14 @@ public class LoadCommands {
       setExecutor("clan", new ClanCommand());
       setExecutor("debugclan", new DebugClanCommand());
       setExecutor("kingdomreload", new KingdomReloadCommand());
+      setExecutor("gmc", new GmcCommand());
+      setExecutor("gma", new GmaCommand());
+      setExecutor("gmsp", new GmspCommand());
+      setExecutor("tasklist", new TaskListCommand());
+      setExecutor("stats", new StatsCommand());
+      setExecutor("seen", new SeenCommand());
+      setExecutor("upgrade",new UpgradeCommand());
+      setExecutor("area", new AreaCommand());
    }
 
    private static void setExecutor(String cmd, CommandExecutor executor) {

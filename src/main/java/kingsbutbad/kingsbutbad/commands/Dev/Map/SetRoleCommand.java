@@ -1,4 +1,4 @@
-package kingsbutbad.kingsbutbad.commands.Dev;
+package kingsbutbad.kingsbutbad.commands.Dev.Map;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.utils.CreateText;

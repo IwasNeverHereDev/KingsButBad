@@ -3,9 +3,11 @@ package kingsbutbad.kingsbutbad.listeners;
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
+import kingsbutbad.kingsbutbad.utils.Pacts;
 import kingsbutbad.kingsbutbad.utils.Role;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,6 +24,11 @@ public class EntityDamageByEntityListener implements Listener {
          event.getDamager().sendMessage(CreateText.addColors("<gray>You can't damage in Vanish!"));
          event.setCancelled(true);
          return;
+      }
+      if(event.getDamager() instanceof Player user && event.getEntity().getType().equals(EntityType.ZOMBIE) && KingsButBad.roles.getOrDefault(user, Role.PEASANT) == Role.PEASANT){
+         user.sendTitle(CreateText.addColors("<red>!!! You're now a criminal !!!"), CreateText.addColors("<gray>You hit a Royal Guard."));
+         KingsButBad.roles.put(user, Role.CRIMINAL);
+         user.playSound(user, Sound.ENTITY_SILVERFISH_DEATH, 1.0F, 0.5F);
       }
       if (event.getEntity() instanceof Player target && event.getDamager() instanceof Player attacker) {
          if(attacker.isSprinting())
@@ -45,6 +52,11 @@ public class EntityDamageByEntityListener implements Listener {
 
          if (attackerRole.equals(Role.PEASANT) && targetRole.isPowerful) {
             attacker.sendTitle(CreateText.addColors("<red>!!! You're now a criminal !!!"), CreateText.addColors("<gray>You hit someone of authority."));
+            KingsButBad.roles.put(attacker, Role.CRIMINAL);
+            attacker.playSound(attacker, Sound.ENTITY_SILVERFISH_DEATH, 1.0F, 0.5F);
+         }
+         if(attackerRole.equals(Role.PEASANT) && Keys.activePact.get(attacker, "") == Pacts.PEASANT.name()){
+            attacker.sendTitle(CreateText.addColors("<red>!!! You're now a criminal !!!"), CreateText.addColors("<gray>You hit someone. (PACT)"));
             KingsButBad.roles.put(attacker, Role.CRIMINAL);
             attacker.playSound(attacker, Sound.ENTITY_SILVERFISH_DEATH, 1.0F, 0.5F);
          }

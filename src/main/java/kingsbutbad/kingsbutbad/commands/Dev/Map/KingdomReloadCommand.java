@@ -1,4 +1,4 @@
-package kingsbutbad.kingsbutbad.commands.Dev;
+package kingsbutbad.kingsbutbad.commands.Dev.Map;
 
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.Loaders.LoadKingdoms;

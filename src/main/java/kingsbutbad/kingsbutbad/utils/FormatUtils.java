@@ -27,7 +27,14 @@ public class FormatUtils {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
 
-        // Formatting the time string as MM:SS
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+    public static String parseDoubleTicksToTime(double ticks) {
+        int totalSeconds = (int) (ticks / 20);
+
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
         return String.format("%02d:%02d", minutes, seconds);
     }
 }

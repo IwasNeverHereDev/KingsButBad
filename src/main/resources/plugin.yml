@@ -16,6 +16,7 @@ commands:
     description: "King Controls/Claiming"
     usage: /king
   resetVillagers:
+    permission: kbb.debug.removevillagers
     description: "resets villagers"
     usage: /resetVillagers
   accept:
@@ -25,7 +26,7 @@ commands:
     description: "Role Resigning"
     usage: /resign
   discord:
-    description: "Discord"
+    description: "Provides a link to the discord"
     usage: /discord
   setMoney:
     description: "set's a player's money count"
@@ -35,32 +36,55 @@ commands:
     description: "Pay a player money."
     usage: /pay <player> <money>
   swapKingdom:
+    description: "Swaps the Current Kingdom."
+    usage: /swapKingdom <kingdomName>
     permission: kbb.builder.swap
-  showBorders:
   maps:
+    description: "Opens up a Gui displays all current Kingdoms"
+    usage: /maps
     permission: kbb.builder.maps
   cells:
+    description: "Teleports you to a random cell."
+    usage: /cells
     permission: kbb.debug.cells
   builderMode:
+    description: "Disabling Teleports when the map Swaps."
+    usage: /builderMode
     permission: kbb.builder.mode
   setRole:
+    description: "Force a Player role."
+    usage: /setRole <PlayerName> <RoleName>
     permission: kbb.debug.setrole
   link:
+    description: "Links your account to discord account."
+    usage: /link
   unlink:
+    description: "Unlinks your Minecraft Account to your Discord Account."
+    usage: /unLink
   whois:
+    description: "Tells who Discord/Minecraft Account Player is linked to."
+    usage: /whoIs <PlayerName>
     permission: kbb.debug.whois
   reloadFilter:
+    description: "Reloads the Filter."
+    usage: /reloadFilter
     permission: kbb.debug.reloadfilter
   kbbSettings:
+    description: "Opens up settings"
+    usage: /kbbSettings
     aliases:
       - kbsettings
   builderChat:
+    description: "Sends a message to all Fellow Builders."
+    usage: /builderChat <Message>
     aliases:
       - bc
       - buildchat
       - headbuilderchat
       - headbuildchat
   staffChat:
+    description: "Sends a message to all Fellow Staff Members."
+    usage: /staffChat <Message>
     aliases:
       - sc
       - staffchat
@@ -68,6 +92,8 @@ commands:
       - adminchat
       - helperchat
   vanish:
+    description: "Hides you from other non-staff players."
+    usage: /vanish
     aliases:
       - v
       - hide
@@ -76,27 +102,86 @@ commands:
       - leave
     permission: kbb.staff.vanish
   clearchat:
+    description: "Clears the In-Game chat."
+    usage: /clearChat
     permission: kbb.staff.clearchat
   rules:
+    description: "Display the rules."
+    usage: /rules
   reboot:
+    description: "Gives a warning before reboot."
+    usage: /reboot
     permission: kbb.debug.reboot
   playtime:
+    description: "Displays a provided player's playtime."
+    usage: /playtime <PlayerName>
   changelog:
+    description: "Displays 25 last changelogs"
+    usage: /changelog
     aliases:
       - updates
       - update
       - discordUpdates
   hello:
+    description: "Displays some info about the server."
+    usage: /hello
     aliases:
       - info
       - serverstats
   key:
+    description: "Gets a Player's Keys in the Database"
+    usage: /key <PlayerName>
     permission: kbb.debug.key
   leaderboard:
+    description: "display a leaderboard."
+    usage: /leaderboard <LeaderboardName>
     permission: kbb.debug.leaderboards
   clan:
+    description: "Clan commands"
+    usage: /clan <SubCommand> <SubArgs...>
     permission: kbb.clan
   debugclan:
+    description: "Debug command for Clans"
+    usage: /debugClan <Rename|Disband> <ClanName>
     permission: kbb.debug.clan;
   kingdomreload:
+    description: "Reload's the Kingdom"
+    usage: /kingdomReload
     permission: kbb.debug.reloadkingdom
+  gmc:
+    description: "Set provided player's game mode to Creative"
+    usage: /gmc <PlayerName>
+    permission: kbb.gmc
+    aliases:
+      - creative
+  gma:
+    description: "Set provided player's game mode to Adventure"
+    usage: /gma <PlayerName>
+    permission: kbb.gma
+    aliases:
+      - gms
+      - adventure
+      - survival
+  gmsp:
+    description: "Set provided player's game mode to Spectator"
+    usage: /gmsp <PlayerName>
+    permission: kbb.gmsp
+    aliases:
+      - spectator
+      - spec
+  tasklist:
+    description: "Display's a Plugin Repeat/Current Task."
+    usage: /taskList <PluginName>
+    permission: kbb.debug.tasklist
+  stats:
+    description: "Displays stats about provided player."
+    usage: /stats <PlayerName>
+    permission: kbb.debug.stats
+  seen:
+    description: "Display last time the player has joined."
+    usage: /seen <PlayerName>
+    permission: kbb.debug.seen
+  upgrade:
+    permission: kbb.debug.upgrade
+  area:
+    permission: kbb.debug.area

@@ -2,6 +2,7 @@ package kingsbutbad.kingsbutbad.commands;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.utils.CreateText;
+import kingsbutbad.kingsbutbad.utils.FormatUtils;
 import kingsbutbad.kingsbutbad.utils.Role;
 import kingsbutbad.kingsbutbad.utils.RoleManager;
 import org.bukkit.Material;
@@ -9,7 +10,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class ResignCommand implements CommandExecutor {
    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -25,8 +29,8 @@ public class ResignCommand implements CommandExecutor {
             return true;
          }
 
-         if(role.equals(Role.CRIMINAL)){
-            sender.sendMessage(CreateText.addColors("<red>You can't do this as a criminal!"));
+         if(role.equals(Role.CRIMINAL) && p.hasPotionEffect(PotionEffectType.BAD_OMEN)){
+            sender.sendMessage(CreateText.addColors("<red>Pls wait before doing this as Criminal! <gray>(<white>"+ FormatUtils.parseDoubleTicksToTime(Objects.requireNonNull(p.getPotionEffect(PotionEffectType.BAD_OMEN)).getDuration()) +"<gray>)"));
             return true;
          }
 

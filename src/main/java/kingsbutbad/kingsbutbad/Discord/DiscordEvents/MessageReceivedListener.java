@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public class ReceiveMessageEvent extends ListenerAdapter {
+public class MessageReceivedListener extends ListenerAdapter {
    @Override
    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
       if(event.getAuthor().isBot()) return;

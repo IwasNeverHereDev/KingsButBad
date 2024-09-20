@@ -7,6 +7,7 @@ public class LoadTasks {
     public static void init(){
         KingsButBad p = KingsButBad.pl;
         new MiscTask().runTaskTimer(p, 0L, 1L);
+        new ScheduleTask().runTaskTimer(p, 0L, 1L);
         new HandcuffTask().runTaskTimer(p, 0L, 1L);
         new VanishTask().runTaskTimer(p, 0L, 1L);
         new KingLastTask().runTaskTimer(p, 0L, 1L);
@@ -17,6 +18,6 @@ public class LoadTasks {
         new RaidTask().runTaskTimer(p, 0L, 1);
         new PrinceTask().runTaskTimer(p, 0L, 1);
         new GangLevelTask().runTaskTimer(p, 0L, 20*5);
-        new ReloadVillagersTask().runTaskTimer(p, 0L, 20*60);
+        new YearTask().runTaskTimer(p, 0L, 20*60*20);
     }
 }

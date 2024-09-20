@@ -2,21 +2,17 @@ package kingsbutbad.kingsbutbad.listeners;
 
 import kingsbutbad.kingsbutbad.KingsButBad;
 import kingsbutbad.kingsbutbad.keys.Keys;
-import kingsbutbad.kingsbutbad.tasks.MiscTask;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.Item;
 import kingsbutbad.kingsbutbad.utils.Role;
 import kingsbutbad.kingsbutbad.utils.RoleManager;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -27,32 +23,34 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static kingsbutbad.kingsbutbad.tasks.ScheduleTask.bossbar;
+
 @SuppressWarnings("deprecation")
 public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean up This File (PlayerInteractAtEntityListener.java)
    @EventHandler
    public void onPlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
-      if (event.getRightClicked().getType().equals(EntityType.ARMOR_STAND)) {
+      if (event.getRightClicked().getType().equals(EntityType.ARMOR_STAND))
          event.setCancelled(true);
-      }
-      if(event.getPlayer().getPing() >= 150){
-         event.getPlayer().sendMessage(CreateText.addColors("<red>Your ping is to high! <gray>(<white>"+event.getPlayer().getPing()+"<gray>)"));
+      if(event.getPlayer().getGameMode() == GameMode.SPECTATOR){
+         event.getPlayer().sendMessage(CreateText.addColors("<red>You can't open GUIS while respawning!"));
          event.setCancelled(true);
          return;
       }
       if(event.getRightClicked() instanceof Player p){
          if(event.getPlayer().getItemInHand().getType().equals(Material.POTION)){
             Player giver = event.getPlayer();
-            giver.getInventory().setItemInMainHand(null);
-            giver.getInventory().addItem(new ItemStack(Material.GLASS_BOTTLE));
+            giver.getInventory().setItemInMainHand(new ItemStack(Material.GLASS_BOTTLE));
             giver.sendMessage(CreateText.addColors("<gray>You gave "+p.getName()+" water!"));
            p.sendMessage(CreateText.addColors("<gray>You were given water by "+giver.getName()));
-            KingsButBad.thirst.put(p, KingsButBad.thirst.getOrDefault(p, 0) + 100);
+            KingsButBad.thirst.put(p, KingsButBad.thirst.getOrDefault(p, 0F) + 100);
          }
       }
 
-      if (event.getRightClicked().getType().equals(EntityType.ITEM_FRAME)) {
+      if (event.getRightClicked().getType().equals(EntityType.ITEM_FRAME))
          event.setCancelled(true);
-      }
 
       if (event.getRightClicked().getType().equals(EntityType.VILLAGER)) {
          if(Keys.vanish.get(event.getPlayer(), false)) {
@@ -67,65 +65,34 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
                   event.getPlayer().closeInventory();
                   event.setCancelled(true);
                   event.setCancelled(true);
+                  if (event.getRightClicked().getType().equals(EntityType.VILLAGER)) {
+                     Player player = event.getPlayer();
+                     Villager villager = (Villager) event.getRightClicked();
+                     Block block = villager.getLocation().add(0, -2, 0).getBlock();
+
+                     if (block.getType() == Material.CHEST) {
+                        Chest chest = (Chest) block.getState();
+                        Inventory chestInventory = chest.getInventory();
+
+                        Inventory guiInventory = Bukkit.createInventory(null, 27, chest.getCustomName() + " GUI");
+                        guiInventory.setContents(chestInventory.getContents());
+
+                        player.openInventory(guiInventory);
+                        return;
+                     }
+                  }
                   if (event.getRightClicked().equals(KingsButBad.servant)) {
                      Inventory inv = Bukkit.createInventory(null, 9);
                      ItemStack cod = new ItemStack(Material.IRON_NUGGET);
                      cod.addItemFlags(ItemFlag.HIDE_PLACED_ON);
                      ItemMeta codmeta = cod.getItemMeta();
-                     codmeta.setDisplayName(ChatColor.GOLD + "Become a " + KingsButBad.kingGender.toUpperCase() + ChatColor.GOLD + "'s servant");
+                     codmeta.setDisplayName(ChatColor.GOLD + "Become a " + KingsButBad.kingPrefix.toUpperCase() + ChatColor.GOLD + "'s servant");
                      ArrayList<String> codlore = new ArrayList<>();
                      codlore.add(ChatColor.GRAY + "Makes you a servant.");
-                     codlore.add(ChatColor.GRAY + "Listen to the king's orders. This " + ChatColor.RED + "isn't" + ChatColor.GRAY + "a role of power.");
+                     codlore.add(CreateText.addColors("<red>Listen to the king's orders. This <red>isn't <gray> a role of power."));
                      codmeta.setLore(codlore);
                      cod.setItemMeta(codmeta);
                      inv.setItem(4, cod);
-                     event.getPlayer().openInventory(inv);
-                  }
-
-                  if (event.getRightClicked().equals(KingsButBad.selfDefense)) {
-                     Inventory inv = Bukkit.createInventory(null, 9);
-                     ItemStack cod = new ItemStack(Material.LEATHER_CHESTPLATE);
-                     cod.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta codmeta = cod.getItemMeta();
-                     codmeta.setDisplayName(ChatColor.GOLD + "Peasant's Armor");
-                     ArrayList<String> codlore = new ArrayList<>();
-                     codlore.add(ChatColor.GRAY + "A set of armor to");
-                     codlore.add(ChatColor.GRAY + "defend yourself from threats.");
-                     codlore.add(ChatColor.GREEN + "$50");
-                     codmeta.setLore(codlore);
-                     cod.setItemMeta(codmeta);
-                     inv.setItem(1, cod);
-                     cod = new ItemStack(Material.WOODEN_SWORD);
-                     cod.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     codmeta = cod.getItemMeta();
-                     codmeta.setDisplayName(ChatColor.GOLD + "Wooden Sword");
-                     codlore = new ArrayList<>();
-                     codlore.add(ChatColor.GRAY + "A weak sword to defend yourself.");
-                     codlore.add(ChatColor.GREEN + "$30");
-                     codmeta.setLore(codlore);
-                     cod.setItemMeta(codmeta);
-                     inv.setItem(3, cod);
-                     cod = new ItemStack(Material.GOLDEN_APPLE);
-                     cod.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     codmeta = cod.getItemMeta();
-                     codmeta.setDisplayName(ChatColor.GOLD + "Golden Apple");
-                     codlore = new ArrayList<>();
-                     codlore.add(ChatColor.GRAY + "A strong tool to keep yourself safe.");
-                     codlore.add(ChatColor.GREEN + "$150");
-                     codmeta.setLore(codlore);
-                     cod.setItemMeta(codmeta);
-                     inv.setItem(5, cod);
-                     cod = new ItemStack(Material.STICK);
-                     cod.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     codmeta = cod.getItemMeta();
-                     codmeta.setDisplayName(ChatColor.GOLD + "Adrenaline");
-                     codlore = new ArrayList<>();
-                     codlore.add(ChatColor.GRAY + "Inject yourself with this to gain");
-                     codlore.add(ChatColor.GRAY + "~20s of stamina invulnerability!");
-                     codlore.add(ChatColor.GREEN + "$200");
-                     codmeta.setLore(codlore);
-                     cod.setItemMeta(codmeta);
-                     inv.setItem(7, cod);
                      event.getPlayer().openInventory(inv);
                   }
                   if(event.getRightClicked().equals(KingsButBad.bmPrisonTrader)){
@@ -357,55 +324,7 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
                      event.getPlayer().openInventory(invx);
                   }
 
-                  if (event.getRightClicked().equals(KingsButBad.sewerVillager)) {
-                     Inventory invx = Bukkit.createInventory(null, 9);
-                     ItemStack codx = new ItemStack(Material.TRIPWIRE_HOOK);
-                     codx.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta codmetax = codx.getItemMeta();
-                     codmetax.setDisplayName(ChatColor.GOLD + "Fake Key");
-                     ArrayList<String> codlorex = new ArrayList<>();
-                     codlorex.add(ChatColor.GRAY + "Used for breaking into the castle,");
-                     codlorex.add(ChatColor.GRAY + "or to let people out of prison.");
-                     codlorex.add(ChatColor.GREEN + "$1500");
-                     codmetax.setLore(codlorex);
-                     codx.setItemMeta(codmetax);
-                     invx.setItem(1, codx);
-                     codx = new ItemStack(Material.STONE_AXE);
-                     codx.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     codmetax = codx.getItemMeta();
-                     codmetax.setDisplayName(ChatColor.GOLD + "Stone Axe");
-                     codlorex = new ArrayList<>();
-                     codlorex.add(ChatColor.GRAY + "A strong weapon, weilded by generations");
-                     codlorex.add(ChatColor.GRAY + "years ago in the days of PrisonButBad.");
-                     codlorex.add(ChatColor.GREEN + "$100");
-                     codmetax.setLore(codlorex);
-                     codx.setItemMeta(codmetax);
-                     invx.setItem(3, codx);
-                     codx = new ItemStack(Material.GOLDEN_APPLE);
-                     codx.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     codmetax = codx.getItemMeta();
-                     codmetax.setDisplayName(ChatColor.GOLD + "Golden Apple");
-                     codlorex = new ArrayList<>();
-                     codlorex.add(ChatColor.GRAY + "i forged this from among us");
-                     codlorex.add(ChatColor.GREEN + "$150");
-                     codmetax.setLore(codlorex);
-                     codx.setItemMeta(codmetax);
-                     invx.setItem(5, codx);
-                     codx = new ItemStack(Material.BROWN_CANDLE);
-                     codx.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     codmetax = codx.getItemMeta();
-                     codmetax.setDisplayName(ChatColor.GOLD + "beanms");
-                     codlorex = new ArrayList<>();
-                     codlorex.add(ChatColor.GRAY + "The most important item in the lore.");
-                     codlorex.add(ChatColor.GRAY + "(fact checked by NoahTheSpacyCat)");
-                     codlorex.add(ChatColor.GRAY + "");
-                     codlorex.add(ChatColor.RED + "OUT OF STOCK!");
-                     codlorex.add(ChatColor.GREEN + "$1");
-                     codmetax.setLore(codlorex);
-                     codx.setItemMeta(codmetax);
-                     invx.setItem(7, codx);
-                     event.getPlayer().openInventory(invx);
-                  }
+
 
                   if (event.getRightClicked().equals(KingsButBad.archerJohn)) {
                      Inventory invx = Bukkit.createInventory(null, 9);
@@ -453,67 +372,11 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
                      event.getPlayer().openInventory(invx);
                   }
 
-                  if (event.getRightClicked().equals(KingsButBad.bertrude)) {
-                     event.getPlayer().sendMessage("hello i am bertrude from the hit server prison but bad");
-                     Inventory invx = Bukkit.createInventory(null, 9);
-                     ItemStack hoe = new ItemStack(Material.FISHING_ROD);
-                     hoe.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta hoemeta = hoe.getItemMeta();
-                     hoemeta.setDisplayName(ChatColor.BLUE + "Get Fishing Rod");
-                     hoe.setItemMeta(hoemeta);
-                     invx.setItem(2, hoe);
-                     ItemStack wheat = new ItemStack(Material.WATER_BUCKET);
-                     wheat.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta wheatmeta = wheat.getItemMeta();
-                     wheatmeta.setDisplayName(ChatColor.GOLD + "Sell Fish");
-                     wheat.setItemMeta(wheatmeta);
-                     invx.setItem(3, wheat);
-                     ItemStack codx = new ItemStack(Material.COOKED_COD);
-                     codx.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta codmetax = codx.getItemMeta();
-                     codmetax.setDisplayName(ChatColor.GOLD + "Cooked Cod");
-                     codx.setAmount(16);
-                     ArrayList<String> codlorex = new ArrayList<>();
-                     codlorex.add(ChatColor.GRAY + "ripe and ready, come buy my fish ;) -bertrude");
-                     codlorex.add(ChatColor.GREEN + "$15");
-                     codmetax.setLore(codlorex);
-                     codx.setItemMeta(codmetax);
-                     invx.setItem(5, codx);
-                     codx = new ItemStack(Material.POTION);
-                     codx.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     PotionMeta ptmeta = (PotionMeta)codx.getItemMeta();
-                     ptmeta.setDisplayName(ChatColor.BLUE + "Water");
-                     ptmeta.setColor(Color.BLUE);
-                     codlorex = new ArrayList<>();
-                     codlorex.add(ChatColor.GRAY + "fancy a bot'o'w'ota");
-                     codlorex.add(ChatColor.GREEN + "$15");
-                     ptmeta.setLore(codlorex);
-                     codx.setItemMeta(ptmeta);
-                     invx.setItem(7, codx);
-                     event.getPlayer().openInventory(invx);
-                  }
 
                   if (event.getRightClicked().equals(KingsButBad.lunchLady)
-                     && (MiscTask.bossbar.getTitle().equals("Lunch") || MiscTask.bossbar.getTitle().equals("Breakfast"))) {
+                     && (bossbar.getTitle().equals("Lunch") || bossbar.getTitle().equals("Breakfast"))) {
                      event.getPlayer().sendMessage(CreateText.addColors("<gold>Lunch Lady <white><b>>> Here's your lunch."));
-                     event.getPlayer().getInventory().addItem();
-                  }
-
-                  if (event.getRightClicked().equals(KingsButBad.farmerJoe)) {
-                     Inventory invx = Bukkit.createInventory(null, 9);
-                     ItemStack hoe = new ItemStack(Material.WOODEN_HOE);
-                     hoe.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta hoemeta = hoe.getItemMeta();
-                     hoemeta.setDisplayName(ChatColor.BLUE + "Get Hoe");
-                     hoe.setItemMeta(hoemeta);
-                     invx.setItem(2, hoe);
-                     ItemStack wheat = new ItemStack(Material.WHEAT);
-                     wheat.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta wheatmeta = wheat.getItemMeta();
-                     wheatmeta.setDisplayName(ChatColor.GOLD + "Sell Wheat");
-                     wheat.setItemMeta(wheatmeta);
-                     invx.setItem(6, wheat);
-                     event.getPlayer().openInventory(invx);
+                     event.getPlayer().getInventory().addItem(new ItemStack(Material.BEETROOT_SOUP));
                   }
 
                   if (event.getRightClicked().equals(KingsButBad.miner)) {
@@ -540,17 +403,6 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
                      event.getPlayer().openInventory(invx);
                   }
 
-                  if (event.getRightClicked().equals(KingsButBad.minerGuard)) {
-                     Inventory invx = Bukkit.createInventory(null, 9);
-                     ItemStack hoe = new ItemStack(Material.IRON_PICKAXE);
-                     hoe.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta hoemeta = hoe.getItemMeta();
-                     hoemeta.setDisplayName(ChatColor.BLUE + "Get Pickaxe");
-                     hoe.setItemMeta(hoemeta);
-                     invx.setItem(4, hoe);
-                     event.getPlayer().openInventory(invx);
-                  }
-
                   if (event.getRightClicked().equals(KingsButBad.prisonGuard)) {
                      Inventory invx = Bukkit.createInventory(null, 9);
                      ItemStack hoe = new ItemStack(Material.RED_CONCRETE);
@@ -569,26 +421,8 @@ public class PlayerInteractAtEntityListener implements Listener { // TODO: Clean
                      event.getPlayer().openInventory(invx);
                   }
 
-                  if (event.getRightClicked().equals(KingsButBad.mopVillager)) {
-                     Inventory invx = Bukkit.createInventory(null, 9);
-                     ItemStack hoe = new ItemStack(Material.BONE);
-                     hoe.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta hoemeta = hoe.getItemMeta();
-                     hoemeta.setDisplayName(ChatColor.BLUE + "Get Mop");
-                     hoe.setItemMeta(hoemeta);
-                     invx.setItem(2, hoe);
-                     ItemStack wheat = new ItemStack(Material.BROWN_CONCRETE);
-                     wheat.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-                     ItemMeta wheatmeta = wheat.getItemMeta();
-                     wheatmeta.setDisplayName(ChatColor.GOLD + "Sell... the trash? i guess????");
-                     wheat.setItemMeta(wheatmeta);
-                     invx.setItem(6, wheat);
-                     event.getPlayer().openInventory(invx);
-                  }
-
-                  if (event.getRightClicked().equals(KingsButBad.royalVillager)) {
+                  if (event.getRightClicked().equals(KingsButBad.royalVillager))
                      event.getPlayer().performCommand("king help");
-                  }
                },
                1L
             );

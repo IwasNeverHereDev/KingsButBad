@@ -7,6 +7,7 @@ import kingsbutbad.kingsbutbad.keys.Key;
 import kingsbutbad.kingsbutbad.keys.Keys;
 import kingsbutbad.kingsbutbad.utils.CreateText;
 import kingsbutbad.kingsbutbad.utils.DiscordUtils;
+import kingsbutbad.kingsbutbad.utils.TabUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -35,16 +36,22 @@ public class PlayerQuitListener implements Listener {
         dbManager.saveData(new File(DatabaseManager.getDataFolder(), "playerdata.db").getPath());
         event.getPlayer().eject();
         event.getPlayer().getPassengers().clear();
-        if(KingsButBad.king == event.getPlayer())
-            KingsButBad.lastKing = event.getPlayer();
-        if(KingsButBad.king2 == event.getPlayer())
-            KingsButBad.lastKing2 = event.getPlayer();
+        TabUtils.reload();
+        if(KingsButBad.king == event.getPlayer()) {
+            KingsButBad.lastKing = event.getPlayer().getUniqueId();
+            KingsButBad.cooldown = 20*5;
+        }
+        if(KingsButBad.king2 == event.getPlayer()) {
+            KingsButBad.lastKing2 = event.getPlayer().getUniqueId();
+            KingsButBad.cooldown = 20*5;
+        }
         for(Entity entity : event.getPlayer().getPassengers())
             event.getPlayer().removePassenger(entity);
         if(event.getPlayer().isInsideVehicle())
             if(event.getPlayer().getVehicle() instanceof Player target) {
-                safelyDismount(event.getPlayer(), target);
                 target.removePassenger(event.getPlayer());
+                target.setSneaking(true);
+                event.getPlayer().eject();
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "warn "+event.getPlayer().getName()+" Logging out while handcuffed! [AUTOMATED]");
             }
         if(!event.getPlayer().getPassengers().isEmpty())
@@ -64,20 +71,5 @@ public class PlayerQuitListener implements Listener {
                         .serialize(MiniMessage.miniMessage().deserialize("<#D49B63>" + event.getPlayer().getName() + " ran away somewhere else..."))
         );
         BotManager.getInGameChatChannel().sendMessage("**" + DiscordUtils.deformat(event.getPlayer().getName()) + "**" + " ran away somewhere else...").queue();
-    }
-    public static void safelyDismount(Player passenger, Player vehicle) {
-        if (passenger.getVehicle() != null) {
-            // Force dismount the passenger
-            vehicle.removePassenger(passenger);
-
-            // Update the vehicle's state
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    vehicle.eject();  // Force the vehicle to remove any passengers
-                    vehicle.teleport(vehicle.getLocation()); // Refresh the vehicle's position
-                }
-            }.runTaskLater(KingsButBad.pl, 1L); // Execute on the next tick to ensure smooth updates
-        }
     }
 }

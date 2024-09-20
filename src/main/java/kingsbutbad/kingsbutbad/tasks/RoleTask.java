@@ -20,10 +20,12 @@ public class RoleTask extends BukkitRunnable {
          if (player == null) continue;
          addTicksToRolesTimer(player);
          checkIfPeasantIsPure(player);
+         checkIfBodyGuardIsProtecting(player);
+         checkIfOutlawIsOver1Hour(player);
 
          KingsButBad.roles.putIfAbsent(player, Role.PEASANT);
 
-         KingsButBad.princeGender.putIfAbsent(player, "Prince");
+         KingsButBad.princePrefix.putIfAbsent(player, "Prince");
 
          Location restrictedAreaStart = KingdomsLoader.activeKingdom.getBm1();
          Location restrictedAreaEnd = KingdomsLoader.activeKingdom.getBm2();
@@ -54,6 +56,14 @@ public class RoleTask extends BukkitRunnable {
    private void checkIfPeasantIsPure(Player p){
       if(Keys.PEASANTTicks.get(p, 0.0) >= 20*60*60*2)
          AdvancementManager.giveAdvancement(p, "purepeasant");
+   }
+   private void checkIfBodyGuardIsProtecting(Player p){
+      if(Keys.BODYGUARDTicks.get(p, 0.0) >= 20*60*60)
+         AdvancementManager.giveAdvancement(p, "keepsafe");
+   }
+   private void checkIfOutlawIsOver1Hour(Player p){
+      if(Keys.OUTLAWTicks.get(p, 0.0) >= 20*60*60)
+         AdvancementManager.giveAdvancement(p, "outlawboss");
    }
    private void addTicksToRolesTimer(Player p){
       switch (KingsButBad.roles.getOrDefault(p, Role.PEASANT)){
@@ -93,11 +103,11 @@ public class RoleTask extends BukkitRunnable {
       String rolePart;
       if (KingsButBad.king2 == player) {
          rolePart = "<dark_gray>[<gradient:#FFFF52:#FFBA52><b>"
-                 + KingsButBad.kingGender2.toUpperCase()
+                 + KingsButBad.kingPrefix2.toUpperCase()
                  + "<dark_gray></b><dark_gray>] ";
       } else if (KingsButBad.roles.get(player).equals(Role.PRINCE)) {
          rolePart = "<dark_gray>[<gradient:#FFFF52:#FFBA52>"
-                 + KingsButBad.princeGender.get(player).toUpperCase()
+                 + KingsButBad.princePrefix.get(player).toUpperCase()
                  + "<dark_gray>] ";
       } else {
          rolePart = "<dark_gray>[<gradient:#FFFF52:#FFBA52>"
@@ -109,9 +119,10 @@ public class RoleTask extends BukkitRunnable {
               vanishMsg + prefixPart + rolePart
       ) + KingsButBad.roles.get(player).chatColor
               + player.getName();
+      String pact = Pacts.valueOf(Keys.activePact.get(player, Pacts.NONE.name())).getFormattedStar()+" ";
 
-      player.setPlayerListName(playerListName+" "+getPing(player));
-      player.setDisplayName(playerListName);
+      player.setPlayerListName(pact+playerListName+" "+getPing(player));
+      player.setDisplayName(pact+playerListName);
    }
    public static String getPing(Player p){
       int ping = p.getPing();

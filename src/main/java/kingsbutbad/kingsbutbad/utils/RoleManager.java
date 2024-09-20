@@ -2,7 +2,9 @@ package kingsbutbad.kingsbutbad.utils;
 
 import kingsbutbad.kingsbutbad.Kingdom.KingdomsLoader;
 import kingsbutbad.kingsbutbad.KingsButBad;
+import kingsbutbad.kingsbutbad.NoNoWords;
 import kingsbutbad.kingsbutbad.keys.Keys;
+import kingsbutbad.kingsbutbad.utils.Items.RoleItems;
 import kingsbutbad.kingsbutbad.utils.Items.Roles.*;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -14,6 +16,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("deprecation")
 public class RoleManager {
    public static Boolean isKingAtAll(Player p) {
@@ -22,78 +29,81 @@ public class RoleManager {
 
    public static String getKingGender(Player p) {
       if (KingsButBad.king == p) {
-         return KingsButBad.kingGender;
+         return KingsButBad.kingPrefix;
       } else {
-         return KingsButBad.king2 == p ? KingsButBad.kingGender2 : "ERROR";
+         return KingsButBad.king2 == p ? KingsButBad.kingPrefix2 : "ERROR";
       }
    }
 
-   public static void setKingGender(Player p, String toset) {
+   public static void setKingPrefix(Player p, String toset) {
       if (KingsButBad.king == p) {
-         switch (toset) {
-            case "male":
-               KingsButBad.kingGender = "King";
-               break;
-            case "female":
-               KingsButBad.kingGender = "Queen";
-               break;
-            case "sussy":
-               KingsButBad.kingGender = "Among Us Impostor";
-               break;
-            default:
-               KingsButBad.kingGender = "Monarch";
+         if(!NoNoWords.isClean(toset)){
+            p.sendMessage(CreateText.addColors("<red>You can't not set your Prefix a Filtered Word!"));
+            return;
          }
+         if(toset.length() >= 20){
+            p.sendMessage(CreateText.addColors("<red>Sorry, Your prefix must be less then 15!"));
+            return;
+         }
+         if(toset.contains("&k")){
+            p.sendMessage(CreateText.addColors("<red>Sorry, You can't us Obstructed in your prefix!"));
+            return;
+         }
+         List<String> listOfCommonRanks = new ArrayList<>();
+         listOfCommonRanks.add("Builder");
+         listOfCommonRanks.add("Owner");
+         listOfCommonRanks.add("Admin");
+         listOfCommonRanks.add("Mod");
+         listOfCommonRanks.add("Helper");
+         listOfCommonRanks.add("Booster");
+         listOfCommonRanks.add("Support");
+         listOfCommonRanks.addAll(Arrays.stream(Role.values())
+                 .map(Role::name)
+                 .collect(Collectors.toList()));
+         for(String noRanks :listOfCommonRanks) {
+            if (noRanks.toUpperCase().contains("KING")) continue;
+            if (toset.toUpperCase().contains(noRanks.toUpperCase())) {
+               p.sendMessage(CreateText.addColors("<red>Sorry, Your prefix can't contain Common Ranks!"));
+               return;
+            }
+         }
+         KingsButBad.kingPrefix = CreateText.convertAmpersandToMiniMessage(toset);
       }
 
       if (KingsButBad.king2 == p) {
-         switch (toset) {
-            case "male":
-               KingsButBad.kingGender2 = "King";
-               break;
-            case "female":
-               KingsButBad.kingGender2 = "Queen";
-               break;
-            case "sussy":
-               KingsButBad.kingGender2 = "Among Us Impostor";
-               break;
-            default:
-               KingsButBad.kingGender2 = "Monarch";
+         if(!NoNoWords.isClean(toset)){
+            p.sendMessage(CreateText.addColors("<red>You can't not set your Prefix a Filtered Word!"));
+            return;
          }
+         if(toset.length() >= 20){
+            p.sendMessage(CreateText.addColors("<red>Sorry, Your prefix must be less then 15!"));
+            return;
+         }
+         if(toset.contains("&k")){
+            p.sendMessage(CreateText.addColors("<red>Sorry, You can't us Obstructed in your prefix!"));
+            return;
+         }
+         List<String> listOfCommonRanks = new ArrayList<>();
+         listOfCommonRanks.add("Builder");
+         listOfCommonRanks.add("Owner");
+         listOfCommonRanks.add("Admin");
+         listOfCommonRanks.add("Mod");
+         listOfCommonRanks.add("Helper");
+         listOfCommonRanks.add("Booster");
+         listOfCommonRanks.add("Support");
+         listOfCommonRanks.addAll(Arrays.stream(Role.values())
+                 .map(Role::name)
+                 .collect(Collectors.toList()));
+         for(String noRanks :listOfCommonRanks) {
+            if (noRanks.toUpperCase().contains("KING")) continue;
+            if (toset.toUpperCase().contains(noRanks.toUpperCase())) {
+               p.sendMessage(CreateText.addColors("<red>Sorry, Your prefix can't contain Common Ranks!"));
+               return;
+            }
+         }
+         KingsButBad.kingPrefix2 = CreateText.convertAmpersandToMiniMessage(toset);
       }
    }
-
-   public static void setKingGender(Boolean oneortwo, String toset) {
-      if (oneortwo) {
-         switch (toset) {
-            case "male":
-               KingsButBad.kingGender = "King";
-               break;
-            case "female":
-               KingsButBad.kingGender = "Queen";
-               break;
-            case "sussy":
-               KingsButBad.kingGender = "Among Us Impostor";
-               break;
-            default:
-               KingsButBad.kingGender = "Monarch";
-         }
-      } else {
-         switch (toset) {
-            case "male":
-               KingsButBad.kingGender2 = "King";
-               break;
-            case "female":
-               KingsButBad.kingGender2 = "Queen";
-               break;
-            case "sussy":
-               KingsButBad.kingGender2 = "Among Us Impostor";
-               break;
-            default:
-               KingsButBad.kingGender2 = "Monarch";
-         }
-      }
-   }
-
    public static void showKingMessages(Player p, String reason) {
       p.sendTitle(
          ChatColor.GREEN
@@ -111,10 +121,11 @@ public class RoleManager {
    }
 
    public static void givePlayerRole(Player p) {
+      TabUtils.reload();
       KingsButBad.roles.putIfAbsent(p, Role.PEASANT);
-      if (p.getWorldBorder() != null) {
+      if (p.getWorldBorder() != null)
          p.setWorldBorder(null);
-      }
+
 
       if(!KingsButBad.roles.get(p).equals(Role.OUTLAW))
          p.getInventory().clear();
@@ -144,16 +155,24 @@ public class RoleManager {
          if (KingsButBad.roles.get(p) == Role.PRISONER) {
             p.setCooldown(Material.TERRACOTTA, 80);
             if (!KingsButBad.prisonTimer.containsKey(p) || KingsButBad.prisonTimer.get(p).equals(0))
-               KingsButBad.prisonTimer.put(p, 2400);
+               KingsButBad.prisonTimer.put(p, 2400F);
             PrisonerKit.giveKit(p);
             Bukkit.getScheduler().runTaskLater(KingsButBad.getPlugin(KingsButBad.class), () -> Cell.tpToRandomCell(p), 10L);
             Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Prisoners").addPlayer(p);
+            if(Keys.activePact.get(p, Pacts.NONE.name()) == Pacts.SERVANT.name()){
+               p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+               p.getInventory().addItem(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+            }
          }
 
          if (KingsButBad.roles.get(p) == Role.PEASANT || KingsButBad.roles.get(p) == Role.SERVANT) {
             Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Peasants").addPlayer(p);
             Keys.inPrison.remove(p);
             Bukkit.getScheduler().runTaskLater(KingsButBad.getPlugin(KingsButBad.class), () -> p.teleport(KingdomsLoader.activeKingdom.getSpawn()), 10L);
+            if(Keys.activePact.get(p, Pacts.NONE.name()) == Pacts.SERVANT.name()){
+               p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+               p.getInventory().addItem(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
+            }
          }
 
          p.sendTitle(KingsButBad.roles.get(p).tag, KingsButBad.roles.get(p).objective);
